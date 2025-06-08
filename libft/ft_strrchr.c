@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/08 18:07:36 by abouchat         ###   ########.fr       */
+/*   Created: 2024/09/24 14:40:56 by abouchat          #+#    #+#             */
+/*   Updated: 2024/10/03 15:20:28 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <string.h>
-# include <dirent.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <signal.h>
-# include <sys/ioctl.h>
-# include <termios.h>
-# include <readline/readline.h>
-# include <term.h>
-# include <curses.h>
-# include "libft/libft.h"
+#include "libft.h"
 
+char	*ft_strrchr(const char *s, int c)
+{
+	int	len;
 
-#endif
+	len = 0;
+	while (s[len] != '\0')
+		len++;
+	while (len >= 0)
+	{
+		if (s[len] == (unsigned char)c)
+			return ((char *)s + len);
+		len--;
+	}
+	return (NULL);
+}

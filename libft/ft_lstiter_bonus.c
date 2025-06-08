@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_lstiter_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/08 18:07:36 by abouchat         ###   ########.fr       */
+/*   Created: 2024/10/07 18:33:06 by abouchat          #+#    #+#             */
+/*   Updated: 2024/10/14 11:05:23 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <string.h>
-# include <dirent.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <signal.h>
-# include <sys/ioctl.h>
-# include <termios.h>
-# include <readline/readline.h>
-# include <term.h>
-# include <curses.h>
-# include "libft/libft.h"
+#include "libft.h"
 
+void	ft_lstiter(t_list *lst, void (*f)(void *))
+{
+	t_list	*curr;
 
-#endif
+	if (lst == NULL)
+		return ;
+	curr = lst;
+	while (curr != NULL)
+	{
+		f(curr->content);
+		curr = curr->next;
+	}
+}

@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/08 18:07:36 by abouchat         ###   ########.fr       */
+/*   Created: 2024/09/30 15:13:18 by abouchat          #+#    #+#             */
+/*   Updated: 2024/10/03 12:25:53 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <string.h>
-# include <dirent.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <signal.h>
-# include <sys/ioctl.h>
-# include <termios.h>
-# include <readline/readline.h>
-# include <term.h>
-# include <curses.h>
-# include "libft/libft.h"
+#include "libft.h"
 
+void	ft_putnbr_fd(int n, int fd)
+{
+	long int	nb;
+	char		res;
 
-#endif
+	nb = n;
+	if (nb < 0)
+	{
+		write(fd, "-", 1);
+		nb = nb * (-1);
+	}
+	if (nb >= 10)
+		ft_putnbr_fd(nb / 10, fd);
+	res = (nb % 10) + '0';
+	write(fd, &res, 1);
+}

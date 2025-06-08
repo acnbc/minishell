@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_printf_utils3.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/08 18:07:36 by abouchat         ###   ########.fr       */
+/*   Created: 2024/10/21 16:24:04 by abouchat          #+#    #+#             */
+/*   Updated: 2024/10/21 16:33:10 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <string.h>
-# include <dirent.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <signal.h>
-# include <sys/ioctl.h>
-# include <termios.h>
-# include <readline/readline.h>
-# include <term.h>
-# include <curses.h>
-# include "libft/libft.h"
+#include "libft.h"
 
+int	ft_num_len(long n, int base)
+{
+	int	len;
 
-#endif
+	len = 0;
+	if (n == 0)
+		return (1);
+	while (n != 0)
+	{
+		n = n / base;
+		len++;
+	}
+	return (len);
+}
