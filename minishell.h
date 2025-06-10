@@ -26,7 +26,9 @@
 # include <termios.h>
 # include <readline/readline.h>
 # include <term.h>
-# include <curses.h>    
+# include <curses.h>
+# include "libft.h"    
 
+char    **ft_separate(char *input);
 
 #endif

@@ -19,6 +19,7 @@ int	main(void)
 	while (1)
 	{
 		input = readline("> ");
-		printf("%s\n", input);
+		ft_separate(input);
+		//printf("%s\n", input);
 	}
 }
