@@ -12,23 +12,35 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# include "libft.h"
+# include <curses.h>
+# include <dirent.h>
+# include <fcntl.h>
+# include <readline/readline.h>
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <unistd.h>
 # include <string.h>
-# include <dirent.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <signal.h>
 # include <sys/ioctl.h>
-# include <termios.h>
-# include <readline/readline.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <term.h>
-# include <curses.h>
-# include "libft.h"    
+# include <termios.h>
+# include <unistd.h>
 
-char    **ft_separate(char *input);
+typedef struct s_process
+{
+	char				*cmd_seq;
+	struct s_process	*next;
+}						t_process;
 
+t_process               *ft_separate(char *input);
+t_process				*new_process(char *content);
+void					add_process(t_process **lst, t_process *new);
+int ft_isspace(char c);
+
+
+
+void print_process_list(t_process *process_list);
 #endif

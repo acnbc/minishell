@@ -5,7 +5,7 @@ CFLAGS = -Wall -Wextra -Werror -g -I./libft
 LDFLAGS = -L./libft
 LDLIBS = -lft -lreadline -ltermcap
 
-SRC = main.c ft_separate.c
+SRC = main.c ft_separate.c list_utils.c
 OBJ = $(SRC:.c=.o)
 
 LIBFT_DIR = ./libft
