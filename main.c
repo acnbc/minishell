@@ -19,7 +19,9 @@ int	main(void)
 	while (1)
 	{
 		input = readline("> ");
-		ft_separate(input);
+		if (!input)
+			continue ;
+		parser(input);
 		//printf("%s\n", input);
 	}
 }

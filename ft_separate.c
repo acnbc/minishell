@@ -78,7 +78,6 @@ t_process   *ft_separate(char *input)
     }
     if (i > j)
         get_cmd_seq(&phrases, input, i, j);
-    print_process_list(phrases);
     return (phrases);
 }
 
