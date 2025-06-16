@@ -42,7 +42,7 @@ void	add_process(t_process **lst, t_process *new)
 	}
 }
 
-/*void	malloc_process(size_t bytes, t_process)
+void	*safe_malloc(size_t bytes)
 {
 	void	*malloced_space;
 
@@ -53,4 +53,4 @@ void	add_process(t_process **lst, t_process *new)
 		exit(1);
 	}
 	return (malloced_space);
-}*/
+}
