@@ -10,31 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
-char	**expantion(char **variables, char *input)
-{
-
-}
-
-char	**variable_expantion(char *input)
-{
-	int		dollar_signs;
-	int		i;
-	char	**variables;
-
-	dollar_signs = 0;
-	i = -1;
-	while (input[++i])
-	{
-		if (input[i] == '$')
-			dollar_signs++;
-	}
-	variables = (char **)safe_malloc(sizeof(char *) * dollar_signs);
-	variables = expantion
-}
-
-char	*handle_double_quotes(char *input, int quotes_count)
+char	*handle_double_quotes(t_minishell *minishell, int quotes_count)
 {
 	int		i;
 	int		flag;
@@ -42,17 +20,17 @@ char	*handle_double_quotes(char *input, int quotes_count)
 	char	**expanded_variables;
 
 	expanded_variables = NULL;
-	if (ft_strchr(input, "$"))
-		expanded_variables = variable_expantion(input);
+	if (ft_strchr(minishell->input, "$"))
+		expanded_variables = variable_expansion(minishell);
 	i = -2;
 	flag = 1;
-	while (input[++i])
+	while (minishell->input[++i])
 	{
 		if (flag == 1 || flag == quotes_count)
 	}
 }
 
-char	*handle_quotes(char *input, char quote)
+char	*handle_quotes(t_minishell *minishell, t_quote quote)
 {
 	int quotes_count;
 	int i;
@@ -61,16 +39,16 @@ char	*handle_quotes(char *input, char quote)
 	quotes_count = 0;
 	i = -1;
 	clean_input = NULL;
-	while (input[++i])
+	while (minishell->input[++i])
 	{
-		if (input[i] == quote)
+		if (minishell->input[i] == quote)
 			quotes_count++;
 	}
 	if (quotes_count % 2 != 0)
 		return (NULL);
-	if (quote == '\"')
-		clean_input = handle_double_quotes(input, quotes_count);
+	if (quote == DOUBLE_QUOTE)
+		clean_input = handle_double_quotes(minishell, quotes_count);
 	else
-		clean_input = handle_single_quotes(input, quotes_count);
+		clean_input = handle_single_quotes(minishell, quotes_count);
 	return (clean_input);
 }

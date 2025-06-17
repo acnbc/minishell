@@ -10,18 +10,46 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
-int	main(void)
+char **copy_envp(char *envp[])
 {
-	char	*input;
+	int		i;
+	int		count;
+	char	**envp_copy;
 
+	if (!envp)
+		return (NULL);
+	envp_copy = NULL;
+	count = -1;
+	while (envp[++count])
+		;
+	envp_copy = (char **)safe_malloc(++count * sizeof(char *));
+	envp_copy[count] = NULL;
+	i = -1;
+	while (++i < count)
+	{
+		envp_copy[i] = ft_strdup(envp[i]);
+		if (!envp_copy[i])
+			free_env(envp_copy, i);
+		return (NULL);
+	}
+	return (envp_copy);
+}
+
+int	main(int argc, char *argv[], char *envp[])
+{
+	t_minishell	*minishell;
+
+	minishell = safe_malloc(sizeof(t_minishell));
+	ft_bzero(minishell, sizeof(t_minishell));
 	while (1)
 	{
-		input = readline("> ");
-		if (!input)
+		minishell->input = readline(MINISHELL_PROMPT);
+		if (!minishell->input)
 			continue ;
-		parser(input);
+		minishell->envp_copy = copy_envp(envp);
+		parser(minishell);
 		//printf("%s\n", input);
 	}
 }

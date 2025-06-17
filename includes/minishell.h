@@ -12,7 +12,7 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# include "libft.h"
+# include "../libft/libft.h"
 # include <curses.h>
 # include <dirent.h>
 # include <fcntl.h>
@@ -29,18 +29,35 @@
 # include <termios.h>
 # include <unistd.h>
 
+# define MINISHELL_PROMPT "minishell> "
+# define SINGLE_QUOTE "'"
+# define DOUBLE_QUOTE "\""
+
 typedef struct s_process
 {
 	char				*cmd_seq;
 	struct s_process	*next;
 }						t_process;
 
-t_process               *ft_separate(char *input);
+typedef struct s_minishell
+{
+	char				**envp_copy;
+	char				*input;
+}						t_minishell;
+
+typedef struct s_expansion
+{
+	int					i;
+	int					start;
+	int					str_i;
+	char				*var_name;
+}						t_expansion;
+
+t_process				*ft_separate(char *input);
 t_process				*new_process(char *content);
 void					add_process(t_process **lst, t_process *new);
-int ft_isspace(char c);
+int						ft_isspace(char c);
+void					parser(t_minishell *minishell);
 
-
-
-void print_process_list(t_process *process_list);
+void					print_process_list(t_process *process_list);
 #endif

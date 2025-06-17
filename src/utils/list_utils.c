@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 t_process	*new_process(char *cmd_seq)
 {
@@ -42,15 +42,3 @@ void	add_process(t_process **lst, t_process *new)
 	}
 }
 
-void	*safe_malloc(size_t bytes)
-{
-	void	*malloced_space;
-
-	malloced_space = malloc(bytes);
-	if (!malloced_space)
-	{
-		// SAFE EXIT
-		exit(1);
-	}
-	return (malloced_space);
-}

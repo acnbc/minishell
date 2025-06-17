@@ -1,30 +1,55 @@
-NAME = minishell
+# ========== Basic Configuration ==========
+NAME		= minishell
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror -g
+INCLUDES	= -I./includes -I./libft/includes
+LDFLAGS		= -L./libft
+LDLIBS		= -lft -lreadline -ltermcap
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -I./libft
-LDFLAGS = -L./libft
-LDLIBS = -lft -lreadline -ltermcap
+# ========== Source Files ==========
+SRC_DIR		= src
+SRC_SUBDIRS	= builtins exec parse utils
 
-SRC = main.c parser.c ft_separate.c list_utils.c handle_quotes.c
-OBJ = $(SRC:.c=.o)
+SRC			= main.c \
+			  $(addprefix parser/, parser.c handle_quotes.c ft_separate.c) \
+			  $(addprefix exec/, ) \
+			  $(addprefix builtins/, ) \
+			  $(addprefix utils/, list_utils.c)
 
-LIBFT_DIR = ./libft
-LIBFT = $(LIBFT_DIR)/libft.a
+OBJ_DIR		= obj
+OBJ			= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
+# ========== Libft Configuration ==========
+LIBFT_DIR	= libft
+LIBFT		= $(LIBFT_DIR)/libft.a
+
+# ========== Rules ==========
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(OBJ) $(LDFLAGS) $(LDLIBS) -o $(NAME)
+	@$(CC) $(OBJ) $(LDFLAGS) $(LDLIBS) -o $(NAME)
+	@echo "✅ $(NAME) compiled successfully!"
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):
-	make bonus -C $(LIBFT_DIR)
+	@make bonus -C $(LIBFT_DIR)
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
 clean:
-	rm -f $(OBJ)
-	make -C $(LIBFT_DIR) clean
+	@rm -rf $(OBJ_DIR)
+	@make -C $(LIBFT_DIR) clean
+	@echo "🧹 Object files removed!"
 
 fclean: clean
-	rm -f $(NAME)
-	make -C $(LIBFT_DIR) fclean
+	@rm -f $(NAME)
+	@make -C $(LIBFT_DIR) fclean
+	@echo "🧹🧹 $(NAME) and libft fully cleaned!"
 
 re: fclean all
+
+.PHONY: all clean fclean re
