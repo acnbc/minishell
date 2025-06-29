@@ -12,11 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-int ft_isspace(char c)
-{
-    return (c == ' ' || (c >= '\t' && c <= '\r'));
-}
-
 int skip_whitespace(char *input, int i)
 {
     while (input[i] && ft_isspace(input[i]))
@@ -59,6 +54,8 @@ t_process   *ft_separate(char *input)
     static char separators[] = "<>|";
     t_process   *phrases;
     
+    if (!input)
+        return (NULL);
     phrases = NULL;
     i = 0;
     i = skip_whitespace(input, i);

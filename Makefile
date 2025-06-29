@@ -11,10 +11,10 @@ SRC_DIR		= src
 SRC_SUBDIRS	= builtins exec parse utils
 
 SRC			= main.c \
-			  $(addprefix parser/, parser.c handle_quotes.c ft_separate.c) \
+			  $(addprefix parser/, parser.c handle_quotes.c expansion.c ft_separate.c) \
 			  $(addprefix exec/, ) \
 			  $(addprefix builtins/, ) \
-			  $(addprefix utils/, list_utils.c)
+			  $(addprefix utils/, list_utils.c utils.c)
 
 OBJ_DIR		= obj
 OBJ			= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))

@@ -12,6 +12,20 @@
 
 #include "../includes/minishell.h"
 
+int ft_isspace(char c)
+{
+    return (c == ' ' || (c >= '\t' && c <= '\r'));
+}
+
+char	*ft_strjoin_free(char *s1, char *s2)
+{
+    char	*joined;
+
+    joined = ft_strjoin(s1, s2);
+    free(s1);
+    return (joined);
+}
+
 void	*safe_malloc(size_t bytes)
 {
 	void	*malloced_space;
@@ -22,10 +36,16 @@ void	*safe_malloc(size_t bytes)
 		// SAFE EXIT
 		exit(1);
 	}
+    ft_bzero(malloced_space, bytes);
+    if (bytes == 0)
+    {
+        free(malloced_space);
+        return (NULL);
+    }
 	return (malloced_space);
 }
 
-void    free_env(char *envp_copy, int i)
+void    free_env(char **envp_copy, int i)
 {
     while (--i >= 0)
         free(envp_copy[i]);

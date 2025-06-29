@@ -14,13 +14,15 @@
 
 void    parser(t_minishell *minishell)
 {
-    char    **lex_ready;
+    t_process   *lex_ready;
     
     lex_ready = NULL;
     if (ft_strchr(minishell->input, DOUBLE_QUOTE))
-        lex_ready = ft_separate(handle_quotes(minishell, DOUBLE_QUOTE));
-    else if (ft_strchr(input, SINGLE_QUOTE))
-        lex_ready = ft_separate(handle_quotes(minishell, SINGLE_QUOTE));
+        lex_ready = ft_separate(handle_quotes(minishell));
+    else if (ft_strchr(minishell->input, SINGLE_QUOTE))
+        lex_ready = ft_separate(handle_quotes(minishell));
+    else if (ft_strchr(minishell->input, '$'))
+        lex_ready = ft_separate(expansion(minishell));
     else
         lex_ready = ft_separate(minishell->input);
     if (!lex_ready)

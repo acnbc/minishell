@@ -30,8 +30,8 @@
 # include <unistd.h>
 
 # define MINISHELL_PROMPT "minishell> "
-# define SINGLE_QUOTE "'"
-# define DOUBLE_QUOTE "\""
+# define SINGLE_QUOTE '\''
+# define DOUBLE_QUOTE '\"'
 
 typedef struct s_process
 {
@@ -45,19 +45,19 @@ typedef struct s_minishell
 	char				*input;
 }						t_minishell;
 
-typedef struct s_expansion
-{
-	int					i;
-	int					start;
-	int					str_i;
-	char				*var_name;
-}						t_expansion;
-
-t_process				*ft_separate(char *input);
+/* ----- PARSER -----*/
 t_process				*new_process(char *content);
 void					add_process(t_process **lst, t_process *new);
 int						ft_isspace(char c);
 void					parser(t_minishell *minishell);
+char	*extract_variable(t_minishell *minishell, char *variable);
+char	*handle_quotes(t_minishell *minishell);
+t_process				*ft_separate(char *input);
+char	*ft_strjoin_free(char *s1, char *s2);
+void	*safe_malloc(size_t bytes);
+void    free_env(char **envp_copy, int i);
+int	is_stopchar(char c);
+char	*expansion(t_minishell *minishell);
 
 void					print_process_list(t_process *process_list);
 #endif

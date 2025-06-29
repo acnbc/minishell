@@ -24,31 +24,48 @@ char **copy_envp(char *envp[])
 	count = -1;
 	while (envp[++count])
 		;
-	envp_copy = (char **)safe_malloc(++count * sizeof(char *));
-	envp_copy[count] = NULL;
+	if (count == 0)
+		return (NULL);
+	envp_copy = (char **)safe_malloc(count + 1 * sizeof(char *));
 	i = -1;
 	while (++i < count)
 	{
 		envp_copy[i] = ft_strdup(envp[i]);
 		if (!envp_copy[i])
+		{
 			free_env(envp_copy, i);
-		return (NULL);
+			return (NULL);
+		}
 	}
+	envp_copy[count] = NULL;
 	return (envp_copy);
+}
+
+void	print_envp(char **envp_copy)
+{
+    int i = 0;
+    if (!envp_copy)
+        return;
+    while (envp_copy[i])
+    {
+        printf("envp_copy[%d]: %s\n", i, envp_copy[i]);
+        i++;
+    }
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_minishell	*minishell;
 
+	(void)argc;
+	(void)argv;
 	minishell = safe_malloc(sizeof(t_minishell));
-	ft_bzero(minishell, sizeof(t_minishell));
+	minishell->envp_copy = copy_envp(envp);
 	while (1)
 	{
 		minishell->input = readline(MINISHELL_PROMPT);
 		if (!minishell->input)
 			continue ;
-		minishell->envp_copy = copy_envp(envp);
 		parser(minishell);
 		//printf("%s\n", input);
 	}
