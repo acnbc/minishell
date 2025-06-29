@@ -6,23 +6,44 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 17:58:37 by abouchat          #+#    #+#             */
-/*   Updated: 2025/06/19 16:16:17 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/06/29 15:11:10 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_echo(char **args, int fd, int flag)
+static bool	verify_flag(char *str)
 {
-//	int	arg_c;
-//	arg_c = 0;
-	while(*args)
+	if (*str != '-')
+		return (false);
+	str++;
+	while (*str)
 	{
-//		arg_c++;
-		write(fd, *args, ft_strlen(*args));
-		args++
+		if (*str != 'n')
+			return (false);
+		str++;
 	}
-	if (flag = 1)
+	return (true);
+}
+
+void	ft_echo(char **args, int fd)
+{
+	int	flag;
+
+	flag = 1;
+	while (verify_flag(*args))
+	{
+		flag = 0;
+		args++;
+	}
+	while (*args)
+	{
+		write(fd, *args, ft_strlen(*args));
+		if (*(args + 1) != NULL)
+			write(fd, " ", 1);
+		args++;
+	}
+	if (flag == 1)
 		write(fd, "\n", 1);
 }
 

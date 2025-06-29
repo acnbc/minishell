@@ -2,7 +2,7 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 READLINE_FLAGS = -lreadline -ltermcap
-SRC = main.c
+SRC = main.c builtins/echo.c
 OBJ = $(SRC:.c=.o)
 LIBFT_PATH = libft/
 LIBFT = libft.a
