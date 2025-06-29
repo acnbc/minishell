@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/29 14:02:21 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:55:33 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,18 @@
 # include <term.h>
 # include <curses.h>
 # include "libft/libft.h"
+
+typedef struct s_env_node
+{
+	char				var[200];
+	struct s_env_node	*next;
+}				t_env_node;
+
+typedef struct s_shelldata
+{
+	char	*home_path;
+	char	*pwd;
+}				t_shelldata;
 
 
 void	ft_echo(char **args, int fd);
