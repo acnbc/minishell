@@ -41,4 +41,3 @@ void	add_process(t_process **lst, t_process *new)
 		tmp->next = new;
 	}
 }
-

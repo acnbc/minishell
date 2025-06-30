@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-char **copy_envp(char *envp[])
+char	**copy_envp(char *envp[])
 {
 	int		i;
 	int		count;
@@ -43,14 +43,16 @@ char **copy_envp(char *envp[])
 
 void	print_envp(char **envp_copy)
 {
-    int i = 0;
-    if (!envp_copy)
-        return;
-    while (envp_copy[i])
-    {
-        printf("envp_copy[%d]: %s\n", i, envp_copy[i]);
-        i++;
-    }
+	int	i;
+
+	i = 0;
+	if (!envp_copy)
+		return ;
+	while (envp_copy[i])
+	{
+		printf("envp_copy[%d]: %s\n", i, envp_copy[i]);
+		i++;
+	}
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -67,6 +69,6 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!minishell->input)
 			continue ;
 		parser(minishell);
-		//printf("%s\n", input);
+		// printf("%s\n", input);
 	}
 }

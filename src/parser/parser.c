@@ -12,20 +12,20 @@
 
 #include "../../includes/minishell.h"
 
-void    parser(t_minishell *minishell)
+void	parser(t_minishell *minishell)
 {
-    t_process   *lex_ready;
-    
-    lex_ready = NULL;
-    if (ft_strchr(minishell->input, DOUBLE_QUOTE))
-        lex_ready = ft_separate(handle_quotes(minishell));
-    else if (ft_strchr(minishell->input, SINGLE_QUOTE))
-        lex_ready = ft_separate(handle_quotes(minishell));
-    else if (ft_strchr(minishell->input, '$'))
-        lex_ready = ft_separate(expansion(minishell));
-    else
-        lex_ready = ft_separate(minishell->input);
-    if (!lex_ready)
-        return ;
-    print_process_list(lex_ready);
+	t_process	*lex_ready;
+
+	lex_ready = NULL;
+	if (ft_strchr(minishell->input, DOUBLE_QUOTE))
+		lex_ready = ft_separate(handle_quotes(minishell));
+	else if (ft_strchr(minishell->input, SINGLE_QUOTE))
+		lex_ready = ft_separate(handle_quotes(minishell));
+	else if (ft_strchr(minishell->input, '$'))
+		lex_ready = ft_separate(expansion(minishell));
+	else
+		lex_ready = ft_separate(minishell->input);
+	if (!lex_ready)
+		return ;
+	print_process_list(lex_ready);
 }

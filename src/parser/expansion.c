@@ -42,31 +42,41 @@ char	*extract_variable(t_minishell *minishell, char *variable)
 	return (NULL);
 }
 
+char	*get_env_var(t_minishell *minishell, int *i, int *j)
+{
+	char	*clean_input;
+
+	clean_input = NULL;
+	if (*j < *i)
+		clean_input = ft_strjoin(clean_input,
+				ft_substr(minishell->input, *j, *i - *j));
+	*j = ++(*i);
+	while (minishell->input[*i] && ft_isalnum(minishell->input[*i]))
+		(*i)++;
+	clean_input = ft_strjoin(clean_input, extract_variable(minishell,
+				ft_substr(minishell->input, *j, *i - *j)));
+	*j = *i;
+	return (clean_input);
+}
+
 char	*expansion(t_minishell *minishell)
 {
 	char	*clean_input;
 	int		i;
 	int		j;
-	
+
 	clean_input = NULL;
 	i = 0;
 	j = i;
 	while (minishell->input[i])
 	{
 		if (minishell->input[i] == '$')
-		{
-			if (j < i)
-				clean_input = ft_strjoin(clean_input, ft_substr(minishell->input, j, i - j));
-			j = ++i;
-			while (minishell->input[i] && ft_isalnum(minishell->input[i]))
-				i++;
-			clean_input = ft_strjoin(clean_input, extract_variable(minishell, ft_substr(minishell->input, j, i - j)));
-			j = i;
-		}
+			clean_input = get_env_var(minishell, &i, &j);
 		else
 			i++;
 	}
 	if (j < i)
-        clean_input = ft_strjoin(clean_input, ft_substr(minishell->input, j, i - j));
-    return (clean_input);
+		clean_input = ft_strjoin(clean_input, ft_substr(minishell->input, j, i
+					- j));
+	return (clean_input);
 }
