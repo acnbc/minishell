@@ -117,29 +117,9 @@ char	*handle_quotes(t_minishell *minishell)
 	while (minishell->input[++i])
 	{
 		if (minishell->input[i] == SINGLE_QUOTE)
-			cut_quotes(minishell, &i, &j, SINGLE_QUOTE);
-		/*{
-			if (j < i)
-				clean_input = ft_strjoin(clean_input,
-						ft_substr(minishell->input, j, i - j));
-			clean_input = ft_strjoin(clean_input,
-					handle_single_quotes(minishell, ++i));
-			while (minishell->input[i] && minishell->input[i] != SINGLE_QUOTE)
-				i++;
-			j = i + 1;
-		}*/
+			clean_input = cut_quotes(minishell, &i, &j, SINGLE_QUOTE);
 		else if (minishell->input[i] == DOUBLE_QUOTE)
-			cut_quotes(minishell, &i, &j, DOUBLE_QUOTE);
-		/*{
-			if (j < i)
-				clean_input = ft_strjoin(clean_input,
-						ft_substr(minishell->input, j, i - j));
-			clean_input = ft_strjoin(clean_input,
-					handle_double_quotes(minishell, ++i));
-			while (minishell->input[i] && minishell->input[i] != DOUBLE_QUOTE)
-				i++;
-			j = i + 1;
-		}*/
+			clean_input = cut_quotes(minishell, &i, &j, DOUBLE_QUOTE);
 	}
 	if (j < i)
 		clean_input = ft_strjoin(clean_input, ft_substr(minishell->input, j, i
