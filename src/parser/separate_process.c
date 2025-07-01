@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_separate.c                                      :+:      :+:    :+:   */
+/*   separate_process.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -47,7 +47,7 @@ int	get_operator(t_process **phrases, char *input, int i)
 	return (i);
 }
 
-t_process	*ft_separate(char *input)
+t_process	*separate_process(char *input)
 {
 	int			i;
 	int			j;

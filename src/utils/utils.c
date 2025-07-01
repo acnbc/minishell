@@ -44,10 +44,3 @@ void	*safe_malloc(size_t bytes)
 	}
 	return (malloced_space);
 }
-
-void	free_env(char **envp_copy, int i)
-{
-	while (--i >= 0)
-		free(envp_copy[i]);
-	free(envp_copy);
-}

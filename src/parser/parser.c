@@ -18,14 +18,15 @@ void	parser(t_minishell *minishell)
 
 	lex_ready = NULL;
 	if (ft_strchr(minishell->input, DOUBLE_QUOTE))
-		lex_ready = ft_separate(handle_quotes(minishell));
+		lex_ready = separate_process(handle_quotes(minishell));
 	else if (ft_strchr(minishell->input, SINGLE_QUOTE))
-		lex_ready = ft_separate(handle_quotes(minishell));
+		lex_ready = separate_process(handle_quotes(minishell));
 	else if (ft_strchr(minishell->input, '$'))
-		lex_ready = ft_separate(expansion(minishell));
+		lex_ready = separate_process(expansion(minishell));
 	else
-		lex_ready = ft_separate(minishell->input);
+		lex_ready = separate_process(minishell->input);
 	if (!lex_ready)
 		return ;
 	print_process_list(lex_ready);
+	free_process_list(lex_ready);
 }

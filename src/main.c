@@ -12,49 +12,6 @@
 
 #include "../includes/minishell.h"
 
-char	**copy_envp(char *envp[])
-{
-	int		i;
-	int		count;
-	char	**envp_copy;
-
-	if (!envp)
-		return (NULL);
-	envp_copy = NULL;
-	count = -1;
-	while (envp[++count])
-		;
-	if (count == 0)
-		return (NULL);
-	envp_copy = (char **)safe_malloc(count + 1 * sizeof(char *));
-	i = -1;
-	while (++i < count)
-	{
-		envp_copy[i] = ft_strdup(envp[i]);
-		if (!envp_copy[i])
-		{
-			free_env(envp_copy, i);
-			return (NULL);
-		}
-	}
-	envp_copy[count] = NULL;
-	return (envp_copy);
-}
-
-void	print_envp(char **envp_copy)
-{
-	int	i;
-
-	i = 0;
-	if (!envp_copy)
-		return ;
-	while (envp_copy[i])
-	{
-		printf("envp_copy[%d]: %s\n", i, envp_copy[i]);
-		i++;
-	}
-}
-
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_minishell	*minishell;
@@ -62,12 +19,22 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argc;
 	(void)argv;
 	minishell = safe_malloc(sizeof(t_minishell));
-	minishell->envp_copy = copy_envp(envp);
+	minishell->env_list = env_list(envp);
+	// print_env_list(minishell->env_list);
 	while (1)
 	{
 		minishell->input = readline(MINISHELL_PROMPT);
 		if (!minishell->input)
 			continue ;
+		if (ft_strncmp(minishell->input, "exit", 4) == 0)
+		{
+			free(minishell->input);
+			free_env_list(minishell->env_list);
+			free_env(minishell->envp_copy, 0);
+			free(minishell);
+			printf("exit\n");
+			exit(0);
+		}
 		parser(minishell);
 		// printf("%s\n", input);
 	}
