@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   separate_process.c                                      :+:      :+:    :+:   */
+/*   separate_process.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/12 12:03:47 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/12 12:03:49 by anogueir         ###   ########.fr       */
+/*   Created: 2025/07/03 12:45:20 by anogueir          #+#    #+#             */
+/*   Updated: 2025/07/03 12:45:22 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,13 @@ int	skip_whitespace(char *input, int i)
 void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 {
 	char	*phrase;
+	char	*temp;
 
 	phrase = NULL;
-	phrase = ft_strtrim(ft_substr(input, j, i - j), " \t");
+	temp = NULL;
+	temp = ft_substr(input, j, i - j);
+	phrase = ft_strtrim(temp, " \t");
+	free(temp);
 	if (phrase && *phrase)
 		add_process(phrases, new_process(phrase));
 	else
@@ -33,8 +37,8 @@ void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 
 int	get_operator(t_process **phrases, char *input, int i)
 {
-	if ((input[i] == '<' && input[i + 1] == '<')
-		|| (input[i] == '>' && input[i + 1] == '>'))
+	if ((input[i] == '<' && input[i + 1] == '<') || (input[i] == '>' && input[i
+			+ 1] == '>'))
 	{
 		add_process(phrases, new_process(ft_substr(input, i, 2)));
 		i += 2;
@@ -57,8 +61,7 @@ t_process	*separate_process(char *input)
 	if (!input)
 		return (NULL);
 	phrases = NULL;
-	i = 0;
-	i = skip_whitespace(input, i);
+	i = skip_whitespace(input, 0);
 	j = i;
 	while (input[i])
 	{
@@ -67,8 +70,7 @@ t_process	*separate_process(char *input)
 			if (i > j)
 				get_cmd_seq(&phrases, input, i, j);
 			i = get_operator(&phrases, input, i);
-			i = skip_whitespace(input, i);
-			j = i;
+			j = skip_whitespace(input, i);
 		}
 		else
 			i++;
@@ -80,8 +82,9 @@ t_process	*separate_process(char *input)
 
 void	print_process_list(t_process *process_list)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	printf("\n=== DEBUG: Process List ===\n");
 	while (process_list != NULL)
 	{

@@ -27,8 +27,8 @@ static char	*cut_double_quotes(t_minishell *minishell, int i)
 			i++;
 	}
 	if (j < i)
-		clean_input = ft_strjoin(clean_input, ft_substr(minishell->input, j, i
-					- j));
+		clean_input = ft_strjoin_free(clean_input, ft_substr(minishell->input,
+					j, i - j));
 	return (clean_input);
 }
 
@@ -41,9 +41,7 @@ static char	*cut_single_quotes(t_minishell *minishell, int i)
 	j = i;
 	while (minishell->input[i] != SINGLE_QUOTE && minishell->input[i++])
 		;
-	clean_input = safe_malloc((i + 1) * sizeof(char));
-	clean_input = ft_substr(minishell->input, j, i - j);
-	return (clean_input);
+	return (ft_substr(minishell->input, j, i - j));
 }
 
 static int	verify_quote_pair(char *input, char quote, int *i)
@@ -64,6 +62,8 @@ static int	verify_quote_count(t_minishell *minishell)
 	int	double_flag;
 	int	i;
 
+	if (!minishell || !minishell->input)
+		return (1);
 	single_flag = 0;
 	double_flag = 0;
 	i = -1;
@@ -80,22 +80,25 @@ static int	verify_quote_count(t_minishell *minishell)
 char	*cut_quotes(t_minishell *minishell, int *i, int *j, char quote)
 {
 	char	*clean_input;
+	char	*temp;
 
 	clean_input = NULL;
 	if (*j < *i)
-		clean_input = ft_strjoin(clean_input, ft_substr(minishell->input, *j, *i
-					- *j));
+	{
+		temp = ft_substr(minishell->input, *j, *i - *j);
+		clean_input = ft_strjoin_free(clean_input, temp);
+	}
 	if (quote == SINGLE_QUOTE)
 	{
-		clean_input = ft_strjoin(clean_input, cut_single_quotes(minishell,
-					++(*i)));
+		temp = cut_single_quotes(minishell, ++(*i));
+		clean_input = ft_strjoin_free(clean_input, temp);
 		while (minishell->input[*i] && minishell->input[*i] != SINGLE_QUOTE)
 			(*i)++;
 	}
 	else
 	{
-		clean_input = ft_strjoin(clean_input, cut_double_quotes(minishell,
-					++(*i)));
+		temp = cut_double_quotes(minishell, ++(*i));
+		clean_input = ft_strjoin_free(clean_input, temp);
 		while (minishell->input[*i] && minishell->input[*i] != DOUBLE_QUOTE)
 			(*i)++;
 	}
@@ -108,21 +111,26 @@ char	*handle_quotes(t_minishell *minishell)
 	int		i;
 	int		j;
 	char	*clean_input;
+	char	*temp;
 
-	i = -1;
-	j = 0;
 	clean_input = NULL;
 	if (verify_quote_count(minishell))
 		return (NULL);
+	j = 0;
+	i = -1;
 	while (minishell->input[++i])
 	{
-		if (minishell->input[i] == SINGLE_QUOTE)
-			clean_input = cut_quotes(minishell, &i, &j, SINGLE_QUOTE);
-		else if (minishell->input[i] == DOUBLE_QUOTE)
-			clean_input = cut_quotes(minishell, &i, &j, DOUBLE_QUOTE);
+		if (minishell->input[i] == SINGLE_QUOTE
+			|| minishell->input[i] == DOUBLE_QUOTE)
+		{
+			temp = cut_quotes(minishell, &i, &j, minishell->input[i]);
+			clean_input = ft_strjoin_free(clean_input, temp);
+		}
 	}
 	if (j < i)
-		clean_input = ft_strjoin(clean_input, ft_substr(minishell->input, j, i
-					- j));
+	{
+		temp = ft_substr(minishell->input, j, i - j);
+		clean_input = ft_strjoin_free(clean_input, temp);
+	}
 	return (clean_input);
 }

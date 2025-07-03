@@ -14,19 +14,30 @@
 
 void	parser(t_minishell *minishell)
 {
-	t_process	*lex_ready;
+	char		*processed_input;
+	t_process	*lexer_ready;
 
-	lex_ready = NULL;
-	if (ft_strchr(minishell->input, DOUBLE_QUOTE))
-		lex_ready = separate_process(handle_quotes(minishell));
-	else if (ft_strchr(minishell->input, SINGLE_QUOTE))
-		lex_ready = separate_process(handle_quotes(minishell));
-	else if (ft_strchr(minishell->input, '$'))
-		lex_ready = separate_process(expansion(minishell));
-	else
-		lex_ready = separate_process(minishell->input);
-	if (!lex_ready)
+	if (!minishell || !minishell->input)
 		return ;
-	print_process_list(lex_ready);
-	free_process_list(lex_ready);
+	lexer_ready = NULL;
+	if (ft_strchr(minishell->input, DOUBLE_QUOTE) || ft_strchr(minishell->input,
+			SINGLE_QUOTE))
+		processed_input = handle_quotes(minishell);
+	else if (ft_strchr(minishell->input, '$'))
+		processed_input = expansion(minishell);
+	else
+		processed_input = minishell->input;
+	if (processed_input)
+	{
+		lexer_ready = separate_process(processed_input);
+		if (processed_input != minishell->input)
+			free(processed_input);
+	}
+	if (lexer_ready)
+	{
+		if (minishell->process_list)
+			free_process_list(minishell->process_list);
+		minishell->process_list = lexer_ready;
+		print_process_list(lexer_ready);
+	}
 }

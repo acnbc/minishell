@@ -47,9 +47,10 @@ typedef struct s_process
 
 typedef struct s_minishell
 {
+	char				*input;
 	t_env				*env_list;
 	char				**envp_copy;
-	char				*input;
+	t_process			*process_list;
 }						t_minishell;
 
 /* ----------------------------- PARSER ---------------------------*/
@@ -78,7 +79,6 @@ char					**copy_envp(t_env *env_list);
 void					free_process_list(t_process *process_list);
 void					free_env_list(t_env *env_list);
 void					free_env(char **envp_copy, int i);
-
 
 void					print_process_list(t_process *process_list);
 void					print_env_list(t_env *env_list);

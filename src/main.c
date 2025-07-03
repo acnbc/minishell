@@ -31,6 +31,7 @@ int	main(int argc, char *argv[], char *envp[])
 			free(minishell->input);
 			free_env_list(minishell->env_list);
 			free_env(minishell->envp_copy, 0);
+			free_process_list(minishell->process_list);
 			free(minishell);
 			printf("exit\n");
 			exit(0);

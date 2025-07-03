@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/03 12:37:23 by anogueir          #+#    #+#             */
+/*   Updated: 2025/07/03 12:37:25 by anogueir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 char	**copy_envp(t_env *env_list)
@@ -29,29 +41,29 @@ char	**copy_envp(t_env *env_list)
 
 t_env	*env_lstnew(char *env_var)
 {
-    t_env	*new_node;
+	t_env	*new_node;
 
-    new_node = (t_env *)safe_malloc(sizeof(t_env));
-    new_node->env_var = env_var;
-    new_node->next = NULL;
-    return (new_node);
+	new_node = (t_env *)safe_malloc(sizeof(t_env));
+	new_node->env_var = env_var;
+	new_node->next = NULL;
+	return (new_node);
 }
 
 void	env_lstadd_back(t_env **lst, t_env *new)
 {
-    t_env	*curr;
+	t_env	*curr;
 
-    if (!lst || !new)
-        return ;
-    if (!*lst)
-    {
-        *lst = new;
-        return ;
-    }
-    curr = *lst;
-    while (curr->next)
-        curr = curr->next;
-    curr->next = new;
+	if (!lst || !new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	curr = *lst;
+	while (curr->next)
+		curr = curr->next;
+	curr->next = new;
 }
 
 t_env	*env_list(char *envp[])
@@ -93,42 +105,43 @@ void	print_envp(char **envp_copy)
 
 void	print_env_list(t_env *env_list)
 {
-    t_env *current = env_list;
-    int i = 0;
+	t_env	*current;
+	int		i;
 
-    while (current)
-    {
-        printf("env_list[%d]: %s\n", i, current->env_var);
-        current = current->next;
-        i++;
-    }
+	current = env_list;
+	i = 0;
+	while (current)
+	{
+		printf("env_list[%d]: %s\n", i, current->env_var);
+		current = current->next;
+		i++;
+	}
 }
-
 
 /* versão para lista ligada
 char	*extract_variable(t_minishell *minishell, char *variable)
 {
-    t_env	*current;
-    char	*equal_sign;
-    int		var_len;
+	t_env	*current;
+	char	*equal_sign;
+	int		var_len;
 
-    current = minishell->env_list;
-    var_len = ft_strlen(variable);
-    while (current)
-    {
-        if (ft_strncmp(current->env_var, variable, var_len) == 0
-            && current->env_var[var_len] == '=')
-        {
-            equal_sign = ft_strchr(current->env_var, '=');
-            if (equal_sign)
-            {
-                free(variable);
-                return (ft_strdup(equal_sign + 1));
-            }
-        }
-        current = current->next;
-    }
-    free(variable);
-    return (NULL);
+	current = minishell->env_list;
+	var_len = ft_strlen(variable);
+	while (current)
+	{
+		if (ft_strncmp(current->env_var, variable, var_len) == 0
+			&& current->env_var[var_len] == '=')
+		{
+			equal_sign = ft_strchr(current->env_var, '=');
+			if (equal_sign)
+			{
+				free(variable);
+				return (ft_strdup(equal_sign + 1));
+			}
+		}
+		current = current->next;
+	}
+	free(variable);
+	return (NULL);
 }
 */

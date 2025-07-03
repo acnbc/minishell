@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/17 09:39:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/17 09:39:22 by anogueir         ###   ########.fr       */
+/*   Created: 2025/07/03 12:45:41 by anogueir          #+#    #+#             */
+/*   Updated: 2025/07/03 12:45:42 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	char	*joined;
 
 	joined = ft_strjoin(s1, s2);
-	free(s1);
+	if (s1)
+		free(s1);
+	if (s2)
+		free(s2);
 	return (joined);
 }
 
