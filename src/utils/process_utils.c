@@ -16,9 +16,7 @@ t_process	*new_process(char *cmd_seq)
 {
 	t_process	*process;
 
-	process = malloc(sizeof(t_process));
-	if (!process)
-		return (NULL);
+	process = safe_malloc(sizeof(t_process));
 	ft_bzero(process, sizeof(t_process));
 	process->cmd_seq = cmd_seq;
 	process->next = NULL;

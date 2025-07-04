@@ -39,9 +39,18 @@ typedef struct s_env
 	struct s_env		*next;
 }						t_env;
 
+typedef struct s_token
+{
+	char				*value;
+	enum e_token_type	type;
+	struct s_token		*next;
+}					t_token;
+
 typedef struct s_process
 {
 	char				*cmd_seq;
+	t_token				*tokens;
+	char				**command;
 	struct s_process	*next;
 }						t_process;
 
@@ -52,6 +61,16 @@ typedef struct s_minishell
 	char				**envp_copy;
 	t_process			*process_list;
 }						t_minishell;
+
+enum e_token_type
+{
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIRECT_IN,
+	TOKEN_REDIRECT_OUT,
+	TOKEN_HEREDOC,
+	TOKEN_APPEND
+};
 
 /* ----------------------------- PARSER ---------------------------*/
 t_process				*new_process(char *content);
@@ -73,7 +92,12 @@ void					env_lstadd_back(t_env **lst, t_env *new);
 t_env					*env_lstnew(char *env_var);
 t_env					*env_list(char *envp[]);
 char					**copy_envp(t_env *env_list);
+/* ----------------------------- LEXER ---------------------------*/
+t_token					*lexer(t_process *process_list);
+void					word_tokenizer(t_token **tokens, char *cmd_seq, int *i);
 /* ----------------------------- UTILS ---------------------------*/
+t_token    *new_token(char *value, enum e_token_type type);
+void    	token_lstadd_back(t_token **tokens, t_token *new);
 
 /* ----------------------------- FREE MEMORY ---------------------------*/
 void					free_process_list(t_process *process_list);
