@@ -12,6 +12,20 @@
 
 #include "../includes/minishell.h"
 
+char	*ft_substr_safe(char *s, unsigned int start, size_t len, t_minishell *minishell)
+{
+    char	*substr;
+
+    substr = ft_substr(s, start, len);
+	if (!substr)
+	{
+		// safe_exit;
+		free (minishell->current_process);
+		return (NULL);
+	}
+    return (substr);
+}
+
 void	free_process_list(t_process *process_list)
 {
 	t_process	*tmp;

@@ -35,7 +35,7 @@ void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 		free(phrase);
 }
 
-int	get_operator(t_process **phrases, char *input, int i)
+static int	get_operator(t_process **phrases, char *input, int i)
 {
 	if ((input[i] == '<' && input[i + 1] == '<') || (input[i] == '>' && input[i
 			+ 1] == '>'))
@@ -55,6 +55,7 @@ t_process	*separate_process(char *input)
 {
 	int			i;
 	int			j;
+	int		double_quote_flag;
 	static char	separators[] = "<>|";
 	t_process	*phrases;
 
@@ -63,9 +64,18 @@ t_process	*separate_process(char *input)
 	phrases = NULL;
 	i = skip_whitespace(input, 0);
 	j = i;
+	double_quote_flag = 0;
 	while (input[i])
 	{
-		if (ft_strchr(separators, input[i]))
+		if (input[i] == DOUBLE_QUOTE)
+		{
+			if (double_quote_flag == 0)
+				double_quote_flag = 1;
+			else
+				double_quote_flag = 0;
+			//i++;
+		}
+		if (ft_strchr(separators, input[i]) && double_quote_flag == 0)
 		{
 			if (i > j)
 				get_cmd_seq(&phrases, input, i, j);
