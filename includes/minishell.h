@@ -62,6 +62,11 @@ typedef struct s_process
 	t_token				*tokens;
 	char				**command;
 	struct s_process	*next;
+	char				*input_file;
+	char				*output_file;
+	int					heredoc_flag;
+	int					append_flag;
+	char				**args;
 }						t_process;
 
 typedef struct s_minishell
@@ -69,6 +74,7 @@ typedef struct s_minishell
 	char				*input;
 	t_env				*env_list;
 	char				**envp_copy;
+	int					process_count;
 	t_process			*process_list;
 	char				*current_process;
 }						t_minishell;
