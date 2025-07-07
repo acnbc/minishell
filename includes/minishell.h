@@ -102,8 +102,7 @@ char					**copy_envp(t_env *env_list);
 void					*safe_malloc(size_t bytes);
 char					*ft_substr_safe(char *s, unsigned int start, size_t len, t_minishell *minishell);
 /* ----------------------------- LEXER ---------------------------*/
-t_token					*lexer(t_process *process_list);
-void					word_tokenizer(t_token **tokens, char *cmd_seq, int *i);
+t_process				*lexer(t_process *process_list);
 /* ----------------------------- UTILS ---------------------------*/
 t_token    				*new_token(char *value, enum e_token_type type);
 void    				token_lstadd_back(t_token **tokens, t_token *new);

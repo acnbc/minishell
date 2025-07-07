@@ -89,17 +89,3 @@ t_process	*separate_process(char *input)
 		get_cmd_seq(&phrases, input, i, j);
 	return (phrases);
 }
-
-void	print_process_list(t_process *process_list)
-{
-	int	i;
-
-	i = 0;
-	printf("\n=== DEBUG: Process List ===\n");
-	while (process_list != NULL)
-	{
-		printf("Node[%d]: '%s'\n", i++, process_list->cmd_seq);
-		process_list = process_list->next;
-	}
-	printf("=== Total: %d nodes ===\n\n", i);
-}

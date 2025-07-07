@@ -46,16 +46,16 @@
 
 void	parser(t_minishell *minishell)
 {
-    t_process	*current;
-    char		*tmp;
+    //t_process	*current;
+    //char		*tmp;
 
     minishell->process_list = separate_process(minishell->input);
 	if (!minishell->process_list)
 		return ;
-    current = minishell->process_list;
-	// lexer(minishell->process_list);
+    //current = minishell->process_list;
+	minishell->process_list = lexer(minishell->process_list);
 	// parsing(minishell->process_list);
-    while (current)
+    /*while (current)
     {
         if (ft_strchr(current->cmd_seq, DOUBLE_QUOTE) || ft_strchr(current->cmd_seq, SINGLE_QUOTE))
         {
@@ -72,7 +72,7 @@ void	parser(t_minishell *minishell)
 		// free (current->cmd_seq);
 		// current->args = ft_split(tmp, ' ');
         current = current->next;
-    }
+    }*/
     print_process_list(minishell->process_list);
 }
 
