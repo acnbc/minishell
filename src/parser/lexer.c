@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
+// tratar outfile
 static void redout_append_tokenizer(t_token **tokens, char *cmd_seq, int *i)
 {
     t_token *new_node;
@@ -7,22 +8,20 @@ static void redout_append_tokenizer(t_token **tokens, char *cmd_seq, int *i)
     if (cmd_seq[*i + 1] == '>')
     {
         new_node = new_token(ft_substr(cmd_seq, *i, 2), TOKEN_APPEND);
-        if (!new_node)
+        //if (!new_node)
         //    safe_exit
         token_lstadd_back(tokens, new_node);
-        *i += 2;
-        printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
+        ++(*i);
         return ;
     }
     new_node = new_token(ft_substr(cmd_seq, *i, 1), TOKEN_REDIRECT_OUT);
-    if (!new_node)
+    //if (!new_node)
     //    safe_exit
     token_lstadd_back(tokens, new_node);
-    printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
-    ++(*i);
     return ;
 }
 
+// Tratar infile e heredoc delimiter
 static void redin_heredoc_tokenizer(t_token **tokens, char *cmd_seq, int *i)
 {
     t_token *new_node;
@@ -30,19 +29,16 @@ static void redin_heredoc_tokenizer(t_token **tokens, char *cmd_seq, int *i)
     if (cmd_seq[*i + 1] == '<')
     {
         new_node = new_token(ft_substr(cmd_seq, *i, 2), TOKEN_HEREDOC);
-        if (!new_node)
+        //if (!new_node)
         //    safe_exit
         token_lstadd_back(tokens, new_node);
-        printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
-        *i += 2;
+        ++(*i);
         return ;
     }
     new_node = new_token(ft_substr(cmd_seq, *i, 1), TOKEN_REDIRECT_IN);
-    if (!new_node)
+    //if (!new_node)
     //    safe_exit
     token_lstadd_back(tokens, new_node);
-    printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
-    ++(*i);
     return ;
 }
 
@@ -51,11 +47,9 @@ static void pipe_tokenizer(t_token **tokens, char *cmd_seq, int *i)
     t_token *new_node;
 
     new_node = new_token(ft_substr(cmd_seq, *i, 1), TOKEN_PIPE);
-    if (!new_node)
+    //if (!new_node)
     //    safe_exit
     token_lstadd_back(tokens, new_node);
-    printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
-    ++(*i);
     return ;
 }
 
@@ -71,11 +65,10 @@ static void word_tokenizer(t_token **tokens, char *cmd_seq, int *i)
     if (*i > start)
     {
         new_node = new_token(ft_substr(cmd_seq, start, *i - start), TOKEN_WORD);
-        if (!new_node)
+        //if (!new_node)
         //    safe_exit
         token_lstadd_back(tokens, new_node);
     }
-    printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
     return ;
 }
 

@@ -65,6 +65,7 @@ typedef struct s_process
 	char				*input_file;
 	char				*output_file;
 	int					heredoc_flag;
+	char				*heredoc_delimiter;
 	int					append_flag;
 	char				**args;
 }						t_process;
