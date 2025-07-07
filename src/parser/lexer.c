@@ -1,74 +1,71 @@
 #include "../includes/minishell.h"
 
-static t_token    *redout_append_tokenizer(char *cmd_seq, int *i)
+static void redout_append_tokenizer(t_token **tokens, char *cmd_seq, int *i)
 {
-    t_token *tokens;
     t_token *new_node;
 
-    tokens = NULL;
     if (cmd_seq[*i + 1] == '>')
     {
         new_node = new_token(ft_substr(cmd_seq, *i, 2), TOKEN_APPEND);
         if (!new_node)
         //    safe_exit
-        token_lstadd_back(&tokens, new_node);
+        token_lstadd_back(tokens, new_node);
         *i += 2;
-        return (tokens);
+        printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
+        return ;
     }
     new_node = new_token(ft_substr(cmd_seq, *i, 1), TOKEN_REDIRECT_OUT);
     if (!new_node)
     //    safe_exit
-    token_lstadd_back(&tokens, new_node);
+    token_lstadd_back(tokens, new_node);
+    printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
     ++(*i);
-    return (tokens);
+    return ;
 }
 
-static t_token    *redin_heredoc_tokenizer(char *cmd_seq, int *i)
+static void redin_heredoc_tokenizer(t_token **tokens, char *cmd_seq, int *i)
 {
-    t_token *tokens;
     t_token *new_node;
 
-    tokens = NULL;
     if (cmd_seq[*i + 1] == '<')
     {
         new_node = new_token(ft_substr(cmd_seq, *i, 2), TOKEN_HEREDOC);
         if (!new_node)
         //    safe_exit
-        token_lstadd_back(&tokens, new_node);
+        token_lstadd_back(tokens, new_node);
+        printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
         *i += 2;
-        return (tokens);
+        return ;
     }
     new_node = new_token(ft_substr(cmd_seq, *i, 1), TOKEN_REDIRECT_IN);
     if (!new_node)
     //    safe_exit
-    token_lstadd_back(&tokens, new_node);
+    token_lstadd_back(tokens, new_node);
+    printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
     ++(*i);
-    return (tokens);
+    return ;
 }
 
-static t_token    *pipe_tokenizer(char *cmd_seq, int *i)
+static void pipe_tokenizer(t_token **tokens, char *cmd_seq, int *i)
 {
-    t_token *tokens;
     t_token *new_node;
 
-    tokens = NULL;
     new_node = new_token(ft_substr(cmd_seq, *i, 1), TOKEN_PIPE);
     if (!new_node)
     //    safe_exit
-    token_lstadd_back(&tokens, new_node);
+    token_lstadd_back(tokens, new_node);
+    printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
     ++(*i);
-    return (tokens);
+    return ;
 }
 
-static t_token    *word_tokenizer(char *cmd_seq, int *i)
+static void word_tokenizer(t_token **tokens, char *cmd_seq, int *i)
 {
-    t_token *tokens;
     t_token *new_node;
     int     start;
 
     start = *i;
     new_node = NULL;
-    tokens = NULL;
     while (cmd_seq[*i] && !ft_isspace(cmd_seq[*i]))
         ++(*i);
     if (*i > start)
@@ -76,9 +73,10 @@ static t_token    *word_tokenizer(char *cmd_seq, int *i)
         new_node = new_token(ft_substr(cmd_seq, start, *i - start), TOKEN_WORD);
         if (!new_node)
         //    safe_exit
-        token_lstadd_back(&tokens, new_node);
+        token_lstadd_back(tokens, new_node);
     }
-    return (tokens);
+    printf("new_node: %s\ntype: %d\n", new_node->value, new_node->type);
+    return ;
 }
 
 t_process   *lexer(t_process *process_list)
@@ -92,14 +90,14 @@ t_process   *lexer(t_process *process_list)
         i = -1;
         while (current_process->cmd_seq[++i])
         {
-            if (current_process->cmd_seq[i] == '|' && i == 0)
-                current_process->tokens = pipe_tokenizer(current_process->cmd_seq, &i);
-            else if (current_process->cmd_seq[i] == '<' && i == 0)
-                current_process->tokens = redin_heredoc_tokenizer(current_process->cmd_seq, &i);
-            else if (current_process->cmd_seq[i] == '>' && i == 0)
-                current_process->tokens = redout_append_tokenizer(current_process->cmd_seq, &i);
+            if (current_process->cmd_seq[i] == '|')
+                pipe_tokenizer(&current_process->tokens, current_process->cmd_seq, &i);
+            else if (current_process->cmd_seq[i] == '<')
+                redin_heredoc_tokenizer(&current_process->tokens, current_process->cmd_seq, &i);
+            else if (current_process->cmd_seq[i] == '>')
+                redout_append_tokenizer(&current_process->tokens, current_process->cmd_seq, &i);
             else
-                current_process->tokens = word_tokenizer(current_process->cmd_seq, &i);
+                word_tokenizer(&current_process->tokens, current_process->cmd_seq, &i);
         }
         current_process = current_process->next;
     }
