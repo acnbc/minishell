@@ -12,6 +12,33 @@
 
 #include "../includes/minishell.h"
 
+char	*get_str(char *str, int *i)
+{
+	int	start;
+	char	*result;
+
+	start = *i;
+    while (str[*i] && !ft_isspace(str[*i]))
+        (*i)++;
+    result = ft_substr(str, start, *i - start);
+	if (!result)
+	{
+		// SAFE EXIT
+		exit(1);
+	}
+	return (result);
+}
+
+int	skip_spaces(char *str, int *i)
+{
+	while (str[*i] && ft_isspace(str[*i]))
+	{
+		printf("em skip spaces, i = %d\n", *i);
+		(*i)++;
+	}
+	return (*i);
+}
+
 int	ft_isspace(char c)
 {
 	return (c == ' ' || (c >= '\t' && c <= '\r'));

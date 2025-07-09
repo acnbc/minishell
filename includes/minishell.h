@@ -64,9 +64,11 @@ typedef struct s_process
 	struct s_process	*next;
 	char				*input_file;
 	char				*output_file;
-	int					heredoc_flag;
 	char				*heredoc_delimiter;
 	int					append_flag;
+	int					redirect_in_flag;
+	int					redirect_out_flag;
+	int					heredoc_flag;
 	char				**args;
 }						t_process;
 
@@ -83,6 +85,7 @@ typedef struct s_minishell
 /* ----------------------------- PARSER ---------------------------*/
 t_process				*new_process(char *content);
 void					add_process(t_process **lst, t_process *new);
+t_process				*last_process(t_process *proc);
 int						ft_isspace(char c);
 void					parser(t_minishell *minishell);
 char					*extract_variable(t_minishell *minishell,
@@ -103,10 +106,12 @@ char					**copy_envp(t_env *env_list);
 void					*safe_malloc(size_t bytes);
 char					*ft_substr_safe(char *s, unsigned int start, size_t len, t_minishell *minishell);
 /* ----------------------------- LEXER ---------------------------*/
-t_process				*lexer(t_process *process_list);
+void					lexer(t_process *process_list);
 /* ----------------------------- UTILS ---------------------------*/
 t_token    				*new_token(char *value, enum e_token_type type);
 void    				token_lstadd_back(t_token **tokens, t_token *new);
+int						skip_spaces(char *str, int *i);
+char					*get_str(char *str, int *i);
 
 /* ----------------------------- FREE MEMORY ---------------------------*/
 void					free_process_list(t_process *process_list);

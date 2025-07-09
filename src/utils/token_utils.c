@@ -1,14 +1,11 @@
 #include "../includes/minishell.h"
-// token_new.c para criar um novo nó de token
-// token_tokensadd_back.c para adicionar um nó de token ao final da lista
-// free_token_list.c para liberar a lista de tokens
-// tokenizer.c para criar uma lista de tokens a partir de uma string vinda do nó 
-// de processo da lista de processos
 
 t_token    *new_token(char *value, enum e_token_type type)
 {
     t_token	*new;
 
+    if (*value == '\0')
+        return (NULL);
     new = safe_malloc(sizeof(t_token));
     new->value = value;
     new->type = type;

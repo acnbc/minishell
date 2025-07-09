@@ -12,13 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-int	skip_whitespace(char *input, int i)
-{
-	while (input[i] && ft_isspace(input[i]))
-		i++;
-	return (i);
-}
-
 void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 {
 	char	*phrase;
@@ -35,52 +28,27 @@ void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 		free(phrase);
 }
 
-static int	get_operator(t_process **phrases, char *input, int i)
-{
-	if ((input[i] == '<' && input[i + 1] == '<') || (input[i] == '>' && input[i
-			+ 1] == '>'))
-	{
-		add_process(phrases, new_process(ft_substr(input, i, 2)));
-		i += 2;
-	}
-	else
-	{
-		add_process(phrases, new_process(ft_substr(input, i, 1)));
-		i += 1;
-	}
-	return (i);
-}
-
 t_process	*separate_process(char *input)
 {
 	int			i;
 	int			j;
-	int		double_quote_flag;
-	static char	separators[] = "<>|";
+	int			double_quote_flag;
 	t_process	*phrases;
 
-	if (!input)
-		return (NULL);
 	phrases = NULL;
-	i = skip_whitespace(input, 0);
+	i = 0;
+	skip_spaces(input, &i);
 	j = i;
 	double_quote_flag = 0;
 	while (input[i])
 	{
 		if (input[i] == DOUBLE_QUOTE)
-		{
-			if (double_quote_flag == 0)
-				double_quote_flag = 1;
-			else
-				double_quote_flag = 0;
-			//i++;
-		}
-		if (ft_strchr(separators, input[i]) && double_quote_flag == 0)
+			double_quote_flag = !double_quote_flag;
+		if (input[i] == '|' && !double_quote_flag)
 		{
 			if (i > j)
 				get_cmd_seq(&phrases, input, i, j);
-			i = get_operator(&phrases, input, i);
-			j = skip_whitespace(input, i);
+			j = ++i;
 		}
 		else
 			i++;
