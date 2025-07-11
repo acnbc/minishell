@@ -33,14 +33,13 @@
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
 
+int	g_exit_status;
+
 enum e_token_type
 {
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_REDIRECT_IN,
-	TOKEN_REDIRECT_OUT,
-	TOKEN_HEREDOC,
-	TOKEN_APPEND
+	TOKEN_BUILTIN,
+	TOKEN_CMD,
+	TOKEN_ARGS,
 };
 
 typedef struct s_env
@@ -69,6 +68,8 @@ typedef struct s_process
 	int					redirect_in_flag;
 	int					redirect_out_flag;
 	int					heredoc_flag;
+	int					double_quote_flag;
+	int					single_quote_flag;
 	char				**args;
 }						t_process;
 
@@ -91,6 +92,7 @@ void					parser(t_minishell *minishell);
 char					*extract_variable(t_minishell *minishell,
 							char *variable);
 char					*handle_quotes(t_minishell *minishell, char *process);
+int	is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
 char					*ft_strjoin_free(char *s1, char *s2);
 void					free_env(char **envp_copy, int i);

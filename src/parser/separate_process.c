@@ -28,27 +28,49 @@ void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 		free(phrase);
 }
 
-t_process	*separate_process(char *input)
+/*t_process	*separate_process(char *input)
 {
-	int			i;
-	int			j;
-	int			double_quote_flag;
-	t_process	*phrases;
+	t_process_separation	*vars;
 
-	phrases = NULL;
-	i = 0;
-	skip_spaces(input, &i);
-	j = i;
-	double_quote_flag = 0;
+	vars = (t_process_separation *) safe_malloc(sizeof(t_process_separation));
 	while (input[i])
 	{
-		if (input[i] == DOUBLE_QUOTE)
+		if (input[i] == DOUBLE_QUOTE && !single_quote_flag)
 			double_quote_flag = !double_quote_flag;
-		if (input[i] == '|' && !double_quote_flag)
+		else if (input[i] == SINGLE_QUOTE && !double_quote_flag)
+			single_quote_flag = !single_quote_flag;
+		if (input[i] == '|' && (!double_quote_flag || !single_quote_flag))
 		{
 			if (i > j)
 				get_cmd_seq(&phrases, input, i, j);
 			j = ++i;
+		}
+		else
+			i++;
+	}
+	if (i > j)
+		get_cmd_seq(&phrases, input, i, j);
+	return (phrases);
+}*/
+
+t_process	*separate_process(char *input)
+{
+	int i;
+	int j;
+	t_process *phrases;
+	
+	i = 0;
+	j = 0;
+	phrases = NULL;
+	while (input[i])
+	{
+		if (input[i] == '|' && !is_between_quotes(input, i))
+		{
+			if (i > j)
+				get_cmd_seq(&phrases, input, i, j);
+			i++;
+			skip_spaces(input, &i);
+			j = i;
 		}
 		else
 			i++;

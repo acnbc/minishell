@@ -12,6 +12,26 @@
 
 #include "../includes/minishell.h"
 
+int	is_between_quotes(const char *str, int pos)
+{
+	int	i;
+	int	single_quote;
+	int	double_quote;
+
+	single_quote = 0;
+	double_quote = 0;
+	i = 0;
+	while (i < pos && str[i])
+	{
+		if (str[i] == DOUBLE_QUOTE && !single_quote)
+			double_quote = !double_quote;
+		else if (str[i] == SINGLE_QUOTE && !double_quote)
+			single_quote = !single_quote;
+		i++;
+	}
+	return (double_quote || single_quote);
+}
+
 char	*get_str(char *str, int *i)
 {
 	int	start;
@@ -60,13 +80,12 @@ void	*safe_malloc(size_t bytes)
 {
 	void	*malloced_space;
 
-	malloced_space = malloc(bytes);
+	malloced_space = ft_calloc(1, bytes);
 	if (!malloced_space)
 	{
 		// SAFE EXIT
 		exit(1);
 	}
-	ft_bzero(malloced_space, bytes);
 	if (bytes == 0)
 	{
 		free(malloced_space);

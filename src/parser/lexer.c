@@ -39,29 +39,42 @@ static void redin_heredoc_tokenizer(t_process *process, int *i)
     return ;
 }
 
-static void pipe_tokenizer(t_token **tokens, t_process *process, int *i)
+int is_builtin(const char *cmd)
 {
-    t_token *new_node;
-
-    new_node = new_token(ft_substr(process->cmd_seq, *i, 1), TOKEN_PIPE);
-    //if (!new_node)
-    //    safe_exit
-    token_lstadd_back(tokens, new_node);
-    return ;
+    static const char   *builtins[] = {"echo", "cd", "pwd", "export", "unset", "env", "exit", NULL};
+    int                 i;
+    
+    i = -1;
+    while (builtins[++i])
+    {
+        if (ft_strncmp(cmd, builtins[i], ft_strlen(builtins[i])) == 0)
+            return 1;
+    }
+    return 0;
 }
 
+// não tokenizar quando estiver entre aspas
 static void word_tokenizer(t_token **tokens, t_process *process, int *i)
 {
     t_token *new_node;
     int     start;
 
+    
     start = *i;
     new_node = NULL;
+    // Primeiro verificar se há áspas (ft_strchr(DOUBLE_QUOTE) || ft_strchr(SINGLE_QUOTE))
+    //      se houver, remover as aspas (e expandir variáveis, se necessário) e copiar tudo para um token só
+    //      se não houver, seguir o fluxo
+    // Segundo verificar se há built-in (is_builtin)
+    //      se houver, verificar se é a primeira palavra da string e criar um token com o nome do built-in
+    //      se não for a primeira palavra, seguir o fluxo normal
+    //      se não houver, seguir o fluxo
+    // Terceiro criar token cmd com primeira palavra da string e criar tokens args com as demais palavras
     while (process->cmd_seq[*i] && !ft_isspace(process->cmd_seq[*i]))
         ++(*i);
     if (*i > start)
     {
-        new_node = new_token(ft_substr(process->cmd_seq, start, *i - start), TOKEN_WORD);
+        new_node = new_token(ft_substr(process->cmd_seq, start, *i - start), TOKEN_ARGS);
         //if (!new_node)
         //    safe_exit
         token_lstadd_back(tokens, new_node);
@@ -72,24 +85,24 @@ static void word_tokenizer(t_token **tokens, t_process *process, int *i)
 void   lexer(t_process *process_list)
 {
     t_process   *current_process;
+    char        *cmd_seq;
     int         i;
 
     current_process = process_list;
     while (current_process)
     {
         i = -1;
-        while (current_process->cmd_seq[++i])
+        cmd_seq = current_process->cmd_seq;
+        while (cmd_seq[++i])
         {
-            if (current_process->cmd_seq[i] == '|')
-                pipe_tokenizer(&current_process->tokens, current_process, &i);
-            else if (current_process->cmd_seq[i] == '<')
+            if (cmd_seq[i] == '<' && !is_between_quotes(cmd_seq, i))
                 redin_heredoc_tokenizer(current_process, &i);
-            else if (current_process->cmd_seq[i] == '>')
+            else if (cmd_seq[i] == '>' && !is_between_quotes(cmd_seq, i))
                 redout_append_tokenizer(current_process, &i);
-            else if (!ft_isspace(current_process->cmd_seq[i]))
+            else if (!ft_isspace(cmd_seq[i]))
                 word_tokenizer(&current_process->tokens, current_process, &i);
             else
-                skip_spaces(current_process->cmd_seq, &i);
+                skip_spaces(cmd_seq, &i);
         }
         current_process = current_process->next;
     }
@@ -139,3 +152,12 @@ void	print_process_list(t_process *process_list)
     }
     printf("=== Fim da lista de processos ===\n\n");
 }
+/* ---------------------------
+        echo
+        cd
+        pwd
+        export
+        unset
+        env
+        exit
+--------------------------- */
