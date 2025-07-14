@@ -51,7 +51,7 @@ char	*get_env_var(t_minishell *minishell, int *i, int *j)
 		return (NULL);
 	clean_input = NULL;
 	// if (minishell->current_process[*i + 1] == '?')
-	// 		return (ft_itoa(g_exit_status));
+	// 		return variável global;
 	if (*j < *i)
 		clean_input = ft_strjoin_free(clean_input, ft_substr(minishell->current_process,
 					*j, *i - *j));

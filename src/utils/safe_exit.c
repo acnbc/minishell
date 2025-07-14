@@ -18,11 +18,7 @@ char	*ft_substr_safe(char *s, unsigned int start, size_t len, t_minishell *minis
 
     substr = ft_substr(s, start, len);
 	if (!substr)
-	{
-		// safe_exit;
-		free (minishell->current_process);
-		return (NULL);
-	}
+		safe_exit(minishell);
     return (substr);
 }
 
@@ -63,4 +59,17 @@ void	free_env(char **envp_copy, int i)
 	while (--i >= 0)
 		free(envp_copy[i]);
 	free(envp_copy);
+}
+
+void	safe_exit(t_minishell *minishell)
+{
+	if (minishell)
+	{
+		free(minishell->input);
+		free_env_list(minishell->env_list);
+		free_env(minishell->envp_copy, 0);
+		free_process_list(minishell->process_list);
+		free(minishell);
+	}
+	exit(EXIT_FAILURE);
 }

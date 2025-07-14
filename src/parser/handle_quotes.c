@@ -156,6 +156,7 @@ static char	*cut_double_quotes(t_minishell *minishell, int i)
 	if (j < i)
 		clean_input = ft_strjoin_free(clean_input, ft_substr_safe(minishell->current_process,
 					j, i - j, minishell));
+	printf("cut_double_quotes: clean_input = '%s'\n", clean_input);
 	return (clean_input);
 }
 
@@ -237,9 +238,8 @@ static int	verify_quote_count(char *process)
 	return (0);
 }
 
-char	*handle_quotes(t_minishell *minishell, char *process)
+char	*handle_quotes(t_minishell *minishell, char *process, int *i)
 {
-	int		i;
 	int		j;
 	char	*clean_input;
 	char	*temp;
@@ -247,18 +247,18 @@ char	*handle_quotes(t_minishell *minishell, char *process)
 	clean_input = NULL;
 	if (!verify_quote_count(process))
 		return (NULL);
-	j = 0;
-	i = -1;
+	j = *i;
 	minishell->current_process = process;
-	while (process[++i])
+	while (process[*i])
 	{
-		if (process[i] == SINGLE_QUOTE || process[i] == DOUBLE_QUOTE)
+		if (process[*i] == SINGLE_QUOTE || process[*i] == DOUBLE_QUOTE)
 		{
-			temp = cut_quotes(minishell, &i, &j, process[i]);
+			temp = cut_quotes(minishell, i, &j, process[*i]);
 			clean_input = ft_strjoin_free(clean_input, temp);
 		}
+		(*i)++;
 	}
-	if (j < i)
-		clean_input = ft_strjoin_free(clean_input, ft_substr_safe(process, j, i - j, minishell));
+	if (j < *i)
+		clean_input = ft_strjoin_free(clean_input, ft_substr_safe(process, j, *i - j, minishell));
 	return (clean_input);
 }

@@ -33,8 +33,6 @@
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
 
-int	g_exit_status;
-
 enum e_token_type
 {
 	TOKEN_BUILTIN,
@@ -91,8 +89,8 @@ int						ft_isspace(char c);
 void					parser(t_minishell *minishell);
 char					*extract_variable(t_minishell *minishell,
 							char *variable);
-char					*handle_quotes(t_minishell *minishell, char *process);
-int	is_between_quotes(const char *str, int pos);
+char					*handle_quotes(t_minishell *minishell, char *process, int *i);
+int						is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
 char					*ft_strjoin_free(char *s1, char *s2);
 void					free_env(char **envp_copy, int i);
@@ -105,15 +103,16 @@ t_env					*env_lstnew(char *env_var);
 t_env					*env_list(char *envp[]);
 char					**copy_envp(t_env *env_list);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
+void					safe_exit(t_minishell *minishell);
 void					*safe_malloc(size_t bytes);
 char					*ft_substr_safe(char *s, unsigned int start, size_t len, t_minishell *minishell);
 /* ----------------------------- LEXER ---------------------------*/
-void					lexer(t_process *process_list);
+void					lexer(t_minishell *minishell);
 /* ----------------------------- UTILS ---------------------------*/
 t_token    				*new_token(char *value, enum e_token_type type);
 void    				token_lstadd_back(t_token **tokens, t_token *new);
 int						skip_spaces(char *str, int *i);
-char					*get_str(char *str, int *i);
+char					*get_str(char *str, int *i, t_minishell *minishell);
 
 /* ----------------------------- FREE MEMORY ---------------------------*/
 void					free_process_list(t_process *process_list);

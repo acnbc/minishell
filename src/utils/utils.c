@@ -32,7 +32,7 @@ int	is_between_quotes(const char *str, int pos)
 	return (double_quote || single_quote);
 }
 
-char	*get_str(char *str, int *i)
+char	*get_str(char *str, int *i, t_minishell *minishell)
 {
 	int	start;
 	char	*result;
@@ -42,10 +42,7 @@ char	*get_str(char *str, int *i)
         (*i)++;
     result = ft_substr(str, start, *i - start);
 	if (!result)
-	{
-		// SAFE EXIT
-		exit(1);
-	}
+		safe_exit(minishell);
 	return (result);
 }
 

@@ -20,7 +20,7 @@ void	parser(t_minishell *minishell)
     minishell->process_list = separate_process(minishell->input);
 	if (!minishell->process_list)
 		return ;
-    lexer(minishell->process_list);
+    lexer(minishell);
 	// parsing(minishell->process_list);
     /*while (current)
     {
