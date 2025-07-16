@@ -6,37 +6,28 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:46:54 by abouchat          #+#    #+#             */
-/*   Updated: 2025/07/09 18:30:31 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/07/11 18:04:03 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_export(char *arg, t_env *env_list)
+void	ft_export(char *arg_name, char *arg_cont, t_env *env_list)
 {
 	t_env	*temp_node;
-	char	**split_str;
 
-	split_str = ft_split(arg, '=');
-	if (split_str == NULL)
+	if (arg_name == NULL)
 		return ;
-	if (!split_str[1])
+	if (find_env_var(arg_name, env_list))
 	{
-		split_free (split_str, 0);
-		return ;
-	}
-	if (find_env_var(split_str[0], env_list))
-	{
-		temp_node = find_env_var(split_str[0], env_list);
-		temp_node->var_cont = split_str[1];
+		temp_node = find_env_var(arg_name, env_list);
+		temp_node->var_cont = arg_cont;
 	}
 	else
 	{
-		temp_node = env_lstnew(ft_strdup(split_str[0]), \
-		ft_strdup(split_str[1]));
+		temp_node = env_lstnew(ft_strdup(arg_name), ft_strdup(arg_cont));
 		env_lstadd_back(&env_list, temp_node);
 	}
-	split_free(split_str, 1);
 }
 
 t_env	*find_env_var(char *var, t_env *env_list)
