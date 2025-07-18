@@ -50,13 +50,11 @@ char	*get_env_var(t_minishell *minishell, int *i, int *j)
 	if (!minishell || !minishell->current_process || !i || !j)
 		return (NULL);
 	clean_input = NULL;
-	// if (minishell->current_process[*i + 1] == '?')
-	// 		return variável global;
 	if (*j < *i)
 		clean_input = ft_strjoin_free(clean_input, ft_substr(minishell->current_process,
 					*j, *i - *j));
 	*j = ++(*i);
-	while (minishell->current_process[*i] && ft_isalnum(minishell->current_process[*i]))
+	while (minishell->current_process[*i] && (ft_isalnum(minishell->current_process[*i]) || minishell->current_process[*i] == '_'))
 		(*i)++;
 	clean_input = ft_strjoin_free(clean_input, extract_variable(minishell,
 				ft_substr(minishell->current_process, *j, *i - *j)));
