@@ -33,7 +33,7 @@
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
 
-enum e_token_type
+enum					e_token_type
 {
 	TOKEN_BUILTIN,
 	TOKEN_CMD,
@@ -66,7 +66,7 @@ typedef struct s_token
 	char				*value;
 	enum e_token_type	type;
 	struct s_token		*next;
-}					t_token;
+}						t_token;
 
 typedef struct s_process
 {
@@ -104,7 +104,8 @@ int						ft_isspace(char c);
 void					parser(t_minishell *minishell);
 char					*extract_variable(t_minishell *minishell,
 							char *variable);
-char					*handle_quotes(t_minishell *minishell, char *process, int *i);
+char					*handle_quotes(t_minishell *minishell, char *process,
+							int *i);
 int						is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
 char					*ft_strjoin_free(char *s1, char *s2);
@@ -115,18 +116,32 @@ char					*get_env_var(t_minishell *minishell, int *i, int *j);
 void					free_env_list(t_env *env_list);
 void					env_lstadd_back(t_env **lst, t_env *new);
 t_env					*env_lstnew(char *var_name, char *var_cont);
-//t_env					*env_lstnew(char *env_var);
+// t_env					*env_lstnew(char *env_var);
 t_env					*env_list(char *envp[]);
 char					**copy_envp(t_env *env_list);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
 void					safe_exit(t_minishell *minishell);
 void					*safe_malloc(size_t bytes);
-char					*ft_substr_safe(char *s, unsigned int start, size_t len, t_minishell *minishell);
+char					*ft_substr_safe(char *s, unsigned int start, size_t len,
+							t_minishell *minishell);
 /* ----------------------------- LEXER ---------------------------*/
 void					lexer(t_minishell *minishell);
-/* ----------------------------- UTILS ---------------------------*/
-t_token    				*new_token(char *value, enum e_token_type type);
-void    				token_lstadd_back(t_token **tokens, t_token *new);
+void					tokenize(char *cmd_seq, t_process *current_process,
+							t_minishell *minishell);
+int						is_builtin(char *cmd);
+char					*is_variable(char *str, t_minishell *minishell, int *i,
+							int start);
+void					word_tokenizer(t_token **tokens, t_process *process,
+							t_minishell *minishell, int *i);
+void					redin_heredoc_tokenizer(t_process *process,
+							t_minishell *minishell, int *i);
+void					redout_append_tokenizer(t_process *process,
+							t_minishell *minishell, int *i);
+void	get_word_token(t_token **tokens, t_minishell *minishell, int *i,
+		int start);
+	/* ----------------------------- UTILS ---------------------------*/
+	t_token *new_token(char *value, enum e_token_type type);
+void					token_lstadd_back(t_token **tokens, t_token *new);
 int						skip_spaces(char *str, int *i);
 char					*get_str(char *str, int *i, t_minishell *minishell);
 

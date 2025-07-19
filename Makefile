@@ -14,7 +14,7 @@ SRC			= main.c \
 			  $(addprefix parser/, parser.c handle_quotes.c expansion.c separate_process.c lexer.c) \
 			  $(addprefix exec/, ) \
 			  $(addprefix builtins/, ) \
-			  $(addprefix utils/, process_utils.c utils.c env_utils.c safe_exit.c token_utils.c) \
+			  $(addprefix utils/, process_utils.c utils.c env_utils.c safe_exit.c token_utils.c lexer_utils.c) \
 
 OBJ_DIR		= obj
 OBJ			= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
