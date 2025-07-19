@@ -46,11 +46,27 @@ void	free_env_list(t_env *env_list)
 	while (env_list)
 	{
 		tmp = env_list->next;
-		free(env_list->env_var);
+		free(env_list->var_cont);
+		free(env_list->var_name);
 		free(env_list);
 		env_list = tmp;
 	}
 }
+
+/*void	free_env_list(t_env *env_list)
+{
+	t_env	*tmp;
+
+	if (!env_list)
+		return ;
+	while (env_list)
+	{
+		tmp = env_list->next;
+		free(env_list->env_var);
+		free(env_list);
+		env_list = tmp;
+	}
+}*/
 
 void	free_env(char **envp_copy, int i)
 {

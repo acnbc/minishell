@@ -40,11 +40,26 @@ enum e_token_type
 	TOKEN_ARGS,
 };
 
+typedef struct s_env_vars
+{
+	char				*equal_sign;
+	char				*var_name;
+	char				*var_cont;
+}						t_env_vars;
+
 typedef struct s_env
+{
+	char				*var_name;
+	char				*var_cont;
+	struct s_env		*next;
+	struct s_env		*prev;
+}						t_env;
+
+/*typedef struct s_env
 {
 	char				*env_var;
 	struct s_env		*next;
-}						t_env;
+}						t_env;*/
 
 typedef struct s_token
 {
@@ -99,7 +114,8 @@ char					*expansion(t_minishell *minishell, char *process);
 char					*get_env_var(t_minishell *minishell, int *i, int *j);
 void					free_env_list(t_env *env_list);
 void					env_lstadd_back(t_env **lst, t_env *new);
-t_env					*env_lstnew(char *env_var);
+t_env					*env_lstnew(char *var_name, char *var_cont);
+//t_env					*env_lstnew(char *env_var);
 t_env					*env_list(char *envp[]);
 char					**copy_envp(t_env *env_list);
 /* ----------------------------- SAFE OPERATIONS -----------------*/

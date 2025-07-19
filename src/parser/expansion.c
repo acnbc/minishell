@@ -17,7 +17,7 @@ int	is_stopchar(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-char	*extract_variable(t_minishell *minishell, char *variable)
+/*char	*extract_variable(t_minishell *minishell, char *variable)
 {
 	t_env	*current;
 	char	*equal_sign;
@@ -36,6 +36,26 @@ char	*extract_variable(t_minishell *minishell, char *variable)
 				free(variable);
 				return (ft_strdup(equal_sign + 1));
 			}
+		}
+		current = current->next;
+	}
+	free(variable);
+	return (NULL);
+}*/
+
+char	*extract_variable(t_minishell *minishell, char *variable)
+{
+	t_env	*current;
+	int		var_len;
+
+	current = minishell->env_list;
+	var_len = ft_strlen(variable);
+	while (current)
+	{
+		if (ft_strncmp(current->var_name, variable, var_len) == 0)
+		{
+			free(variable);
+			return (ft_strdup(current->var_cont));
 		}
 		current = current->next;
 	}
