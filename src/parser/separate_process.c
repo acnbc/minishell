@@ -30,10 +30,10 @@ void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 
 t_process	*separate_process(char *input)
 {
-	int i;
-	int j;
-	t_process *phrases;
-	
+	int			i;
+	int			j;
+	t_process	*phrases;
+
 	i = 0;
 	j = 0;
 	phrases = NULL;

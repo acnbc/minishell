@@ -55,12 +55,6 @@ typedef struct s_env
 	struct s_env		*prev;
 }						t_env;
 
-/*typedef struct s_env
-{
-	char				*env_var;
-	struct s_env		*next;
-}						t_env;*/
-
 typedef struct s_token
 {
 	char				*value;
@@ -93,7 +87,7 @@ typedef struct s_minishell
 	char				**envp_copy;
 	int					process_count;
 	t_process			*process_list;
-	char				*current_process;
+	t_process			*current_process;
 }						t_minishell;
 
 /* ----------------------------- PARSER ---------------------------*/
@@ -111,14 +105,17 @@ t_process				*separate_process(char *input);
 char					*ft_strjoin_free(char *s1, char *s2);
 void					free_env(char **envp_copy, int i);
 int						is_stopchar(char c);
-char					*expansion(t_minishell *minishell, char *process);
-char					*get_env_var(t_minishell *minishell, int *i, int *j);
+char					*expansion(t_minishell *minishell, char *segment);
+char					*get_env_var(t_minishell *minishell, char *segment,
+							int *i, int *j);
 void					free_env_list(t_env *env_list);
 void					env_lstadd_back(t_env **lst, t_env *new);
 t_env					*env_lstnew(char *var_name, char *var_cont);
 // t_env					*env_lstnew(char *env_var);
 t_env					*env_list(char *envp[]);
 char					**copy_envp(t_env *env_list);
+int						verify_quote_pair(char *input, char quote, int *i);
+int						verify_quote_count(char *process);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
 void					safe_exit(t_minishell *minishell);
 void					*safe_malloc(size_t bytes);
@@ -126,21 +123,17 @@ char					*ft_substr_safe(char *s, unsigned int start, size_t len,
 							t_minishell *minishell);
 /* ----------------------------- LEXER ---------------------------*/
 void					lexer(t_minishell *minishell);
-void					tokenize(char *cmd_seq, t_process *current_process,
-							t_minishell *minishell);
+void					tokenize(t_minishell *minishell);
 int						is_builtin(char *cmd);
-char					*is_variable(char *str, t_minishell *minishell, int *i,
+char					*is_variable(t_minishell *minishell, int *i, int start);
+void					word_tokenizer(t_minishell *minishell, int *i);
+void					redin_heredoc_tokenizer(t_minishell *minishell, int *i);
+void					redout_append_tokenizer(t_minishell *minishell, int *i);
+void					get_word_token(t_minishell *minishell, int *i,
 							int start);
-void					word_tokenizer(t_token **tokens, t_process *process,
-							t_minishell *minishell, int *i);
-void					redin_heredoc_tokenizer(t_process *process,
-							t_minishell *minishell, int *i);
-void					redout_append_tokenizer(t_process *process,
-							t_minishell *minishell, int *i);
-void	get_word_token(t_token **tokens, t_minishell *minishell, int *i,
-		int start);
-	/* ----------------------------- UTILS ---------------------------*/
-	t_token *new_token(char *value, enum e_token_type type);
+/* ----------------------------- UTILS ---------------------------*/
+t_token					*new_token(char *value, enum e_token_type type,
+							t_minishell *minishell);
 void					token_lstadd_back(t_token **tokens, t_token *new);
 int						skip_spaces(char *str, int *i);
 char					*get_str(char *str, int *i, t_minishell *minishell);
@@ -149,6 +142,7 @@ char					*get_str(char *str, int *i, t_minishell *minishell);
 void					free_process_list(t_process *process_list);
 void					free_env_list(t_env *env_list);
 void					free_env(char **envp_copy, int i);
+void free_token_list(t_token *tokens);
 
 void					print_process_list(t_process *process_list);
 void					print_env_list(t_env *env_list);

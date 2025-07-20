@@ -1,23 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   syntatic_analysis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/12 19:37:33 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/12 19:37:34 by anogueir         ###   ########.fr       */
+/*   Created: 2025/07/19 19:27:08 by anogueir          #+#    #+#             */
+/*   Updated: 2025/07/19 19:27:10 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	parser(t_minishell *minishell)
-{
-	minishell->process_list = separate_process(minishell->input);
-	if (!minishell->process_list)
-		return ;
-	lexer(minishell);
-	// syntactic_analysis(minishell);
-	print_process_list(minishell->process_list);
-}
+

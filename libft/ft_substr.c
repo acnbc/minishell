@@ -18,35 +18,19 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t	i;
 	size_t	s_len;
 
-	i = 0;
+	if (!s)
+		return (NULL);
+	i = -1;
 	s_len = ft_strlen(s);
-	if (start > s_len)
-	{
-		substr = ft_calloc(1, sizeof(char));
-		return (substr);
-	}
-	if (len >= s_len)
-	{
-		len = s_len;
-		substr = (char *)malloc(sizeof(char) * (len - start) + 1);
-	}
-	else
-		substr = (char *)malloc(sizeof(char) * len + 1);
+	if (start >= s_len)
+		return (ft_strdup(""));
+	if (len > s_len - start)
+		len = s_len - start;
+	substr = (char *)malloc(sizeof(char) * (len + 1));
 	if (!substr)
 		return (NULL);
-	while (i < len && s[start] != '\0')
-		substr[i++] = s[start++];
+	while (++i < len && s[start + i])
+		substr[i] = s[start + i];
 	substr[i] = '\0';
 	return (substr);
 }
-/*
-int	main(void)
-{
-	char	str1[10] = "salvetropa";
-	char	*str2;
-
-	str2 = ft_substr(str1, 0, 20);
-	if (str2 == NULL)
-		write(1, "NULL", 4);
-	write(1, str2, 10);
-}*/

@@ -12,84 +12,66 @@
 
 #include "../includes/minishell.h"
 
-/*void	classify_word(t_token **tokens, t_minishell *minishell, int *i, int start)
+void	get_word_token(t_minishell *minishell, int *i, int start)
 {
-	char	*word;
+	char				*cmd_seq;
+	t_token				**tokens;
+	char				*segment;
+	enum e_token_type	type;
 
-	word = minishell->current_process;
-	while (word[*i])
+	cmd_seq = minishell->current_process->cmd_seq;
+	tokens = &minishell->current_process->tokens;
+	segment = is_variable(minishell, i, start);
+	if (!segment)
+		return ;
+	if (start == 0)
 	{
-		if ((word[*i] == '>' || word[*i] == '<') && !is_between_quotes(word,
-				*i))
+		if (is_builtin(ft_substr_safe(cmd_seq, start, *i - start, minishell)))
 		{
-			get_word_token(tokens, minishell, i, start);
+			token_lstadd_back(tokens, new_token(segment, TOKEN_BUILTIN,
+					minishell));
 			return ;
 		}
-		else if (ft_isspace(word[*i]))
-		{
-			if (*i > start)
-				get_word_token(tokens, minishell, i, start);
-			skip_spaces(word, i);
-			start = *i;
-			continue ;
-		}
-		else if (word[*i] == DOUBLE_QUOTE || word[*i] == SINGLE_QUOTE)
-		{
-			if (*i > start)
-			{
-				segment = is_variable(word, minishell, i, start);
-				token_lstadd_back(tokens, new_token(segment, TOKEN_ARGS));
-			}
-			token_lstadd_back(tokens, new_token(handle_quotes(minishell, word,
-						i), TOKEN_ARGS));
-			start = *i;
-		}
-		else
-			(*i)++;
+		type = TOKEN_CMD;
 	}
-	if (*i > start)
-		get_word_token(tokens, minishell, i, start);
-}*/
-
-void	get_word_token(t_token **tokens, t_minishell *minishell, int *i,
-		int start)
-{
-	char	*cmd_seq;
-	char	*segment;
-
-	cmd_seq = minishell->current_process;
-	segment = is_variable(cmd_seq, minishell, i, start);
-	if (start == 0 && is_builtin(ft_substr_safe(cmd_seq, start, *i - start,
-				minishell)))
-		token_lstadd_back(tokens, new_token(segment, TOKEN_BUILTIN));
-	else if (*i > start && start == 0)
-		token_lstadd_back(tokens, new_token(segment, TOKEN_CMD));
-	else if (*i > start)
-		token_lstadd_back(tokens, new_token(segment, TOKEN_ARGS));
+	else
+		type = TOKEN_ARGS;
+	token_lstadd_back(tokens, new_token(segment, type, minishell));
 }
 
 int	is_builtin(char *cmd)
 {
 	static const char	*builtins[] = {"echo", "cd", "pwd", "export", "unset",
-			"env", "exit", NULL};
+		"env", "exit", NULL};
 	int					i;
 
 	i = -1;
+	if (!cmd)
+		return (0);
 	while (builtins[++i])
 	{
-		if (ft_strncmp(cmd, builtins[i], ft_strlen(builtins[i])) == 0)
+		if (ft_strncmp(cmd, builtins[i], ft_strlen(builtins[i]) + 1) == 0)
+		{
+			free(cmd);
 			return (1);
+		}
 	}
 	free(cmd);
 	return (0);
 }
 
-char	*is_variable(char *str, t_minishell *minishell, int *i, int start)
+char	*is_variable(t_minishell *minishell, int *i, int start)
 {
 	char	*segment;
 	char	*result;
 
-	segment = ft_substr_safe(str, start, *i - start, minishell);
+	segment = ft_substr_safe(minishell->current_process->cmd_seq, start, *i
+			- start, minishell);
+	if (*segment == '\0')
+	{
+		free (segment);
+		return (NULL);
+	}
 	if (!segment)
 		return (NULL);
 	if (ft_strchr(segment, '$'))
@@ -98,34 +80,33 @@ char	*is_variable(char *str, t_minishell *minishell, int *i, int start)
 		free(segment);
 		if (!result)
 			return (NULL);
+		return (result);
 	}
-	else
-		result = segment;
-	return (result);
+	return (segment);
 }
 
-void	tokenize(char *cmd_seq, t_process *current_process,
-		t_minishell *minishell)
+void	tokenize(t_minishell *minishell)
 {
-	int	i;
+	int		i;
+	char	*cmd_seq;
 
 	i = 0;
+	cmd_seq = minishell->current_process->cmd_seq;
 	while (cmd_seq[i])
 	{
 		if (cmd_seq[i] == '<' && !is_between_quotes(cmd_seq, i))
 		{
-			redin_heredoc_tokenizer(current_process, minishell, &i);
+			redin_heredoc_tokenizer(minishell, &i);
 			continue ;
 		}
 		else if (cmd_seq[i] == '>' && !is_between_quotes(cmd_seq, i))
 		{
-			redout_append_tokenizer(current_process, minishell, &i);
+			redout_append_tokenizer(minishell, &i);
 			continue ;
 		}
 		else if (!ft_isspace(cmd_seq[i]))
 		{
-			word_tokenizer(&current_process->tokens, current_process, minishell,
-				&i);
+			word_tokenizer(minishell, &i);
 			continue ;
 		}
 		else

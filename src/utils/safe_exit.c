@@ -12,14 +12,15 @@
 
 #include "../includes/minishell.h"
 
-char	*ft_substr_safe(char *s, unsigned int start, size_t len, t_minishell *minishell)
+char	*ft_substr_safe(char *s, unsigned int start, size_t len,
+		t_minishell *minishell)
 {
-    char	*substr;
+	char	*substr;
 
-    substr = ft_substr(s, start, len);
+	substr = ft_substr(s, start, len);
 	if (!substr)
 		safe_exit(minishell);
-    return (substr);
+	return (substr);
 }
 
 void	free_process_list(t_process *process_list)
@@ -32,6 +33,10 @@ void	free_process_list(t_process *process_list)
 	{
 		tmp = process_list->next;
 		free(process_list->cmd_seq);
+		free(process_list->input_file);
+		free(process_list->output_file);
+		free(process_list->heredoc_delimiter);
+		free_token_list(process_list->tokens); // Libera a lista de tokens
 		free(process_list);
 		process_list = tmp;
 	}
@@ -53,21 +58,6 @@ void	free_env_list(t_env *env_list)
 	}
 }
 
-/*void	free_env_list(t_env *env_list)
-{
-	t_env	*tmp;
-
-	if (!env_list)
-		return ;
-	while (env_list)
-	{
-		tmp = env_list->next;
-		free(env_list->env_var);
-		free(env_list);
-		env_list = tmp;
-	}
-}*/
-
 void	free_env(char **envp_copy, int i)
 {
 	if (!envp_copy)
@@ -79,13 +69,28 @@ void	free_env(char **envp_copy, int i)
 
 void	safe_exit(t_minishell *minishell)
 {
-	if (minishell)
+	if (!minishell)
+		exit(EXIT_FAILURE);
+	if (minishell->input)
 	{
 		free(minishell->input);
-		free_env_list(minishell->env_list);
-		free_env(minishell->envp_copy, 0);
-		free_process_list(minishell->process_list);
-		free(minishell);
+		minishell->input = NULL;
 	}
-	exit(EXIT_FAILURE);
+	if (minishell->process_list)
+	{
+		free_process_list(minishell->process_list);
+		minishell->process_list = NULL;
+	}
+	if (minishell->env_list)
+	{
+		free_env_list(minishell->env_list);
+		minishell->env_list = NULL;
+	}
+	if (minishell->envp_copy)
+	{
+		free_env(minishell->envp_copy, 0);
+		minishell->envp_copy = NULL;
+	}
+	free(minishell);
+	exit(EXIT_SUCCESS);
 }
