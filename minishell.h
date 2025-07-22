@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/09 19:31:46 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:44:26 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <readline/readline.h>
 # include <term.h>
 # include <curses.h>
+# include <limits.h>
 # include "libft/libft.h"
 
 typedef struct s_env
@@ -46,10 +47,11 @@ typedef struct s_shelldata
 
 
 void	ft_echo(char **args, int fd);
-void	ft_export(char *arg, t_env *env_list);
+void	ft_export(char *arg_name, char *arg_cont, t_env *env_list);
 void	ft_env(t_env *env_list);
 void	ft_unset(char *var, t_env *env_list);
 void	ft_pwd(t_env *env_list);
+void	ft_cd(char *str, t_env *env_list);
 t_env	*env_lstnew(char *var_name, char *var_cont);
 void	env_lstadd_back(t_env **lst, t_env *new);
 t_env	*env_list(char *envp[]);

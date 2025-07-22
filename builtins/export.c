@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:46:54 by abouchat          #+#    #+#             */
-/*   Updated: 2025/07/11 18:04:03 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/07/22 16:55:47 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	ft_export(char *arg_name, char *arg_cont, t_env *env_list)
 	if (find_env_var(arg_name, env_list))
 	{
 		temp_node = find_env_var(arg_name, env_list);
-		temp_node->var_cont = arg_cont;
+		free(temp_node->var_cont);
+		temp_node->var_cont = ft_strdup(arg_cont);
 	}
 	else
 	{
