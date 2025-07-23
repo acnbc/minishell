@@ -37,6 +37,8 @@ char	*get_str(char *str, int *i, t_minishell *minishell)
 	int		start;
 	char	*result;
 
+	if (str[*i] == '\0')
+		return (NULL);
 	start = *i;
 	while (str[*i] && !ft_isspace(str[*i]))
 		(*i)++;
@@ -49,14 +51,32 @@ char	*get_str(char *str, int *i, t_minishell *minishell)
 int	skip_spaces(char *str, int *i)
 {
 	while (str[*i] && ft_isspace(str[*i]))
-	{
-		printf("em skip spaces, i = %d\n", *i);
 		(*i)++;
-	}
 	return (*i);
 }
 
 int	ft_isspace(char c)
 {
 	return (c == ' ' || (c >= '\t' && c <= '\r'));
+}
+
+char	*ft_strstr(char *str, char *to_find)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		j = 0;
+		if (str[i] == to_find[j])
+		{
+			while ((to_find[j] != '\0') && (str[i + j] == to_find[j]))
+				j++;
+			if (to_find[j] == '\0')
+				return (&str[i]);
+		}
+		i++;
+	}
+	return (NULL);
 }

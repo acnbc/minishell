@@ -41,3 +41,43 @@ void	*safe_malloc(size_t bytes)
 	}
 	return (malloced_space);
 }
+
+char	**paths(t_env *env_list)
+{
+	while (env_list)
+	{
+		if (ft_strncmp(env_list->var_name, "PATH", 4) == 0)
+		{
+			if (env_list->var_cont)
+				return (ft_split(env_list->var_cont, ':'));
+			else
+				return (NULL);
+		}
+		env_list = env_list->next;
+	}
+	return (NULL);
+}
+
+char	*path_name(char **paths, char *command)
+{
+	char	*path;
+	char	*final_path;
+	int		i;
+
+	path = NULL;
+	final_path = NULL;
+	i = -1;
+	while (paths[++i] != NULL)
+	{
+		path = ft_strjoin(paths[i], "/");
+		final_path = ft_strjoin(path, command);
+		free(path);
+		if (access(final_path, X_OK) == 0)
+			return (final_path);
+		free(final_path);
+	}
+	ft_putstr_fd("zsh: no such file or directory: ", 1);
+	ft_putstr_fd(command, 1);
+	ft_putstr_fd("\n", 1);
+	return (NULL);
+}

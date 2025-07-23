@@ -66,6 +66,7 @@ typedef struct s_process
 {
 	char				*cmd_seq;
 	t_token				*tokens;
+	char				*path;
 	char				**command;
 	struct s_process	*next;
 	char				*input_file;
@@ -131,6 +132,11 @@ void					redin_heredoc_tokenizer(t_minishell *minishell, int *i);
 void					redout_append_tokenizer(t_minishell *minishell, int *i);
 void					get_word_token(t_minishell *minishell, int *i,
 							int start);
+char					**paths(t_env *env_list);
+char					*path_name(char **paths, char *command);
+/* ---------------- SYNTACTIC ANALYSIS ------------------*/
+bool					syntactic_analysis(t_minishell *minishell);
+int						is_cmd(char *cmd, t_minishell *minishell);						
 /* ----------------------------- UTILS ---------------------------*/
 t_token					*new_token(char *value, enum e_token_type type,
 							t_minishell *minishell);

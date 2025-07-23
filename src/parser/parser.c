@@ -18,6 +18,7 @@ void	parser(t_minishell *minishell)
 	if (!minishell->process_list)
 		return ;
 	lexer(minishell);
-	// syntactic_analysis(minishell);
+	if (syntactic_analysis(minishell) == false)
+		return ;
 	print_process_list(minishell->process_list);
 }

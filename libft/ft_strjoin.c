@@ -21,14 +21,8 @@ char	*ft_strjoin(const char *s1, char const *s2)
 
 	if (!s1 && !s2)
 		return (NULL);
-	if (!s1)
-		s1_len = 0;
-	else
-		s1_len = ft_strlen(s1);
-	if (!s2)
-		s2_len = 0;
-	else
-		s2_len = ft_strlen(s2);
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
 	i = -1;
 	str = malloc(sizeof(char) * ((s1_len + s2_len) + 1));
 	if (!str)

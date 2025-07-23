@@ -14,29 +14,50 @@
 
 void	get_word_token(t_minishell *minishell, int *i, int start)
 {
-	char				*cmd_seq;
 	t_token				**tokens;
 	char				*segment;
 	enum e_token_type	type;
 
-	cmd_seq = minishell->current_process->cmd_seq;
 	tokens = &minishell->current_process->tokens;
 	segment = is_variable(minishell, i, start);
 	if (!segment)
 		return ;
-	if (start == 0)
-	{
-		if (is_builtin(ft_substr_safe(cmd_seq, start, *i - start, minishell)))
+	//if (start == 0)
+	//{
+		if (is_builtin(segment))
 		{
 			token_lstadd_back(tokens, new_token(segment, TOKEN_BUILTIN,
 					minishell));
 			return ;
 		}
-		type = TOKEN_CMD;
-	}
+		else if (is_cmd(segment, minishell))
+			type = TOKEN_CMD;
+//	}
 	else
 		type = TOKEN_ARGS;
 	token_lstadd_back(tokens, new_token(segment, type, minishell));
+}
+
+int is_cmd(char *cmd, t_minishell *minishell)
+{
+	char	**path_dirs;
+
+	if (ft_strchr(cmd, '/'))
+	{
+		minishell->current_process->path = ft_strdup(cmd);
+		return (1);
+	}
+	path_dirs = paths(minishell->env_list);
+	if (!path_dirs)
+		return (0);
+	minishell->current_process->path = path_name(path_dirs, cmd);
+	if (minishell->current_process->path)
+	{
+		free(path_dirs);
+		return (1);
+	}
+	free(path_dirs);
+	return (0);
 }
 
 int	is_builtin(char *cmd)
@@ -51,12 +72,8 @@ int	is_builtin(char *cmd)
 	while (builtins[++i])
 	{
 		if (ft_strncmp(cmd, builtins[i], ft_strlen(builtins[i]) + 1) == 0)
-		{
-			free(cmd);
 			return (1);
-		}
 	}
-	free(cmd);
 	return (0);
 }
 
@@ -126,14 +143,19 @@ void	print_process_list(t_process *process_list)
 	{
 		printf("Node[%d]:\n", i++);
 		printf("  cmd_seq:            '%s'\n", process_list->cmd_seq);
+
+		// Caminho resolvido para o comando
+		if (process_list->path)
+			printf("  path:               '%s'\n", process_list->path);
+
 		// Redirecionamentos
 		if (process_list->input_file)
 			printf("  input_file:         '%s'\n", process_list->input_file);
 		if (process_list->output_file)
 			printf("  output_file:        '%s'\n", process_list->output_file);
 		if (process_list->heredoc_delimiter)
-			printf("  heredoc_delimiter:  '%s'\n",
-				process_list->heredoc_delimiter);
+			printf("  heredoc_delimiter:  '%s'\n", process_list->heredoc_delimiter);
+
 		// Flags
 		printf("  append_flag:        %d\n", process_list->append_flag);
 		printf("  redirect_in_flag:   %d\n", process_list->redirect_in_flag);
@@ -141,37 +163,38 @@ void	print_process_list(t_process *process_list)
 		printf("  heredoc_flag:       %d\n", process_list->heredoc_flag);
 		printf("  double_quote_flag:  %d\n", process_list->double_quote_flag);
 		printf("  single_quote_flag:  %d\n", process_list->single_quote_flag);
+
 		// Tokens
 		tok = process_list->tokens;
 		j = 0;
 		while (tok)
 		{
-			printf("    Token[%d]:         '%s' (type: %d)\n", j++, tok->value,
-				tok->type);
+			printf("    Token[%d]:         '%s' (type: %d)\n", j++, tok->value, tok->type);
 			tok = tok->next;
 		}
+
 		// Command array
 		if (process_list->command)
 		{
 			j = 0;
 			while (process_list->command[j])
 			{
-				printf("    command[%d]:       '%s'\n", j,
-					process_list->command[j]);
+				printf("    command[%d]:       '%s'\n", j, process_list->command[j]);
 				j++;
 			}
 		}
+
 		// Args array
 		if (process_list->args)
 		{
 			j = 0;
 			while (process_list->args[j])
 			{
-				printf("    args[%d]:          '%s'\n", j,
-					process_list->args[j]);
+				printf("    args[%d]:          '%s'\n", j, process_list->args[j]);
 				j++;
 			}
 		}
+
 		process_list = process_list->next;
 	}
 	printf("=== Fim da lista de processos ===\n\n");
