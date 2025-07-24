@@ -32,7 +32,10 @@ int main(int argc, char *argv[], char *envp[])
         if ((ft_strchr(minishell->input, DOUBLE_QUOTE)
             || ft_strchr(minishell->input, SINGLE_QUOTE))
             && !verify_quote_count(minishell->input))
+        {
+            free(minishell->input);
             continue ;
+        }
         parser(minishell);
         free(minishell->input);
         if (minishell->process_list)

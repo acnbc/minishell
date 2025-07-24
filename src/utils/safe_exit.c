@@ -36,7 +36,8 @@ void	free_process_list(t_process *process_list)
 		free(process_list->input_file);
 		free(process_list->output_file);
 		free(process_list->heredoc_delimiter);
-		free_token_list(process_list->tokens); // Libera a lista de tokens
+		free(process_list->path);
+		free_token_list(process_list->tokens);
 		free(process_list);
 		process_list = tmp;
 	}
