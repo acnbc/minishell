@@ -45,14 +45,15 @@ bool	syntactic_analysis(t_minishell *minishell)
 			return syntax_error("Missing redirection target");
 		while (token)
 		{
+			if ((token->type == TOKEN_CMD || token->type == TOKEN_BUILTIN) && found_cmd)
+				return syntax_error("Multiple commands without pipe");
+		
 			if (token->type == TOKEN_CMD || token->type == TOKEN_BUILTIN)
 				found_cmd = true;
+		
 			if (!found_cmd && token->type == TOKEN_ARGS)
 				return syntax_error("Argument before command");
-			if ((token->type == TOKEN_CMD || token->type == TOKEN_BUILTIN)
-				&& found_cmd)/*token->next
-				&& (token->next->type == TOKEN_CMD || token->next->type == TOKEN_BUILTIN))*/
-				return syntax_error("Multiple commands without pipe");
+		
 			token = token->next;
 		}
 		if (!found_cmd)

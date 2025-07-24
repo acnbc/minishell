@@ -22,25 +22,24 @@ void	get_word_token(t_minishell *minishell, int *i, int start)
 	segment = is_variable(minishell, i, start);
 	if (!segment)
 		return ;
-	//if (start == 0)
-	//{
-		if (is_builtin(segment))
-		{
-			token_lstadd_back(tokens, new_token(segment, TOKEN_BUILTIN,
-					minishell));
-			return ;
-		}
-		else if (is_cmd(segment, minishell))
-			type = TOKEN_CMD;
-//	}
+	if (is_builtin(segment))
+	{
+		token_lstadd_back(tokens, new_token(segment, TOKEN_BUILTIN,
+				minishell));
+		return ;
+	}
+	else if (is_cmd(segment, minishell))
+		type = TOKEN_CMD;
 	else
 		type = TOKEN_ARGS;
 	token_lstadd_back(tokens, new_token(segment, type, minishell));
+	
 }
 
 int is_cmd(char *cmd, t_minishell *minishell)
 {
 	char	**path_dirs;
+	char	*temp;
 
 	if (ft_strchr(cmd, '/'))
 	{
@@ -50,13 +49,14 @@ int is_cmd(char *cmd, t_minishell *minishell)
 	path_dirs = paths(minishell->env_list);
 	if (!path_dirs)
 		return (0);
-	minishell->current_process->path = path_name(path_dirs, cmd);
-	if (minishell->current_process->path)
+	temp = path_name(path_dirs, cmd);
+	if (temp)
 	{
-		free(path_dirs);
+		minishell->current_process->path = temp;
+		free_matrix(path_dirs);
 		return (1);
 	}
-	free(path_dirs);
+	free_matrix(path_dirs);
 	return (0);
 }
 

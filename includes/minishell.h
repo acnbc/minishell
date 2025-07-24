@@ -148,8 +148,8 @@ char					*get_str(char *str, int *i, t_minishell *minishell);
 void					free_process_list(t_process *process_list);
 void					free_env_list(t_env *env_list);
 void					free_env(char **envp_copy, int i);
-void free_token_list(t_token *tokens);
-
+void					free_token_list(t_token *tokens);
+void					free_matrix(char **matrix);
 void					print_process_list(t_process *process_list);
 void					print_env_list(t_env *env_list);
 

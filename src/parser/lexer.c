@@ -15,6 +15,7 @@
 void	redout_append_tokenizer(t_minishell *minishell, int *i)
 {
 	char	*cmd_seq;
+	char	*outfile;
 
 	cmd_seq = minishell->current_process->cmd_seq;
 	if (cmd_seq[*i + 1] && cmd_seq[*i + 1] == '>')
@@ -29,12 +30,13 @@ void	redout_append_tokenizer(t_minishell *minishell, int *i)
 	}
 	skip_spaces(cmd_seq, i);
 	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
-		minishell->current_process->output_file = handle_quotes(minishell,
-				cmd_seq, i);
+		outfile = handle_quotes(minishell, cmd_seq, i);
 	else
-		minishell->current_process->output_file = get_str(cmd_seq, i,
-				minishell);
+		outfile = get_str(cmd_seq, i, minishell);
 	skip_spaces(cmd_seq, i);
+	if (outfile && (ft_strchr(outfile, '<') || ft_strchr(outfile, '>')))
+		outfile = NULL;
+	minishell->current_process->output_file = outfile;
 	return ;
 }
 
@@ -59,6 +61,8 @@ void	redin_heredoc_tokenizer(t_minishell *minishell, int *i)
 		temp = handle_quotes(minishell, cmd_seq, i);
 	else
 		temp = get_str(cmd_seq, i, minishell);
+	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
+		temp = NULL;
 	skip_spaces(cmd_seq, i);
 	if (minishell->current_process->heredoc_flag)
 		minishell->current_process->heredoc_delimiter = temp;

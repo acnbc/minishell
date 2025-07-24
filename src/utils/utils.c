@@ -76,8 +76,15 @@ char	*path_name(char **paths, char *command)
 			return (final_path);
 		free(final_path);
 	}
-	ft_putstr_fd("zsh: no such file or directory: ", 1);
-	ft_putstr_fd(command, 1);
-	ft_putstr_fd("\n", 1);
 	return (NULL);
+}
+
+void	free_matrix(char **matrix)
+{
+	int	i = 0;
+	if (!matrix)
+		return;
+	while (matrix[i])
+		free(matrix[i++]);
+	free(matrix);
 }

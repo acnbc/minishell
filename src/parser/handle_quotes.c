@@ -86,8 +86,6 @@ char	*handle_quotes(t_minishell *minishell, char *process, int *i)
 	size_t	len;
 
 	clean_input = NULL;
-	if (!verify_quote_count(process))
-		return (NULL);
 	j = *i;
 	len = ft_strlen(process);
 	while (*i < (int)len)

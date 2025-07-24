@@ -29,6 +29,10 @@ int main(int argc, char *argv[], char *envp[])
             continue;
         if (ft_strncmp(minishell->input, "exit", 5) == 0)
             safe_exit(minishell);
+        if ((ft_strchr(minishell->input, DOUBLE_QUOTE)
+            || ft_strchr(minishell->input, SINGLE_QUOTE))
+            && !verify_quote_count(minishell->input))
+            continue ;
         parser(minishell);
         free(minishell->input);
         if (minishell->process_list)

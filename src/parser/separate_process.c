@@ -28,6 +28,20 @@ void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 		free(phrase);
 }
 
+static int	pipe_checks(char *input, int *i)
+{
+	int	j;
+	
+	j = *i;
+	if (*i == 0 || input[*i + 1] == '\0')
+		return (0);
+	j++;
+	skip_spaces(input, &j);
+	if (input[j] == '|' && j != *i)
+		return (0);
+	return (1);
+}
+
 t_process	*separate_process(char *input)
 {
 	int			i;
@@ -41,6 +55,8 @@ t_process	*separate_process(char *input)
 	{
 		if (input[i] == '|' && !is_between_quotes(input, i))
 		{
+			if (!pipe_checks(input, &i))
+				return (NULL);
 			if (i > j)
 				get_cmd_seq(&phrases, input, i, j);
 			i++;
