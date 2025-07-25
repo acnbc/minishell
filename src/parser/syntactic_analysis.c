@@ -15,51 +15,45 @@
 static bool	has_redirection_without_target(t_process *p)
 {
 	if (p->redirect_in_flag && !p->input_file)
-		return true;
+		return (true);
 	if (p->heredoc_flag && !p->heredoc_delimiter)
-		return true;
+		return (true);
 	if ((p->redirect_out_flag || p->append_flag) && !p->output_file)
-		return true;
-	return false;
+		return (true);
+	return (false);
 }
 
 static bool	syntax_error(const char *msg)
 {
 	printf("Syntax error: %s\n", msg);
-	return false;
+	return (false);
 }
 
 bool	syntactic_analysis(t_minishell *minishell)
 {
-	t_process	*process;
+	t_process	*p;
 	t_token		*token;
-	bool		found_cmd;
 
-	process = minishell->process_list;
-	while (process)
+	p = minishell->process_list;
+	while (p)
 	{
-		found_cmd = false;
-		token = process->tokens;
-
-		if (has_redirection_without_target(process))
-			return syntax_error("Missing redirection target");
+		p->found_cmd = false;
+		token = p->tokens;
+		if (has_redirection_without_target(p))
+			return (syntax_error("Missing redirection target"));
 		while (token)
 		{
-			if ((token->type == TOKEN_CMD || token->type == TOKEN_BUILTIN) && found_cmd)
-				return syntax_error("Multiple commands without pipe");
-		
-			if (token->type == TOKEN_CMD || token->type == TOKEN_BUILTIN)
-				found_cmd = true;
-		
-			if (!found_cmd && token->type == TOKEN_ARGS)
-				return syntax_error("Argument before command");
-		
+			if ((token->type == CMD || token->type == BUILTIN) && p->found_cmd)
+				return (syntax_error("Multiple commands without pipe"));
+			if (token->type == CMD || token->type == BUILTIN)
+				p->found_cmd = true;
+			if (!p->found_cmd && token->type == ARGS)
+				return (syntax_error("Argument before command"));
 			token = token->next;
 		}
-		if (!found_cmd)
-			return syntax_error("Missing command");
-		process = process->next;
+		if (!p->found_cmd)
+			return (syntax_error("Missing command"));
+		p = p->next;
 	}
-	return true;
+	return (true);
 }
-

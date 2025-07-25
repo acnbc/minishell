@@ -12,17 +12,6 @@
 
 #include "../includes/minishell.h"
 
-char	*ft_substr_safe(char *s, unsigned int start, size_t len,
-		t_minishell *minishell)
-{
-	char	*substr;
-
-	substr = ft_substr(s, start, len);
-	if (!substr)
-		safe_exit(minishell);
-	return (substr);
-}
-
 void	free_process_list(t_process *process_list)
 {
 	t_process	*tmp;
@@ -41,6 +30,15 @@ void	free_process_list(t_process *process_list)
 		free(process_list);
 		process_list = tmp;
 	}
+}
+
+void	safe_env_list_exit(t_env_vars *vars, t_env *env_list)
+{
+	free(vars->var_name);
+	free(vars->var_cont);
+	free(vars->equal_sign);
+	free_env_list(env_list);
+	exit(1);
 }
 
 void	free_env_list(t_env *env_list)

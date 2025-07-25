@@ -31,7 +31,7 @@ void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 static int	pipe_checks(char *input, int *i)
 {
 	int	j;
-	
+
 	j = *i;
 	if (*i == 0 || input[*i + 1] == '\0')
 		return (0);

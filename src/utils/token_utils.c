@@ -16,10 +16,11 @@ t_token	*new_token(char *value, enum e_token_type type, t_minishell *minishell)
 {
 	t_token	*new;
 
-	(void)minishell;
 	if (*value == '\0' || !value)
-		// SAFE_EXIT
+	{
+		safe_exit(minishell);
 		return (NULL);
+	}
 	new = safe_malloc(sizeof(t_token));
 	new->value = value;
 	new->type = type;
@@ -46,7 +47,7 @@ void	token_lstadd_back(t_token **tokens, t_token *new)
 
 void	free_token_list(t_token *tokens)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	while (tokens)
 	{

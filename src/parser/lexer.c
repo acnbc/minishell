@@ -12,10 +12,29 @@
 
 #include "../includes/minishell.h"
 
+static char	*get_redir_target(t_minishell *minishell, int *i)
+{
+	char	*cmd_seq;
+	char	*temp;
+
+	cmd_seq = minishell->current_process->cmd_seq;
+	skip_spaces(cmd_seq, i);
+	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
+		temp = handle_quotes(minishell, cmd_seq, i);
+	else
+		temp = get_str(cmd_seq, i, minishell);
+	skip_spaces(cmd_seq, i);
+	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
+	{	
+		free(temp);
+		temp = NULL;
+	}
+	return (temp);
+}
+
 void	redout_append_tokenizer(t_minishell *minishell, int *i)
 {
 	char	*cmd_seq;
-	char	*outfile;
 
 	cmd_seq = minishell->current_process->cmd_seq;
 	if (cmd_seq[*i + 1] && cmd_seq[*i + 1] == '>')
@@ -28,18 +47,7 @@ void	redout_append_tokenizer(t_minishell *minishell, int *i)
 		*i += 1;
 		minishell->current_process->redirect_out_flag = 1;
 	}
-	skip_spaces(cmd_seq, i);
-	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
-		outfile = handle_quotes(minishell, cmd_seq, i);
-	else
-		outfile = get_str(cmd_seq, i, minishell);
-	skip_spaces(cmd_seq, i);
-	if (outfile && (ft_strchr(outfile, '<') || ft_strchr(outfile, '>')))
-	{	
-		free(outfile);
-		outfile = NULL;
-	}
-	minishell->current_process->output_file = outfile;
+	minishell->current_process->output_file = get_redir_target(minishell, i);
 	return ;
 }
 
@@ -59,17 +67,7 @@ void	redin_heredoc_tokenizer(t_minishell *minishell, int *i)
 		*i += 1;
 		minishell->current_process->redirect_in_flag = 1;
 	}
-	skip_spaces(cmd_seq, i);
-	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
-		temp = handle_quotes(minishell, cmd_seq, i);
-	else
-		temp = get_str(cmd_seq, i, minishell);
-	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
-	{	
-		free(temp);
-		temp = NULL;
-	}
-	skip_spaces(cmd_seq, i);
+	temp = get_redir_target(minishell, i);
 	if (minishell->current_process->heredoc_flag)
 		minishell->current_process->heredoc_delimiter = temp;
 	else

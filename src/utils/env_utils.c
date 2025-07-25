@@ -41,15 +41,6 @@ char	**copy_envp(t_env *env_list)
 	return (envp_copy);
 }
 
-void	safe_env_list_exit(t_env_vars *vars, t_env *env_list)
-{
-	free(vars->var_name);
-	free(vars->var_cont);
-	free(vars->equal_sign);
-	free_env_list(env_list);
-	exit(1);
-}
-
 static void	env_list_pair(t_env_vars *vars, int i, char *envp[])
 {
 	if (vars->equal_sign)

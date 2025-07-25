@@ -48,7 +48,7 @@ int	verify_quote_count(char *process)
 				return (1);
 		}
 		if (process[i] == '\0')
-			break;
+			break ;
 	}
 	return (0);
 }

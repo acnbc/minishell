@@ -35,9 +35,9 @@
 
 enum					e_token_type
 {
-	TOKEN_BUILTIN,
-	TOKEN_CMD,
-	TOKEN_ARGS,
+	BUILTIN,
+	CMD,
+	ARGS,
 };
 
 typedef struct s_env_vars
@@ -79,6 +79,7 @@ typedef struct s_process
 	int					double_quote_flag;
 	int					single_quote_flag;
 	char				**args;
+	bool				found_cmd;
 }						t_process;
 
 typedef struct s_minishell
@@ -150,6 +151,8 @@ void					free_env_list(t_env *env_list);
 void					free_env(char **envp_copy, int i);
 void					free_token_list(t_token *tokens);
 void					free_matrix(char **matrix);
+void					safe_env_list_exit(t_env_vars *vars, t_env *env_list);
+
 void					print_process_list(t_process *process_list);
 void					print_env_list(t_env *env_list);
 

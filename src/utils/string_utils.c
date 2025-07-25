@@ -60,23 +60,13 @@ int	ft_isspace(char c)
 	return (c == ' ' || (c >= '\t' && c <= '\r'));
 }
 
-char	*ft_strstr(char *str, char *to_find)
+char	*ft_substr_safe(char *s, unsigned int start, size_t len,
+		t_minishell *minishell)
 {
-	int	i;
-	int	j;
+	char	*substr;
 
-	i = 0;
-	while (str[i] != '\0')
-	{
-		j = 0;
-		if (str[i] == to_find[j])
-		{
-			while ((to_find[j] != '\0') && (str[i + j] == to_find[j]))
-				j++;
-			if (to_find[j] == '\0')
-				return (&str[i]);
-		}
-		i++;
-	}
-	return (NULL);
+	substr = ft_substr(s, start, len);
+	if (!substr)
+		safe_exit(minishell);
+	return (substr);
 }

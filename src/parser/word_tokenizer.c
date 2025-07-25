@@ -34,9 +34,9 @@ static void	handle_quote_token(t_minishell *minishell, int *i, int *start)
 	cmd_seq = minishell->current_process->cmd_seq;
 	if (*i > *start)
 		token_lstadd_back(tokens, new_token(is_variable(minishell, i, *start),
-				TOKEN_ARGS, minishell));
+				ARGS, minishell));
 	token_lstadd_back(tokens, new_token(handle_quotes(minishell, cmd_seq, i),
-			TOKEN_ARGS, minishell));
+			ARGS, minishell));
 	*start = *i;
 }
 

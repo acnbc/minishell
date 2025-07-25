@@ -81,9 +81,11 @@ char	*path_name(char **paths, char *command)
 
 void	free_matrix(char **matrix)
 {
-	int	i = 0;
+	int	i;
+
+	i = 0;
 	if (!matrix)
-		return;
+		return ;
 	while (matrix[i])
 		free(matrix[i++]);
 	free(matrix);
