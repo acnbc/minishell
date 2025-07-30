@@ -104,6 +104,7 @@ char					*handle_quotes(t_minishell *minishell, char *process,
 							int *i);
 int						is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
+int						count_process(t_process *process_list);
 char					*ft_strjoin_free(char *s1, char *s2);
 void					free_env(char **envp_copy, int i);
 int						is_stopchar(char c);

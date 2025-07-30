@@ -17,6 +17,8 @@ void	parser(t_minishell *minishell)
 	minishell->process_list = separate_process(minishell->input);
 	if (!minishell->process_list)
 		return ;
+	minishell->process_count = count_process(minishell->process_list);
+	printf("process_count: %d\n", minishell->process_count);
 	lexer(minishell);
 	if (syntactic_analysis(minishell) == false)
 		return ;

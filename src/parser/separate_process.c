@@ -12,6 +12,21 @@
 
 #include "../../includes/minishell.h"
 
+int	count_process(t_process *process_list)
+{
+	int			size;
+	t_process	*current;
+
+	size = 0;
+	current = process_list;
+	while (current)
+	{
+		size++;
+		current = current->next;
+	}
+	return (size);
+}
+
 void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 {
 	char	*phrase;

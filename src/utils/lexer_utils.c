@@ -141,6 +141,10 @@ void	print_process_list(t_process *process_list)
 	{
 		printf("Node[%d]:\n", i++);
 		printf("  cmd_seq:            '%s'\n", process_list->cmd_seq);
+		// Contagem de processos
+		// Identificador do processo
+		//if (process_list->process_id)
+		//	printf("  process_id:         %d\n", process_list->process_id);
 		// Caminho resolvido para o comando
 		if (process_list->path)
 			printf("  path:               '%s'\n", process_list->path);
