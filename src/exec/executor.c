@@ -1,29 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string.h>
-#include <sys/wait.h>
+#include "../../includes/minishell.h"
 
-// Suponha que essas variáveis estejam globais ou passadas por parâmetro:
-char *inputFile = NULL;
-char *outputFile = NULL;
-int background = 0;
-
-typedef struct {
-    char **args; // argumentos do comando, começando com o nome
-} SimpleCommand;
-
-SimpleCommand **simpleCommands;
-int numSimpleCommands;
-
-void execute_command() {
+/*void execute_command(t_minishell *minishell)
+{
     // 1. Salvar stdin e stdout
     int tmpin = dup(0);    // salva stdin
     int tmpout = dup(1);   // salva stdout
 
     // 2. Redirecionar a entrada inicial (inputFile ou stdin)
     int fdin;
+    
     if (inputFile) {
         fdin = open(inputFile, O_RDONLY);
     } else {
@@ -82,3 +67,4 @@ void execute_command() {
         waitpid(ret, NULL, 0);
     }
 }
+*/

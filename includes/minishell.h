@@ -33,6 +33,17 @@
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
 
+typedef struct s_exec_vars
+{
+	int					tmpin;
+	int					tmpout;
+	int					fdin;
+	int					fdout;
+	int					pid;
+	int					i;
+	int					fdpipe[2];
+}						t_exec_vars;
+
 enum					e_token_type
 {
 	BUILTIN,
@@ -137,7 +148,9 @@ char					**paths(t_env *env_list);
 char					*path_name(char **paths, char *command);
 /* ---------------- SYNTACTIC ANALYSIS ------------------*/
 bool					syntactic_analysis(t_minishell *minishell);
-int						is_cmd(char *cmd, t_minishell *minishell);						
+int						is_cmd(char *cmd, t_minishell *minishell);
+/*------------------------ EXECUTOR ------------------------------*/
+void					execute_command(t_minishell *mini);
 /* ----------------------------- UTILS ---------------------------*/
 t_token					*new_token(char *value, enum e_token_type type,
 							t_minishell *minishell);
