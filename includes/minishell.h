@@ -40,8 +40,8 @@ typedef struct s_exec_vars
 	int					fdin;
 	int					fdout;
 	int					pid;
-	int					i;
 	int					fdpipe[2];
+	int					ret;
 }						t_exec_vars;
 
 enum					e_token_type
@@ -76,10 +76,10 @@ typedef struct s_token
 typedef struct s_process
 {
 	char				*cmd_seq;
+	int					process_num;
 	t_token				*tokens;
 	char				*path;
 	char				**command;
-	struct s_process	*next;
 	char				*input_file;
 	char				*output_file;
 	char				*heredoc_delimiter;
@@ -91,6 +91,12 @@ typedef struct s_process
 	int					single_quote_flag;
 	char				**args;
 	bool				found_cmd;
+	int					fdin;
+	int					fdout;
+	int					pid;
+	int					status;
+	int					exit_signal;
+	struct s_process	*next;
 }						t_process;
 
 typedef struct s_minishell
@@ -101,6 +107,7 @@ typedef struct s_minishell
 	int					process_count;
 	t_process			*process_list;
 	t_process			*current_process;
+	t_exec_vars			exec_vars;
 }						t_minishell;
 
 /* ----------------------------- PARSER ---------------------------*/
@@ -115,6 +122,7 @@ char					*handle_quotes(t_minishell *minishell, char *process,
 							int *i);
 int						is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
+int						count_process(t_process *process_list);
 char					*ft_strjoin_free(char *s1, char *s2);
 void					free_env(char **envp_copy, int i);
 int						is_stopchar(char c);
@@ -150,7 +158,11 @@ char					*path_name(char **paths, char *command);
 bool					syntactic_analysis(t_minishell *minishell);
 int						is_cmd(char *cmd, t_minishell *minishell);
 /*------------------------ EXECUTOR ------------------------------*/
-void					execute_command(t_minishell *mini);
+void					executor(t_minishell *minishell);
+void    				handle_heredoc(t_minishell *mini);
+void					unlink_heredoc_files(t_minishell *minishell);
+char					**copy_args(t_token *tokens);
+int						get_args(t_process *process_list);
 /* ----------------------------- UTILS ---------------------------*/
 t_token					*new_token(char *value, enum e_token_type type,
 							t_minishell *minishell);
@@ -165,6 +177,7 @@ void					free_env(char **envp_copy, int i);
 void					free_token_list(t_token *tokens);
 void					free_matrix(char **matrix);
 void					safe_env_list_exit(t_env_vars *vars, t_env *env_list);
+void					flush(t_minishell *minishell);
 
 void					print_process_list(t_process *process_list);
 void					print_env_list(t_env *env_list);

@@ -1,0 +1,66 @@
+#include "../../includes/minishell.h"
+
+void	unlink_heredoc_files(t_minishell *minishell)
+{
+	t_process	*current;
+	char		*filename;
+
+	current = minishell->process_list;
+	while (current)
+	{
+		if (current->heredoc_flag && current->input_file)
+		{
+			filename = current->input_file;
+			unlink(filename);
+			free(filename);
+		}
+		current = current->next;
+	}
+}
+
+static void	here_doc(t_minishell *mini)
+{
+	int		fd;
+	char	*line;
+	char	*filename;
+	t_process	*p;
+
+	p = mini->current_process;
+	filename = ft_itoa(p->process_num);
+	if (!filename)
+		safe_exit(mini);
+	fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (!fd)
+		safe_exit(mini);
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+			break ;
+		if (ft_strncmp(line, p->heredoc_delimiter, ft_strlen(p->heredoc_delimiter)) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write(fd, line, ft_strlen(line));
+		free(line);
+	}
+	close(fd);
+	p->input_file = filename;
+}
+
+void    handle_heredoc(t_minishell *mini)
+{
+	t_process	*p;
+
+	p = mini->process_list;
+	while (p)
+	{
+		if (p->heredoc_flag)
+		{			
+			mini->current_process = p;
+			here_doc(mini);
+		}
+		p = p->next;
+	}
+}

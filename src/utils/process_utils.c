@@ -35,6 +35,8 @@ t_process	*new_process(char *cmd_seq)
 	process = safe_malloc(sizeof(t_process));
 	ft_bzero(process, sizeof(t_process));
 	process->cmd_seq = cmd_seq;
+	process->fdin = -1;
+	process->fdout = -1;
 	process->next = NULL;
 	return (process);
 }

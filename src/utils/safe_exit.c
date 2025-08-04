@@ -93,3 +93,13 @@ void	safe_exit(t_minishell *minishell)
 	free(minishell);
 	exit(EXIT_SUCCESS);
 }
+
+void	flush(t_minishell *minishell)
+{
+	free(minishell->input);
+    if (minishell->process_list)
+    {
+        free_process_list(minishell->process_list);
+        minishell->process_list = NULL;
+    }
+}
