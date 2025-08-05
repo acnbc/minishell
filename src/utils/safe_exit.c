@@ -21,12 +21,20 @@ void	free_process_list(t_process *process_list)
 	while (process_list)
 	{
 		tmp = process_list->next;
-		free(process_list->cmd_seq);
-		free(process_list->input_file);
-		free(process_list->output_file);
-		free(process_list->heredoc_delimiter);
-		free(process_list->path);
-		free_token_list(process_list->tokens);
+		if (process_list->cmd_seq)
+			free(process_list->cmd_seq);
+		if (process_list->input_file)
+			free(process_list->input_file);
+		if (process_list->output_file)
+			free(process_list->output_file);
+		if (process_list->heredoc_delimiter)
+			free(process_list->heredoc_delimiter);
+		if (process_list->path)
+			free(process_list->path);
+		if (process_list->tokens)
+			free_token_list(process_list->tokens);
+		if (process_list->args)
+			free_matrix(process_list->args);
 		free(process_list);
 		process_list = tmp;
 	}
@@ -50,21 +58,27 @@ void	free_env_list(t_env *env_list)
 	while (env_list)
 	{
 		tmp = env_list->next;
-		free(env_list->var_cont);
-		free(env_list->var_name);
+		if (env_list->var_name)
+			free(env_list->var_name);
+		if (env_list->var_cont)
+			free(env_list->var_cont);
 		free(env_list);
 		env_list = tmp;
 	}
 }
 
-void	free_env(char **envp_copy, int i)
+void	free_env(char **envp_copy)
 {
+	int i;
+
 	if (!envp_copy)
 		return ;
-	while (--i >= 0)
-		free(envp_copy[i]);
+	i = 0;
+	while (envp_copy[i])
+		free(envp_copy[i++]);
 	free(envp_copy);
 }
+
 
 void	safe_exit(t_minishell *minishell)
 {
@@ -87,7 +101,7 @@ void	safe_exit(t_minishell *minishell)
 	}
 	if (minishell->envp_copy)
 	{
-		free_env(minishell->envp_copy, 0);
+		free_env(minishell->envp_copy);
 		minishell->envp_copy = NULL;
 	}
 	free(minishell);
@@ -102,4 +116,9 @@ void	flush(t_minishell *minishell)
         free_process_list(minishell->process_list);
         minishell->process_list = NULL;
     }
+	if (minishell->envp_copy)
+	{
+		free_env(minishell->envp_copy);
+		minishell->envp_copy = NULL;
+	}
 }

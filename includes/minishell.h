@@ -79,7 +79,7 @@ typedef struct s_process
 	int					process_num;
 	t_token				*tokens;
 	char				*path;
-	char				**command;
+	//char				**command;
 	char				*input_file;
 	char				*output_file;
 	char				*heredoc_delimiter;
@@ -124,7 +124,6 @@ int						is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
 int						count_process(t_process *process_list);
 char					*ft_strjoin_free(char *s1, char *s2);
-void					free_env(char **envp_copy, int i);
 int						is_stopchar(char c);
 char					*expansion(t_minishell *minishell, char *segment);
 char					*get_env_var(t_minishell *minishell, char *segment,
@@ -173,7 +172,7 @@ char					*get_str(char *str, int *i, t_minishell *minishell);
 /* ----------------------------- FREE MEMORY ---------------------------*/
 void					free_process_list(t_process *process_list);
 void					free_env_list(t_env *env_list);
-void					free_env(char **envp_copy, int i);
+void					free_env(char **envp_copy);
 void					free_token_list(t_token *tokens);
 void					free_matrix(char **matrix);
 void					safe_env_list_exit(t_env_vars *vars, t_env *env_list);

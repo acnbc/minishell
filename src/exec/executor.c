@@ -107,7 +107,9 @@ void execute_command(t_minishell *mini)
 
 void    executor(t_minishell *minishell)
 {
-    handle_heredoc(minishell);
+    //handle_heredoc(minishell);
+    if (minishell->envp_copy)
+        free_env(minishell->envp_copy);
     minishell->envp_copy = copy_envp(minishell->env_list);
     if (!get_args(minishell->process_list))
         return ;

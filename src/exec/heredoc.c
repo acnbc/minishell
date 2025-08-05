@@ -1,5 +1,17 @@
 #include "../../includes/minishell.h"
 
+static char	*put_line_break(char *line)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(line, "\n");
+	if (!tmp)
+		safe_exit(NULL);
+	free(line);
+	line = tmp;
+	return (line);
+}
+
 void	unlink_heredoc_files(t_minishell *minishell)
 {
 	t_process	*current;
@@ -13,6 +25,7 @@ void	unlink_heredoc_files(t_minishell *minishell)
 			filename = current->input_file;
 			unlink(filename);
 			free(filename);
+			current->input_file = NULL;
 		}
 		current = current->next;
 	}
@@ -42,7 +55,19 @@ static void	here_doc(t_minishell *mini)
 			free(line);
 			break ;
 		}
-		write(fd, line, ft_strlen(line));
+		line = put_line_break(line);
+		if (!line)
+			safe_exit(mini);
+		if (write(fd, line, ft_strlen(line)) < 0)
+		{
+			free(line);
+			safe_exit(mini);
+		}
+		if (ft_strlen(line) == 0)
+		{
+			free(line);
+			continue ;
+		}
 		free(line);
 	}
 	close(fd);

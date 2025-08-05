@@ -169,7 +169,7 @@ void	print_process_list(t_process *process_list)
 			tok = tok->next;
 		}
 		// Command array
-		if (process_list->command)
+		/*if (process_list->command)
 		{
 			j = 0;
 			while (process_list->command[j])
@@ -178,7 +178,7 @@ void	print_process_list(t_process *process_list)
 					process_list->command[j]);
 				j++;
 			}
-		}
+		}*/
 		// Args array
 		if (process_list->args)
 		{

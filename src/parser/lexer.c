@@ -25,10 +25,12 @@ static char	*get_redir_target(t_minishell *minishell, int *i)
 		temp = get_str(cmd_seq, i, minishell);
 	skip_spaces(cmd_seq, i);
 	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
-	{	
-		free(temp);
-		temp = NULL;
+	{
+    	fprintf(stderr, "Syntax error: redir target '%s' has invalid character\n", temp);
+    	free(temp);
+    	temp = NULL;
 	}
+	printf("DEBUG: redir target = '%s'\n", temp);
 	return (temp);
 }
 
@@ -47,6 +49,8 @@ void	redout_append_tokenizer(t_minishell *minishell, int *i)
 		*i += 1;
 		minishell->current_process->redirect_out_flag = 1;
 	}
+	if (minishell->current_process->output_file)
+		free(minishell->current_process->output_file);
 	minishell->current_process->output_file = get_redir_target(minishell, i);
 	return ;
 }
@@ -69,9 +73,17 @@ void	redin_heredoc_tokenizer(t_minishell *minishell, int *i)
 	}
 	temp = get_redir_target(minishell, i);
 	if (minishell->current_process->heredoc_flag)
+	{
+		if (minishell->current_process->heredoc_delimiter)
+			free(minishell->current_process->heredoc_delimiter);
 		minishell->current_process->heredoc_delimiter = temp;
+	}
 	else
+	{
+		if (minishell->current_process->input_file)
+			free(minishell->current_process->input_file);
 		minishell->current_process->input_file = temp;
+	}
 	return ;
 }
 

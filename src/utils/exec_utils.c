@@ -22,7 +22,13 @@ char	**copy_args(t_token *tokens)
 	{
 		args[i] = ft_strdup(current->value);
 		if (!args[i])
+		{
+			// libera os args já alocados até aqui
+			while (i > 0)
+				free(args[--i]);
+			free(args);
 			return (NULL);
+		}
 		i++;
 		current = current->next;
 	}

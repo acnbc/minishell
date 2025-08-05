@@ -41,6 +41,7 @@ int main(int argc, char *argv[], char *envp[])
         free(minishell->input);
         if (minishell->process_list)
         {
+            print_process_list(minishell->process_list);
             free_process_list(minishell->process_list);
             minishell->process_list = NULL;
         }
