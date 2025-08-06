@@ -38,14 +38,14 @@ int main(int argc, char *argv[], char *envp[])
         }
         parser(minishell);
         executor(minishell);
-        free(minishell->input);
+        /*free(minishell->input);
         if (minishell->process_list)
         {
-            print_process_list(minishell->process_list);
+            // print_process_list(minishell->process_list);
             free_process_list(minishell->process_list);
             minishell->process_list = NULL;
-        }
-       //flush(minishell);
+        }*/
+       flush(minishell);
     }
     return (0);
 }

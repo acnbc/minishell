@@ -30,6 +30,9 @@ static char	*get_redir_target(t_minishell *minishell, int *i)
     	free(temp);
     	temp = NULL;
 	}
+	if (temp == NULL)
+		fprintf(stderr, "[DEBUG] get_redir_target retornou NULL (provavelmente redirecionamento inválido)\n");
+
 	printf("DEBUG: redir target = '%s'\n", temp);
 	return (temp);
 }

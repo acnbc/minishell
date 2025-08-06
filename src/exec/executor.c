@@ -67,6 +67,11 @@ void execute_command(t_minishell *mini)
         }
         else
             p->fdout = dup(e.tmpout); // saída padrão
+        if (!p->args || !p->args[0])
+        {
+            fprintf(stderr, "minishell: empty command\n");
+            continue ;
+        }
         p->pid = fork();
         if (p->pid == 0)
         {
@@ -83,7 +88,7 @@ void execute_command(t_minishell *mini)
             }
             // Processo filho: executar comando
             execve(p->path, p->args, mini->envp_copy);
-            perror("execvp");
+            perror("execve");
             exit(1);
         }
         if (p->fdin != -1)
@@ -107,12 +112,11 @@ void execute_command(t_minishell *mini)
 
 void    executor(t_minishell *minishell)
 {
-    //handle_heredoc(minishell);
     if (minishell->envp_copy)
         free_env(minishell->envp_copy);
     minishell->envp_copy = copy_envp(minishell->env_list);
     if (!get_args(minishell->process_list))
         return ;
-    //execute_command(minishell);
+    execute_command(minishell);
     unlink_heredoc_files(minishell);
 }
