@@ -23,7 +23,8 @@ void	unlink_heredoc_files(t_minishell *minishell)
 		if (current->heredoc_flag && current->input_file)
 		{
 			filename = current->input_file;
-			unlink(filename);
+			if (unlink(filename) == -1)
+			    perror("unlink");
 			free(filename);
 			current->input_file = NULL;
 		}
@@ -35,6 +36,7 @@ static void	here_doc(t_minishell *mini)
 {
 	int		fd;
 	char	*line;
+	char	*temp;
 	char	*filename;
 	t_process	*p;
 
@@ -44,7 +46,10 @@ static void	here_doc(t_minishell *mini)
 		safe_exit(mini);
 	fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (!fd)
-		safe_exit(mini);
+	{
+	    perror("heredoc open");
+	    safe_exit(mini);
+	}
 	while (1)
 	{
 		line = readline("> ");
@@ -58,9 +63,21 @@ static void	here_doc(t_minishell *mini)
 		line = put_line_break(line);
 		if (!line)
 			safe_exit(mini);
+		if (p->heredoc_quote_flag)
+		{
+			temp = expansion(mini, line);
+			free(line);
+			if (!temp)
+			{
+				perror("heredoc expansion");
+				safe_exit(mini);
+			}
+			line = temp;
+		}
 		if (write(fd, line, ft_strlen(line)) < 0)
 		{
-			free(line);
+			perror("heredoc write");
+    		free(line);
 			safe_exit(mini);
 		}
 		if (ft_strlen(line) == 0)

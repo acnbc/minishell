@@ -20,20 +20,18 @@ static char	*get_redir_target(t_minishell *minishell, int *i)
 	cmd_seq = minishell->current_process->cmd_seq;
 	skip_spaces(cmd_seq, i);
 	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
+	{
 		temp = handle_quotes(minishell, cmd_seq, i);
+		minishell->current_process->heredoc_quote_flag = 1;
+	}
 	else
 		temp = get_str(cmd_seq, i, minishell);
 	skip_spaces(cmd_seq, i);
 	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
 	{
-    	fprintf(stderr, "Syntax error: redir target '%s' has invalid character\n", temp);
     	free(temp);
     	temp = NULL;
 	}
-	if (temp == NULL)
-		fprintf(stderr, "[DEBUG] get_redir_target retornou NULL (provavelmente redirecionamento inválido)\n");
-
-	printf("DEBUG: redir target = '%s'\n", temp);
 	return (temp);
 }
 

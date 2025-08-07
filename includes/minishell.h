@@ -33,6 +33,8 @@
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
 
+extern int g_exit_status;
+
 typedef struct s_exec_vars
 {
 	int					tmpin;
@@ -79,7 +81,6 @@ typedef struct s_process
 	int					process_num;
 	t_token				*tokens;
 	char				*path;
-	//char				**command;
 	char				*input_file;
 	char				*output_file;
 	char				*heredoc_delimiter;
@@ -87,6 +88,7 @@ typedef struct s_process
 	int					redirect_in_flag;
 	int					redirect_out_flag;
 	int					heredoc_flag;
+	int					heredoc_quote_flag;
 	int					double_quote_flag;
 	int					single_quote_flag;
 	char				**args;
@@ -115,7 +117,7 @@ t_process				*new_process(char *content);
 void					add_process(t_process **lst, t_process *new);
 t_process				*last_process(t_process *proc);
 int						ft_isspace(char c);
-void					parser(t_minishell *minishell);
+int						parser(t_minishell *minishell);
 char					*extract_variable(t_minishell *minishell,
 							char *variable);
 char					*handle_quotes(t_minishell *minishell, char *process,

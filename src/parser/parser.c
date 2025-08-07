@@ -12,13 +12,14 @@
 
 #include "../../includes/minishell.h"
 
-void	parser(t_minishell *minishell)
+int	parser(t_minishell *minishell)
 {
 	minishell->process_list = separate_process(minishell->input);
 	if (!minishell->process_list)
-		return ;
+		return (0);
 	lexer(minishell);
 	handle_heredoc(minishell);
 	if (syntactic_analysis(minishell) == false)
-		return ;
+		return (0);
+	return (1);
 }

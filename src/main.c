@@ -12,12 +12,15 @@
 
 #include "../includes/minishell.h"
 
+int         g_exit_status;
+
 int main(int argc, char *argv[], char *envp[])
 {
     t_minishell *minishell;
-
+    
     (void)argc;
     (void)argv;
+    g_exit_status = 0;
     minishell = safe_malloc(sizeof(t_minishell));
     minishell->env_list = env_list(envp);
     minishell->process_list = NULL;
@@ -36,7 +39,11 @@ int main(int argc, char *argv[], char *envp[])
             free(minishell->input);
             continue ;
         }
-        parser(minishell);
+        if (!parser(minishell))
+        {
+            flush(minishell);
+            continue ;
+        }
         executor(minishell);
         /*free(minishell->input);
         if (minishell->process_list)

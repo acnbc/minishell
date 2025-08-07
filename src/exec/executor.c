@@ -14,6 +14,8 @@ void	wait_all_processes(t_process *head)
 			cur->exit_signal = 128 + WTERMSIG(cur->status);
 		else
 			cur->exit_signal = -1;
+        if (cur->next == NULL)
+			g_exit_status = cur->exit_signal;
 		cur = cur->next;
 	}
 }
@@ -27,7 +29,17 @@ void execute_command(t_minishell *mini)
     
     // 1. Salvar stdin e stdout
     e.tmpin = dup(0);    // salva stdin
+    if (e.tmpin == -1)
+    {
+        perror("dup (stdin)");
+        safe_exit(mini);
+    }
     e.tmpout = dup(1);   // salva stdout
+    if (e.tmpout == -1)
+    {
+        perror("dup (stdout)");
+        safe_exit(mini);
+    }
     p = mini->process_list;
     mini->exec_vars = e;
     while (p)
@@ -38,7 +50,15 @@ void execute_command(t_minishell *mini)
         if (p->fdin == -1)
         {
             if (p->input_file)
+            {    
                 p->fdin = open(p->input_file, O_RDONLY);
+                if (p->fdin == -1)
+                {
+                    perror(p->input_file);
+                    p->exit_signal = 1;
+                    continue;
+                }
+            }
             else
                 p->fdin = dup(e.tmpin); // entrada padrão
         }
@@ -49,6 +69,12 @@ void execute_command(t_minishell *mini)
                 p->fdout = open(p->output_file, O_WRONLY | O_CREAT | O_APPEND, 0666);
             else if (p->redirect_out_flag)
                 p->fdout = open(p->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+            if (p->fdout == -1)
+            {
+                perror(p->output_file);
+                p->exit_signal = 1;
+                continue;
+            }
         }
         else if (p->next)
         {
@@ -67,23 +93,36 @@ void execute_command(t_minishell *mini)
         }
         else
             p->fdout = dup(e.tmpout); // saída padrão
-        if (!p->args || !p->args[0])
+        /*if (!p->args || !p->args[0])
         {
             fprintf(stderr, "minishell: empty command\n");
             continue ;
-        }
+        }*/
         p->pid = fork();
+        if (p->pid < 0)
+        {
+            perror("fork");
+            safe_exit(mini);
+        }
         if (p->pid == 0)
         {
             // 4. Redirecionar entrada e saída
             if (p->fdin != 0)
             {
-                dup2(p->fdin, 0); // redireciona stdin
+                if (dup2(p->fdin, 0) == -1)
+                {
+                    perror("dup2 (stdin)");
+                    exit(1);
+                }
                 close(p->fdin);
             }
             if (p->fdout != 1)
             {
-                dup2(p->fdout, 1); // redireciona stdout
+                if (dup2(p->fdout, 1) == -1)
+                {
+                    perror("dup2 (stdout)");
+                    exit(1);
+                }
                 close(p->fdout);
             }
             // Processo filho: executar comando
@@ -101,8 +140,16 @@ void execute_command(t_minishell *mini)
         p = p->next;
     }
     // 8. Restaurar entrada e saída originais
-    dup2(e.tmpin, 0);
-    dup2(e.tmpout, 1);
+    if (dup2(e.tmpin, 0) == -1)
+    {
+        perror("dup2 (stdin)");
+        exit(1);
+    }
+    if (dup2(e.tmpout, 1) == -1)
+    {
+        perror("dup2 (stdout)");
+        exit(1);
+    }
     close(e.tmpin);
     close(e.tmpout);
 
