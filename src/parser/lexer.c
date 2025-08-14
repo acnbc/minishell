@@ -29,8 +29,8 @@ static char	*get_redir_target(t_minishell *minishell, int *i)
 	skip_spaces(cmd_seq, i);
 	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
 	{
-    	free(temp);
-    	temp = NULL;
+		free(temp);
+		temp = NULL;
 	}
 	return (temp);
 }

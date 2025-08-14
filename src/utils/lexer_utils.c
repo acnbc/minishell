@@ -61,7 +61,7 @@ int	is_cmd(char *cmd, t_minishell *minishell)
 int	is_builtin(char *cmd)
 {
 	static const char	*builtins[] = {"echo", "cd", "pwd", "export", "unset",
-		"env", "exit", NULL};
+			"env", "exit", NULL};
 	int					i;
 
 	i = -1;

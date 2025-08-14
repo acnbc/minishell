@@ -38,7 +38,7 @@ char	**copy_args(t_token *tokens)
 
 int	get_args(t_process *process_list)
 {
-	t_process	*current;
+	t_process *current;
 
 	current = process_list;
 	while (current)

@@ -33,7 +33,7 @@
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
 
-extern int g_exit_status;
+extern int				g_exit_status;
 
 typedef struct s_exec_vars
 {
@@ -109,7 +109,7 @@ typedef struct s_minishell
 	int					process_count;
 	t_process			*process_list;
 	t_process			*current_process;
-	t_exec_vars			exec_vars;
+	t_exec_vars			*exec_vars;
 }						t_minishell;
 
 /* ----------------------------- PARSER ---------------------------*/
@@ -133,7 +133,6 @@ char					*get_env_var(t_minishell *minishell, char *segment,
 void					free_env_list(t_env *env_list);
 void					env_lstadd_back(t_env **lst, t_env *new);
 t_env					*env_lstnew(char *var_name, char *var_cont);
-// t_env					*env_lstnew(char *env_var);
 t_env					*env_list(char *envp[]);
 char					**copy_envp(t_env *env_list);
 int						verify_quote_pair(char *input, char quote, int *i);
@@ -160,7 +159,7 @@ bool					syntactic_analysis(t_minishell *minishell);
 int						is_cmd(char *cmd, t_minishell *minishell);
 /*------------------------ EXECUTOR ------------------------------*/
 void					executor(t_minishell *minishell);
-void    				handle_heredoc(t_minishell *mini);
+void					handle_heredoc(t_minishell *mini);
 void					unlink_heredoc_files(t_minishell *minishell);
 char					**copy_args(t_token *tokens);
 int						get_args(t_process *process_list);

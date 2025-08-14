@@ -69,7 +69,7 @@ void	free_env_list(t_env *env_list)
 
 void	free_env(char **envp_copy)
 {
-	int i;
+	int	i;
 
 	if (!envp_copy)
 		return ;
@@ -78,7 +78,6 @@ void	free_env(char **envp_copy)
 		free(envp_copy[i++]);
 	free(envp_copy);
 }
-
 
 void	safe_exit(t_minishell *minishell)
 {
@@ -111,11 +110,11 @@ void	safe_exit(t_minishell *minishell)
 void	flush(t_minishell *minishell)
 {
 	free(minishell->input);
-    if (minishell->process_list)
-    {
-        free_process_list(minishell->process_list);
-        minishell->process_list = NULL;
-    }
+	if (minishell->process_list)
+	{
+		free_process_list(minishell->process_list);
+		minishell->process_list = NULL;
+	}
 	if (minishell->envp_copy)
 	{
 		free_env(minishell->envp_copy);

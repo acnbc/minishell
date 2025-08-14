@@ -12,47 +12,47 @@
 
 #include "../includes/minishell.h"
 
-int         g_exit_status;
+int	g_exit_status;
 
-int main(int argc, char *argv[], char *envp[])
+int	main(int argc, char *argv[], char *envp[])
 {
-    t_minishell *minishell;
-    
-    (void)argc;
-    (void)argv;
-    g_exit_status = 0;
-    minishell = safe_malloc(sizeof(t_minishell));
-    minishell->env_list = env_list(envp);
-    minishell->process_list = NULL;
+	t_minishell	*minishell;
+
+	(void)argc;
+	(void)argv;
+	g_exit_status = 0;
+	minishell = safe_malloc(sizeof(t_minishell));
+	minishell->env_list = env_list(envp);
+	minishell->process_list = NULL;
 	// print_env_list(minishell->env_list);
-    while (1)
-    {
-        minishell->input = readline(MINISHELL_PROMPT);
-        if (!minishell->input)
-            continue;
-        if (ft_strncmp(minishell->input, "exit", 5) == 0)
-            safe_exit(minishell);
-        if ((ft_strchr(minishell->input, DOUBLE_QUOTE)
-            || ft_strchr(minishell->input, SINGLE_QUOTE))
-            && !verify_quote_count(minishell->input))
-        {
-            free(minishell->input);
-            continue ;
-        }
-        if (!parser(minishell))
-        {
-            flush(minishell);
-            continue ;
-        }
-        executor(minishell);
-        /*free(minishell->input);
-        if (minishell->process_list)
-        {
-            // print_process_list(minishell->process_list);
-            free_process_list(minishell->process_list);
-            minishell->process_list = NULL;
-        }*/
-       flush(minishell);
-    }
-    return (0);
+	while (1)
+	{
+		minishell->input = readline(MINISHELL_PROMPT);
+		if (!minishell->input)
+			continue ;
+		if (ft_strncmp(minishell->input, "exit", 5) == 0)
+			safe_exit(minishell);
+		if ((ft_strchr(minishell->input, DOUBLE_QUOTE)
+				|| ft_strchr(minishell->input, SINGLE_QUOTE))
+			&& !verify_quote_count(minishell->input))
+		{
+			free(minishell->input);
+			continue ;
+		}
+		if (!parser(minishell))
+		{
+			flush(minishell);
+			continue ;
+		}
+		executor(minishell);
+		/*free(minishell->input);
+		if (minishell->process_list)
+		{
+			// print_process_list(minishell->process_list);
+			free_process_list(minishell->process_list);
+			minishell->process_list = NULL;
+		}*/
+		flush(minishell);
+	}
+	return (0);
 }

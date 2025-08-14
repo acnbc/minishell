@@ -33,7 +33,8 @@ char	**copy_envp(t_env *env_list)
 	while (current)
 	{
 		envp_copy[i] = ft_strjoin(current->var_name, "=");
-		envp_copy[i] = ft_strjoin_free(envp_copy[i], ft_strdup(current->var_cont));
+		envp_copy[i] = ft_strjoin_free(envp_copy[i],
+				ft_strdup(current->var_cont));
 		i++;
 		current = current->next;
 	}

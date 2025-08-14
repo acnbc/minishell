@@ -6,13 +6,14 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 21:28:27 by abouchat          #+#    #+#             */
-/*   Updated: 2024/10/03 15:37:38 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/11 19:29:01 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void	strings_len(int *s1_len, int *s2_len, const char *s1, const char *s2)
+static void	strings_len(int *s1_len, int *s2_len, const char *s1,
+		const char *s2)
 {
 	if (!s1)
 		*s1_len = 0;

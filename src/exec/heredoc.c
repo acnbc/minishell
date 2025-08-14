@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/11 19:21:34 by anogueir          #+#    #+#             */
+/*   Updated: 2025/08/11 19:21:37 by anogueir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 static char	*put_line_break(char *line)
@@ -24,7 +36,7 @@ void	unlink_heredoc_files(t_minishell *minishell)
 		{
 			filename = current->input_file;
 			if (unlink(filename) == -1)
-			    perror("unlink");
+				perror("unlink");
 			free(filename);
 			current->input_file = NULL;
 		}
@@ -34,10 +46,10 @@ void	unlink_heredoc_files(t_minishell *minishell)
 
 static void	here_doc(t_minishell *mini)
 {
-	int		fd;
-	char	*line;
-	char	*temp;
-	char	*filename;
+	int			fd;
+	char		*line;
+	char		*temp;
+	char		*filename;
 	t_process	*p;
 
 	p = mini->current_process;
@@ -47,15 +59,16 @@ static void	here_doc(t_minishell *mini)
 	fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (!fd)
 	{
-	    perror("heredoc open");
-	    safe_exit(mini);
+		perror("heredoc open");
+		safe_exit(mini);
 	}
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
 			break ;
-		if (ft_strncmp(line, p->heredoc_delimiter, ft_strlen(p->heredoc_delimiter)) == 0)
+		if (ft_strncmp(line, p->heredoc_delimiter,
+				ft_strlen(p->heredoc_delimiter)) == 0)
 		{
 			free(line);
 			break ;
@@ -77,7 +90,7 @@ static void	here_doc(t_minishell *mini)
 		if (write(fd, line, ft_strlen(line)) < 0)
 		{
 			perror("heredoc write");
-    		free(line);
+			free(line);
 			safe_exit(mini);
 		}
 		if (ft_strlen(line) == 0)
@@ -91,15 +104,15 @@ static void	here_doc(t_minishell *mini)
 	p->input_file = filename;
 }
 
-void    handle_heredoc(t_minishell *mini)
+void	handle_heredoc(t_minishell *mini)
 {
-	t_process	*p;
+	t_process *p;
 
 	p = mini->process_list;
 	while (p)
 	{
 		if (p->heredoc_flag)
-		{			
+		{
 			mini->current_process = p;
 			here_doc(mini);
 		}
