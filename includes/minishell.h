@@ -95,6 +95,7 @@ typedef struct s_process
 	bool				found_cmd;
 	int					fdin;
 	int					fdout;
+	int					heredoc_fd;
 	int					pid;
 	int					status;
 	int					exit_signal;
@@ -112,6 +113,7 @@ typedef struct s_minishell
 	t_exec_vars			*exec_vars;
 }						t_minishell;
 
+int						mini_shell(t_minishell *minishell);
 /* ----------------------------- PARSER ---------------------------*/
 t_process				*new_process(char *content);
 void					add_process(t_process **lst, t_process *new);
@@ -124,7 +126,6 @@ char					*handle_quotes(t_minishell *minishell, char *process,
 							int *i);
 int						is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
-int						count_process(t_process *process_list);
 char					*ft_strjoin_free(char *s1, char *s2);
 int						is_stopchar(char c);
 char					*expansion(t_minishell *minishell, char *segment);

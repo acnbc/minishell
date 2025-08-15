@@ -10,7 +10,7 @@ LDLIBS		= -lft -lreadline -ltermcap
 SRC_DIR		= src
 SRC_SUBDIRS	= builtins exec parse utils
 
-SRC			= main.c \
+SRC			= main.c mini_shell.c \
 			  $(addprefix parser/, parser.c handle_quotes.c expansion.c separate_process.c lexer.c word_tokenizer.c syntactic_analysis.c) \
 			  $(addprefix exec/, executor.c heredoc.c) \
 			  $(addprefix builtins/, ) \

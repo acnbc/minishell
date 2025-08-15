@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   syntatic_analysis.c                                :+:      :+:    :+:   */
+/*   syntactic_analysis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:27:08 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/19 19:27:10 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/14 21:29:20 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,42 +22,6 @@ static bool	has_redirection_without_target(t_process *p)
 		return (true);
 	return (false);
 }
-
-/*static bool	syntax_error(const char *msg)
-{
-	printf("Syntax error: %s\n", msg);
-	return (false);
-}
-
-bool	syntactic_analysis(t_minishell *minishell)
-{
-	t_process	*p;
-	t_token		*token;
-
-	p = minishell->process_list;
-	while (p)
-	{
-		p->found_cmd = false;
-		token = p->tokens;
-		if (has_redirection_without_target(p))
-			return (syntax_error("Missing redirection target"));
-		while (token)
-		{
-			if ((token->type == CMD || token->type == BUILTIN) && p->found_cmd)
-				return (syntax_error("Multiple commands without pipe"));
-			if (token->type == CMD || token->type == BUILTIN)
-				p->found_cmd = true;
-			if (!p->found_cmd && token->type == ARGS)
-				return (syntax_error("Argument before command"));
-			token = token->next;
-		}
-		if (!p->found_cmd)
-			return (syntax_error("Missing command"));
-		p = p->next;
-	}
-	return (true);
-}
-*/
 
 static bool	syntax_error_msg(const char *msg)
 {
@@ -77,29 +41,18 @@ bool	syntactic_analysis(t_minishell *minishell)
 	{
 		p->found_cmd = false;
 		token = p->tokens;
-		// Redirecionamento sem destino (ex: cat >)
 		if (has_redirection_without_target(p))
 			return (syntax_error_msg("Missing redirection target"));
 		while (token)
 		{
-			// Vários comandos sem pipe
 			if ((token->type == CMD || token->type == BUILTIN) && p->found_cmd)
 				return (syntax_error_msg("Multiple commands without pipe"));
-			// Primeiro comando válido
 			if (token->type == CMD || token->type == BUILTIN)
 				p->found_cmd = true;
-			// Argumento antes do comando (mas ignora se for o primeiro token isolado)
 			if (!p->found_cmd && token->type == ARGS && token != p->tokens)
-			{
-				write(2, "Syntax error: Unexpected argument before command: ",
-					50);
-				write(2, token->value, ft_strlen(token->value));
-				write(2, "\n", 1);
-				return (false);
-			}
+				return (syntax_error_msg("Unexpected argument before command"));
 			token = token->next;
 		}
-		// Nenhum comando encontrado (ex: só redirecionamentos ou argumentos)
 		if (!p->found_cmd)
 			return (syntax_error_msg("Missing command"));
 		p = p->next;

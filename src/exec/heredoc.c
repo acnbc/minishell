@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:21:34 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/11 19:21:37 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/14 21:24:50 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,53 @@ void	unlink_heredoc_files(t_minishell *minishell)
 	}
 }
 
+static int	open_heredoc_file(char *filename, t_minishell *mini)
+{
+	int	fd;
+
+	fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (fd < 0)
+	{
+		perror("heredoc open");
+		safe_exit(mini);
+	}
+	return (fd);
+}
+
+static char	*process_line(t_minishell *mini, t_process *p, char *line)
+{
+	char	*temp;
+
+	if (p->heredoc_quote_flag)
+	{
+		temp = expansion(mini, line);
+		free(line);
+		if (!temp)
+		{
+			perror("heredoc expansion");
+			safe_exit(mini);
+		}
+		line = temp;
+	}
+	line = put_line_break(line);
+	if (!line)
+		safe_exit(mini);
+	return (line);
+}
+
+static void	write_heredoc_line(int fd, char *line, t_minishell *mini)
+{
+	if (write(fd, line, ft_strlen(line)) < 0)
+	{
+		perror("heredoc write");
+		free(line);
+		safe_exit(mini);
+	}
+}
+
 static void	here_doc(t_minishell *mini)
 {
-	int			fd;
 	char		*line;
-	char		*temp;
 	char		*filename;
 	t_process	*p;
 
@@ -56,12 +98,7 @@ static void	here_doc(t_minishell *mini)
 	filename = ft_itoa(p->process_num);
 	if (!filename)
 		safe_exit(mini);
-	fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	if (!fd)
-	{
-		perror("heredoc open");
-		safe_exit(mini);
-	}
+	p->heredoc_fd = open_heredoc_file(filename, mini);
 	while (1)
 	{
 		line = readline("> ");
@@ -73,49 +110,30 @@ static void	here_doc(t_minishell *mini)
 			free(line);
 			break ;
 		}
-		line = put_line_break(line);
-		if (!line)
-			safe_exit(mini);
-		if (p->heredoc_quote_flag)
-		{
-			temp = expansion(mini, line);
-			free(line);
-			if (!temp)
-			{
-				perror("heredoc expansion");
-				safe_exit(mini);
-			}
-			line = temp;
-		}
-		if (write(fd, line, ft_strlen(line)) < 0)
-		{
-			perror("heredoc write");
-			free(line);
-			safe_exit(mini);
-		}
-		if (ft_strlen(line) == 0)
-		{
-			free(line);
-			continue ;
-		}
+		line = process_line(mini, p, line);
+		write_heredoc_line(p->heredoc_fd, line, mini);
 		free(line);
 	}
-	close(fd);
+	close(p->heredoc_fd);
 	p->input_file = filename;
 }
 
 void	handle_heredoc(t_minishell *mini)
 {
-	t_process *p;
+	t_process	*p;
+	int			i;
 
+	i = 1;
 	p = mini->process_list;
 	while (p)
 	{
+		p->process_num = i;
 		if (p->heredoc_flag)
 		{
 			mini->current_process = p;
 			here_doc(mini);
 		}
 		p = p->next;
+		i++;
 	}
 }
