@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
-void	ft_pwd(t_env *env_list)
+int	ft_pwd(t_process *p, t_env *env_list)
 {
 	t_env	*curr;
 
@@ -21,4 +21,7 @@ void	ft_pwd(t_env *env_list)
 		return ;
 	write(1, curr->var_cont, ft_strlen(curr->var_cont));
 	write(1, "\n", 1);
+	if (p->output_file)
+		write(p->fdout, "0\n", 2);
+	return (0);
 }

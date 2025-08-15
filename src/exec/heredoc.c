@@ -94,7 +94,7 @@ static void	here_doc(t_minishell *mini)
 	char		*filename;
 	t_process	*p;
 
-	p = mini->current_process;
+	p = mini->cur_proc;
 	filename = ft_itoa(p->process_num);
 	if (!filename)
 		safe_exit(mini);
@@ -129,7 +129,7 @@ void	handle_heredoc(t_minishell *mini)
 		p->process_num = i;
 		if (p->heredoc_flag)
 		{
-			mini->current_process = p;
+			mini->cur_proc = p;
 			here_doc(mini);
 		}
 		p = p->next;

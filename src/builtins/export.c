@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
-void	ft_export(char *arg_name, char *arg_cont, t_env *env_list)
+int	ft_export(char *arg_name, char *arg_cont, t_env *env_list)
 {
 	t_env	*temp_node;
 

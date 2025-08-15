@@ -55,7 +55,7 @@ static void	create_forks(t_minishell *mini)
 {
 	t_process	*p;
 
-	p = mini->current_process;
+	p = mini->cur_proc;
 	p->pid = fork();
 	if (p->pid < 0)
 	{
@@ -85,7 +85,7 @@ static void	open_pipes(t_minishell *mini)
 	t_process	*p;
 	t_exec_vars	*e;
 
-	p = mini->current_process;
+	p = mini->cur_proc;
 	e = mini->exec_vars;
 	if (pipe(e->fdpipe) == -1)
 	{
@@ -115,7 +115,7 @@ static void	get_redirect_in(t_minishell *mini)
 {
 	t_process	*p;
 
-	p = mini->current_process;
+	p = mini->cur_proc;
 	if (p->fdin == -1)
 	{
 		if (p->input_file)
@@ -137,7 +137,7 @@ static void	get_redirect_out(t_minishell *mini)
 {
 	t_process	*p;
 
-	p = mini->current_process;
+	p = mini->cur_proc;
 	if (p->output_file)
 	{
 		if (p->append_flag)
@@ -159,6 +159,27 @@ static void	get_redirect_out(t_minishell *mini)
 		dup_safe(mini, &p->fdout, mini->exec_vars->tmpout, "dup (stdout)");
 }
 
+void	exec_builtin(t_minishell *mini)
+{
+	t_process	*p;
+
+	p = mini->cur_proc;
+	if (ft_strcmp(p->args[0], "cd") == 0)
+		p->exit_signal = ft_cd(p->args[1], mini->env_list);
+	else if (ft_strcmp(p->args[0], "echo") == 0)
+		p->exit_signal = ft_echo(p->args, p->fdout);
+	else if (ft_strcmp(p->args[0], "pwd") == 0)
+		p->exit_signal = ft_pwd(mini->cur_proc, mini->env_list);
+	else if (ft_strcmp(p->args[0], "export") == 0)
+		p->exit_signal = ft_export(mini, p->args);
+	else if (ft_strcmp(p->args[0], "unset") == 0)
+		p->exit_signal = builtin_unset(mini, p->args);
+	else if (ft_strcmp(p->args[0], "env") == 0)
+		p->exit_signal = builtin_env(mini->env_list);
+	else if (ft_strcmp(p->args[0], "exit") == 0)
+		p->exit_signal = builtin_exit(mini, p->args);
+}
+
 void	execute_command(t_minishell *mini)
 {
 	t_exec_vars	e;
@@ -171,10 +192,13 @@ void	execute_command(t_minishell *mini)
 	mini->exec_vars = &e;
 	while (p)
 	{
-		mini->current_process = p;
+		mini->cur_proc = p;
 		get_redirect_in(mini);
 		get_redirect_out(mini);
-		create_forks(mini);
+		if (is_builtin(p->args[0]))
+			exec_builtin(mini);
+		else
+			create_forks(mini);
 		close_fds(p);
 		p = p->next;
 	}

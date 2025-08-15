@@ -13,7 +13,7 @@ SRC_SUBDIRS	= builtins exec parse utils
 SRC			= main.c mini_shell.c \
 			  $(addprefix parser/, parser.c handle_quotes.c expansion.c separate_process.c lexer.c word_tokenizer.c syntactic_analysis.c) \
 			  $(addprefix exec/, executor.c heredoc.c) \
-			  $(addprefix builtins/, ) \
+			  $(addprefix builtins/, cd.c echo.c env.c export.c pwd.c unset.c ) \
 			  $(addprefix utils/, process_utils.c utils.c env_utils.c safe_exit.c token_utils.c lexer_utils.c quotes_utils.c string_utils.c exec_utils.c) \
 
 OBJ_DIR		= obj

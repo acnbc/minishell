@@ -17,7 +17,7 @@ cd /: Vai para o diretório raiz do sistema de arquivos.
 cd ~: Vai para o diretório inicial do usuário atual.
 */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 static char	*cd_special_char(char *str, t_env *env_list)
 {
@@ -47,13 +47,15 @@ static char	*cd_special_char(char *str, t_env *env_list)
 	return (path);
 }
 
-void	ft_cd(char *str, t_env *env_list)
+int	ft_cd(t_minishell *mini, t_env *env_list)
 {
 	char	*path;
 	t_env	*old_pwd;
 	t_env	*pwd;
 	char	*temp;
+	char	*str;
 
+	str = mini->cur_proc->args[1];
 	path = cd_special_char(str, env_list);
 	if (!path)
 		path = ft_strdup(str);
@@ -61,8 +63,8 @@ void	ft_cd(char *str, t_env *env_list)
 	pwd = find_env_var("PWD", env_list);
 	if (chdir(path) == -1)
 	{
-		write(1, "cd: No such file or directory\n", 30);
-		return ;
+		write(mini->cur_proc->fdout, "cd: No such file or directory\n", 30);
+		return (1);
 	}
 	else
 	{
@@ -75,4 +77,5 @@ void	ft_cd(char *str, t_env *env_list)
 		free(temp);
 	}
 	free(path);
+	return (0);
 }

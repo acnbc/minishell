@@ -109,7 +109,7 @@ typedef struct s_minishell
 	char				**envp_copy;
 	int					process_count;
 	t_process			*process_list;
-	t_process			*current_process;
+	t_process			*cur_proc;
 	t_exec_vars			*exec_vars;
 }						t_minishell;
 
@@ -164,6 +164,15 @@ void					handle_heredoc(t_minishell *mini);
 void					unlink_heredoc_files(t_minishell *mini);
 char					**copy_args(t_token *tokens);
 int						get_args(t_process *process_list);
+/* ---------------------- BUILTINS ----------------------------*/
+int						ft_echo(char **args, int fd);
+int						ft_cd(t_minishell *mini, t_env *env_list);
+int						ft_pwd(t_process *p, t_env *env_list);
+int						ft_export(char *arg_name, char *arg_cont, t_env *env_list);
+void					ft_unset(char *var, t_env *env_list);
+void					ft_env(t_env *env_list);
+t_env					*find_env_var(char *var, t_env *env_list);
+/* ---------------------- SIGNALS ----------------------------*/
 /* ----------------------------- UTILS ---------------------------*/
 t_token					*new_token(char *value, enum e_token_type type,
 							t_minishell *mini);

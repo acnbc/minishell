@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 static bool	verify_flag(char *str)
 {
@@ -26,7 +26,7 @@ static bool	verify_flag(char *str)
 	return (true);
 }
 
-void	ft_echo(char **args, int fd)
+int	ft_echo(char **args, int fd)
 {
 	int	flag;
 
@@ -45,4 +45,5 @@ void	ft_echo(char **args, int fd)
 	}
 	if (flag == 1)
 		write(fd, "\n", 1);
+	return (0);
 }

@@ -19,7 +19,7 @@ static char	*cut_double_quotes(t_minishell *mini, int i)
 	int		j;
 
 	clean_input = NULL;
-	cmd_seq = mini->current_process->cmd_seq;
+	cmd_seq = mini->cur_proc->cmd_seq;
 	j = i;
 	while (cmd_seq[i] != DOUBLE_QUOTE && cmd_seq[i])
 	{
@@ -41,7 +41,7 @@ static char	*cut_single_quotes(t_minishell *mini, int i)
 	int		j;
 
 	clean_input = NULL;
-	cmd_seq = mini->current_process->cmd_seq;
+	cmd_seq = mini->cur_proc->cmd_seq;
 	j = i;
 	while (cmd_seq[i] != SINGLE_QUOTE && cmd_seq[i++])
 		;
@@ -56,7 +56,7 @@ char	*cut_quotes(t_minishell *mini, int *i, int *j, char quote)
 	char	*temp;
 
 	clean_input = NULL;
-	cmd_seq = mini->current_process->cmd_seq;
+	cmd_seq = mini->cur_proc->cmd_seq;
 	if (*j < *i)
 		clean_input = strjoin_free(clean_input, ft_substr_safe(cmd_seq, *j,
 					*i - *j, mini));

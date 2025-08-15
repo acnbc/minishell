@@ -18,7 +18,7 @@ void	get_word_token(t_minishell *mini, int *i, int start)
 	char				*segment;
 	enum e_token_type	type;
 
-	tokens = &mini->current_process->tokens;
+	tokens = &mini->cur_proc->tokens;
 	segment = is_variable(mini, i, start);
 	if (!segment)
 		return ;
@@ -41,7 +41,7 @@ int	is_cmd(char *cmd, t_minishell *mini)
 
 	if (ft_strchr(cmd, '/'))
 	{
-		mini->current_process->path = ft_strdup(cmd);
+		mini->cur_proc->path = ft_strdup(cmd);
 		return (1);
 	}
 	path_dirs = paths(mini->env_list);
@@ -50,7 +50,7 @@ int	is_cmd(char *cmd, t_minishell *mini)
 	temp = path_name(path_dirs, cmd);
 	if (temp)
 	{
-		mini->current_process->path = temp;
+		mini->cur_proc->path = temp;
 		free_matrix(path_dirs);
 		return (1);
 	}
@@ -80,7 +80,7 @@ char	*is_variable(t_minishell *mini, int *i, int start)
 	char	*segment;
 	char	*result;
 
-	segment = ft_substr_safe(mini->current_process->cmd_seq, start, *i
+	segment = ft_substr_safe(mini->cur_proc->cmd_seq, start, *i
 			- start, mini);
 	if (*segment == '\0')
 	{
@@ -106,7 +106,7 @@ void	tokenize(t_minishell *mini)
 	char	*cmd_seq;
 
 	i = 0;
-	cmd_seq = mini->current_process->cmd_seq;
+	cmd_seq = mini->cur_proc->cmd_seq;
 	while (cmd_seq[i])
 	{
 		if (cmd_seq[i] == '<' && !is_between_quotes(cmd_seq, i))

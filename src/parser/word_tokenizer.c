@@ -21,7 +21,7 @@ static void	handle_whitespace_token(t_minishell *mini, int *i, int *start)
 {
 	if (*i > *start)
 		get_word_token(mini, i, *start);
-	skip_spaces(mini->current_process->cmd_seq, i);
+	skip_spaces(mini->cur_proc->cmd_seq, i);
 	*start = *i;
 }
 
@@ -30,8 +30,8 @@ static void	handle_quote_token(t_minishell *mini, int *i, int *start)
 	t_token	**tokens;
 	char	*cmd_seq;
 
-	tokens = &mini->current_process->tokens;
-	cmd_seq = mini->current_process->cmd_seq;
+	tokens = &mini->cur_proc->tokens;
+	cmd_seq = mini->cur_proc->cmd_seq;
 	if (*i > *start)
 		token_lstadd_back(tokens, new_token(is_variable(mini, i, *start),
 				ARGS, mini));
@@ -45,7 +45,7 @@ void	word_tokenizer(t_minishell *mini, int *i)
 	char	*cmd_seq;
 	int		start;
 
-	cmd_seq = mini->current_process->cmd_seq;
+	cmd_seq = mini->cur_proc->cmd_seq;
 	start = *i;
 	while (cmd_seq[*i])
 	{
