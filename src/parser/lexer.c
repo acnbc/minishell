@@ -6,26 +6,26 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 16:23:12 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/14 21:31:50 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 09:10:10 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static char	*get_redir_target(t_minishell *minishell, int *i)
+static char	*get_redir_target(t_minishell *mini, int *i)
 {
 	char	*cmd_seq;
 	char	*temp;
 
-	cmd_seq = minishell->current_process->cmd_seq;
+	cmd_seq = mini->current_process->cmd_seq;
 	skip_spaces(cmd_seq, i);
 	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
 	{
-		temp = handle_quotes(minishell, cmd_seq, i);
-		minishell->current_process->heredoc_quote_flag = 1;
+		temp = handle_quotes(mini, cmd_seq, i);
+		mini->current_process->heredoc_quote_flag = 1;
 	}
 	else
-		temp = get_str(cmd_seq, i, minishell);
+		temp = get_str(cmd_seq, i, mini);
 	skip_spaces(cmd_seq, i);
 	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
 	{
@@ -35,68 +35,63 @@ static char	*get_redir_target(t_minishell *minishell, int *i)
 	return (temp);
 }
 
-void	redout_append_tokenizer(t_minishell *minishell, int *i)
+static void	assign_file(char **file, t_minishell *mini, int *i)
+{
+	if (*file)
+		free(*file);
+	*file = get_redir_target(mini, i);
+}
+
+void	redout_append_tokenizer(t_minishell *mini, int *i)
 {
 	char	*cmd_seq;
 
-	cmd_seq = minishell->current_process->cmd_seq;
+	cmd_seq = mini->current_process->cmd_seq;
 	if (cmd_seq[*i + 1] && cmd_seq[*i + 1] == '>')
 	{
 		*i += 2;
-		minishell->current_process->append_flag = 1;
+		mini->current_process->append_flag = 1;
 	}
 	else
 	{
 		*i += 1;
-		minishell->current_process->redirect_out_flag = 1;
+		mini->current_process->redirect_out_flag = 1;
 	}
-	if (minishell->current_process->output_file)
-		free(minishell->current_process->output_file);
-	minishell->current_process->output_file = get_redir_target(minishell, i);
+	assign_file(&mini->current_process->output_file, mini, i);
 	return ;
 }
 
-void	redin_heredoc_tokenizer(t_minishell *minishell, int *i)
+void	redin_heredoc_tokenizer(t_minishell *mini, int *i)
 {
-	char	*temp;
 	char	*cmd_seq;
 
-	cmd_seq = minishell->current_process->cmd_seq;
+	cmd_seq = mini->current_process->cmd_seq;
 	if (cmd_seq[*i + 1] && cmd_seq[*i + 1] == '<')
 	{
 		*i += 2;
-		minishell->current_process->heredoc_flag = 1;
+		mini->current_process->heredoc_flag = 1;
 	}
 	else
 	{
 		*i += 1;
-		minishell->current_process->redirect_in_flag = 1;
+		mini->current_process->redirect_in_flag = 1;
 	}
-	temp = get_redir_target(minishell, i);
-	if (minishell->current_process->heredoc_flag)
-	{
-		if (minishell->current_process->heredoc_delimiter)
-			free(minishell->current_process->heredoc_delimiter);
-		minishell->current_process->heredoc_delimiter = temp;
-	}
+	if (mini->current_process->heredoc_flag)
+		assign_file(&mini->current_process->delimiter, mini, i);
 	else
-	{
-		if (minishell->current_process->input_file)
-			free(minishell->current_process->input_file);
-		minishell->current_process->input_file = temp;
-	}
+		assign_file(&mini->current_process->input_file, mini, i);
 	return ;
 }
 
-void	lexer(t_minishell *minishell)
+void	lexer(t_minishell *mini)
 {
 	t_process	*current_process;
 
-	current_process = minishell->process_list;
+	current_process = mini->process_list;
 	while (current_process)
 	{
-		minishell->current_process = current_process;
-		tokenize(minishell);
+		mini->current_process = current_process;
+		tokenize(mini);
 		current_process = current_process->next;
 	}
 	return ;

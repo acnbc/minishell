@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   safe_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:37:39 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/03 12:37:41 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 09:19:25 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	free_process_list(t_process *process_list)
 			free(process_list->input_file);
 		if (process_list->output_file)
 			free(process_list->output_file);
-		if (process_list->heredoc_delimiter)
-			free(process_list->heredoc_delimiter);
+		if (process_list->delimiter)
+			free(process_list->delimiter);
 		if (process_list->path)
 			free(process_list->path);
 		if (process_list->tokens)
@@ -79,45 +79,45 @@ void	free_env(char **envp_copy)
 	free(envp_copy);
 }
 
-void	safe_exit(t_minishell *minishell)
+void	safe_exit(t_minishell *mini)
 {
-	if (!minishell)
+	if (!mini)
 		exit(EXIT_FAILURE);
-	if (minishell->input)
+	if (mini->input)
 	{
-		free(minishell->input);
-		minishell->input = NULL;
+		free(mini->input);
+		mini->input = NULL;
 	}
-	if (minishell->process_list)
+	if (mini->process_list)
 	{
-		free_process_list(minishell->process_list);
-		minishell->process_list = NULL;
+		free_process_list(mini->process_list);
+		mini->process_list = NULL;
 	}
-	if (minishell->env_list)
+	if (mini->env_list)
 	{
-		free_env_list(minishell->env_list);
-		minishell->env_list = NULL;
+		free_env_list(mini->env_list);
+		mini->env_list = NULL;
 	}
-	if (minishell->envp_copy)
+	if (mini->envp_copy)
 	{
-		free_env(minishell->envp_copy);
-		minishell->envp_copy = NULL;
+		free_env(mini->envp_copy);
+		mini->envp_copy = NULL;
 	}
-	free(minishell);
+	free(mini);
 	exit(EXIT_SUCCESS);
 }
 
-void	flush(t_minishell *minishell)
+void	flush(t_minishell *mini)
 {
-	free(minishell->input);
-	if (minishell->process_list)
+	free(mini->input);
+	if (mini->process_list)
 	{
-		free_process_list(minishell->process_list);
-		minishell->process_list = NULL;
+		free_process_list(mini->process_list);
+		mini->process_list = NULL;
 	}
-	if (minishell->envp_copy)
+	if (mini->envp_copy)
 	{
-		free_env(minishell->envp_copy);
-		minishell->envp_copy = NULL;
+		free_env(mini->envp_copy);
+		mini->envp_copy = NULL;
 	}
 }

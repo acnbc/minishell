@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:11:40 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/19 19:11:41 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 08:41:22 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_token	*new_token(char *value, enum e_token_type type, t_minishell *minishell)
+t_token	*new_token(char *value, enum e_token_type type, t_minishell *mini)
 {
 	t_token	*new;
 
 	if (*value == '\0' || !value)
 	{
-		safe_exit(minishell);
+		safe_exit(mini);
 		return (NULL);
 	}
 	new = safe_malloc(sizeof(t_token));

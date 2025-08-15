@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:37:23 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/03 12:37:25 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 09:13:12 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	**copy_envp(t_env *env_list)
 {
-	char	**envp_copy;
+	char	**copy;
 	t_env	*current;
 	int		i;
 
@@ -27,19 +27,18 @@ char	**copy_envp(t_env *env_list)
 		i++;
 		current = current->next;
 	}
-	envp_copy = (char **)safe_malloc((i + 1) * sizeof(char *));
+	copy = (char **)safe_malloc((i + 1) * sizeof(char *));
 	current = env_list;
 	i = 0;
 	while (current)
 	{
-		envp_copy[i] = ft_strjoin(current->var_name, "=");
-		envp_copy[i] = ft_strjoin_free(envp_copy[i],
-				ft_strdup(current->var_cont));
+		copy[i] = ft_strjoin(current->var_name, "=");
+		copy[i] = strjoin_free(copy[i], ft_strdup(current->var_cont));
 		i++;
 		current = current->next;
 	}
-	envp_copy[i] = NULL;
-	return (envp_copy);
+	copy[i] = NULL;
+	return (copy);
 }
 
 static void	env_list_pair(t_env_vars *vars, int i, char *envp[])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:23:30 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/19 19:23:32 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 08:41:22 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	is_between_quotes(const char *str, int pos)
 	return (double_quote || single_quote);
 }
 
-char	*get_str(char *str, int *i, t_minishell *minishell)
+char	*get_str(char *str, int *i, t_minishell *mini)
 {
 	int		start;
 	char	*result;
@@ -44,7 +44,7 @@ char	*get_str(char *str, int *i, t_minishell *minishell)
 		(*i)++;
 	result = ft_substr(str, start, *i - start);
 	if (!result)
-		safe_exit(minishell);
+		safe_exit(mini);
 	return (result);
 }
 
@@ -61,12 +61,12 @@ int	ft_isspace(char c)
 }
 
 char	*ft_substr_safe(char *s, unsigned int start, size_t len,
-		t_minishell *minishell)
+		t_minishell *mini)
 {
 	char	*substr;
 
 	substr = ft_substr(s, start, len);
 	if (!substr)
-		safe_exit(minishell);
+		safe_exit(mini);
 	return (substr);
 }

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:27:08 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/14 21:29:20 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 09:10:10 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static bool	has_redirection_without_target(t_process *p)
 {
 	if (p->redirect_in_flag && !p->input_file)
 		return (true);
-	if (p->heredoc_flag && !p->heredoc_delimiter)
+	if (p->heredoc_flag && !p->delimiter)
 		return (true);
 	if ((p->redirect_out_flag || p->append_flag) && !p->output_file)
 		return (true);
@@ -31,12 +31,12 @@ static bool	syntax_error_msg(const char *msg)
 	return (false);
 }
 
-bool	syntactic_analysis(t_minishell *minishell)
+bool	syntactic_analysis(t_minishell *mini)
 {
 	t_process	*p;
 	t_token		*token;
 
-	p = minishell->process_list;
+	p = mini->process_list;
 	while (p)
 	{
 		p->found_cmd = false;

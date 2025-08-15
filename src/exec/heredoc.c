@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:21:34 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/14 21:24:50 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 09:10:16 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ static char	*put_line_break(char *line)
 	return (line);
 }
 
-void	unlink_heredoc_files(t_minishell *minishell)
+void	unlink_heredoc_files(t_minishell *mini)
 {
 	t_process	*current;
 	char		*filename;
 
-	current = minishell->process_list;
+	current = mini->process_list;
 	while (current)
 	{
 		if (current->heredoc_flag && current->input_file)
@@ -104,8 +104,7 @@ static void	here_doc(t_minishell *mini)
 		line = readline("> ");
 		if (!line)
 			break ;
-		if (ft_strncmp(line, p->heredoc_delimiter,
-				ft_strlen(p->heredoc_delimiter)) == 0)
+		if (ft_strncmp(line, p->delimiter, ft_strlen(p->delimiter)) == 0)
 		{
 			free(line);
 			break ;

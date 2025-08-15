@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 12:01:02 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/14 21:34:59 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 08:45:01 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	is_stopchar(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-char	*extract_variable(t_minishell *minishell, char *variable)
+char	*extract_variable(t_minishell *mini, char *variable)
 {
 	t_env	*current;
 	int		var_len;
@@ -27,7 +27,7 @@ char	*extract_variable(t_minishell *minishell, char *variable)
 		free(variable);
 		return (ft_itoa(g_exit_status));
 	}
-	current = minishell->env_list;
+	current = mini->env_list;
 	var_len = ft_strlen(variable);
 	while (current)
 	{
@@ -42,13 +42,13 @@ char	*extract_variable(t_minishell *minishell, char *variable)
 	return (NULL);
 }
 
-char	*get_env_var(t_minishell *minishell, char *segment, int *i, int *j)
+char	*get_env_var(t_minishell *mini, char *segment, int *i, int *j)
 {
 	char	*var_name;
 	char	*expanded;
 	int		start;
 
-	if (!minishell || !segment || !i || !j)
+	if (!mini || !segment || !i || !j)
 		return (NULL);
 	*j = ++(*i);
 	if (segment[*i] == '?')
@@ -64,18 +64,18 @@ char	*get_env_var(t_minishell *minishell, char *segment, int *i, int *j)
 		var_name = ft_substr(segment, start, *i - start);
 	}
 	*j = *i;
-	expanded = extract_variable(minishell, var_name);
+	expanded = extract_variable(mini, var_name);
 	return (expanded);
 }
 
-char	*expansion(t_minishell *minishell, char *segment)
+char	*expansion(t_minishell *mini, char *segment)
 {
-	char	*clean_input;
+	char	*clean;
 	char	*var_value;
 	int		i;
 	int		j;
 
-	clean_input = NULL;
+	clean = NULL;
 	i = 0;
 	j = 0;
 	while (segment[i])
@@ -83,18 +83,16 @@ char	*expansion(t_minishell *minishell, char *segment)
 		if (segment[i] == '$')
 		{
 			if (j < i)
-				clean_input = ft_strjoin_free(clean_input, ft_substr(segment, j,
-							i - j));
-			var_value = get_env_var(minishell, segment, &i, &j);
+				clean = strjoin_free(clean, ft_substr(segment, j, i - j));
+			var_value = get_env_var(mini, segment, &i, &j);
 			if (var_value)
-				clean_input = ft_strjoin_free(clean_input, var_value);
+				clean = strjoin_free(clean, var_value);
 			j = i;
 		}
 		else
 			i++;
 	}
 	if (j < i)
-		clean_input = ft_strjoin_free(clean_input, ft_substr(segment, j, i
-					- j));
-	return (clean_input);
+		clean = strjoin_free(clean, ft_substr(segment, j, i - j));
+	return (clean);
 }

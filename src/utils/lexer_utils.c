@@ -3,54 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 16:22:27 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/19 16:22:30 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 09:20:28 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	get_word_token(t_minishell *minishell, int *i, int start)
+void	get_word_token(t_minishell *mini, int *i, int start)
 {
 	t_token				**tokens;
 	char				*segment;
 	enum e_token_type	type;
 
-	tokens = &minishell->current_process->tokens;
-	segment = is_variable(minishell, i, start);
+	tokens = &mini->current_process->tokens;
+	segment = is_variable(mini, i, start);
 	if (!segment)
 		return ;
 	if (is_builtin(segment))
 	{
-		token_lstadd_back(tokens, new_token(segment, BUILTIN, minishell));
+		token_lstadd_back(tokens, new_token(segment, BUILTIN, mini));
 		return ;
 	}
-	else if (is_cmd(segment, minishell))
+	else if (is_cmd(segment, mini))
 		type = CMD;
 	else
 		type = ARGS;
-	token_lstadd_back(tokens, new_token(segment, type, minishell));
+	token_lstadd_back(tokens, new_token(segment, type, mini));
 }
 
-int	is_cmd(char *cmd, t_minishell *minishell)
+int	is_cmd(char *cmd, t_minishell *mini)
 {
 	char	**path_dirs;
 	char	*temp;
 
 	if (ft_strchr(cmd, '/'))
 	{
-		minishell->current_process->path = ft_strdup(cmd);
+		mini->current_process->path = ft_strdup(cmd);
 		return (1);
 	}
-	path_dirs = paths(minishell->env_list);
+	path_dirs = paths(mini->env_list);
 	if (!path_dirs)
 		return (0);
 	temp = path_name(path_dirs, cmd);
 	if (temp)
 	{
-		minishell->current_process->path = temp;
+		mini->current_process->path = temp;
 		free_matrix(path_dirs);
 		return (1);
 	}
@@ -61,7 +61,7 @@ int	is_cmd(char *cmd, t_minishell *minishell)
 int	is_builtin(char *cmd)
 {
 	static const char	*builtins[] = {"echo", "cd", "pwd", "export", "unset",
-			"env", "exit", NULL};
+		"env", "exit", NULL};
 	int					i;
 
 	i = -1;
@@ -75,13 +75,13 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-char	*is_variable(t_minishell *minishell, int *i, int start)
+char	*is_variable(t_minishell *mini, int *i, int start)
 {
 	char	*segment;
 	char	*result;
 
-	segment = ft_substr_safe(minishell->current_process->cmd_seq, start, *i
-			- start, minishell);
+	segment = ft_substr_safe(mini->current_process->cmd_seq, start, *i
+			- start, mini);
 	if (*segment == '\0')
 	{
 		free(segment);
@@ -91,7 +91,7 @@ char	*is_variable(t_minishell *minishell, int *i, int start)
 		return (NULL);
 	if (ft_strchr(segment, '$'))
 	{
-		result = expansion(minishell, segment);
+		result = expansion(mini, segment);
 		free(segment);
 		if (!result)
 			return (NULL);
@@ -100,28 +100,28 @@ char	*is_variable(t_minishell *minishell, int *i, int start)
 	return (segment);
 }
 
-void	tokenize(t_minishell *minishell)
+void	tokenize(t_minishell *mini)
 {
 	int		i;
 	char	*cmd_seq;
 
 	i = 0;
-	cmd_seq = minishell->current_process->cmd_seq;
+	cmd_seq = mini->current_process->cmd_seq;
 	while (cmd_seq[i])
 	{
 		if (cmd_seq[i] == '<' && !is_between_quotes(cmd_seq, i))
 		{
-			redin_heredoc_tokenizer(minishell, &i);
+			redin_heredoc_tokenizer(mini, &i);
 			continue ;
 		}
 		else if (cmd_seq[i] == '>' && !is_between_quotes(cmd_seq, i))
 		{
-			redout_append_tokenizer(minishell, &i);
+			redout_append_tokenizer(mini, &i);
 			continue ;
 		}
 		else if (!ft_isspace(cmd_seq[i]))
 		{
-			word_tokenizer(minishell, &i);
+			word_tokenizer(mini, &i);
 			continue ;
 		}
 		else
@@ -149,9 +149,9 @@ void	print_process_list(t_process *process_list)
 			printf("  input_file:         '%s'\n", process_list->input_file);
 		if (process_list->output_file)
 			printf("  output_file:        '%s'\n", process_list->output_file);
-		if (process_list->heredoc_delimiter)
-			printf("  heredoc_delimiter:  '%s'\n",
-				process_list->heredoc_delimiter);
+		if (process_list->delimiter)
+			printf("  delimiter:  '%s'\n",
+				process_list->delimiter);
 		// Flags
 		printf("  append_flag:        %d\n", process_list->append_flag);
 		printf("  redirect_in_flag:   %d\n", process_list->redirect_in_flag);
@@ -168,18 +168,6 @@ void	print_process_list(t_process *process_list)
 				tok->type);
 			tok = tok->next;
 		}
-		// Command array
-		/*if (process_list->command)
-		{
-			j = 0;
-			while (process_list->command[j])
-			{
-				printf("    command[%d]:       '%s'\n", j,
-					process_list->command[j]);
-				j++;
-			}
-		}*/
-		// Args array
 		if (process_list->args)
 		{
 			j = 0;

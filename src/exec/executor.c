@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/14 21:19:45 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 09:08:23 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	close_fds(t_process *p)
 	if (p->fdout != -1)
 		close(p->fdout);
 }
-	
+
 static void	dup2_safe(t_minishell *mini, int *fd, int dup2_fd,
 		const char *error_message)
 {
@@ -54,7 +54,7 @@ static void	dup2_safe(t_minishell *mini, int *fd, int dup2_fd,
 static void	create_forks(t_minishell *mini)
 {
 	t_process	*p;
-	
+
 	p = mini->current_process;
 	p->pid = fork();
 	if (p->pid < 0)
@@ -84,7 +84,7 @@ static void	open_pipes(t_minishell *mini)
 {
 	t_process	*p;
 	t_exec_vars	*e;
-	
+
 	p = mini->current_process;
 	e = mini->exec_vars;
 	if (pipe(e->fdpipe) == -1)
@@ -114,7 +114,7 @@ static void	dup_safe(t_minishell *mini, int *fd, int dup_fd,
 static void	get_redirect_in(t_minishell *mini)
 {
 	t_process	*p;
-	
+
 	p = mini->current_process;
 	if (p->fdin == -1)
 	{
@@ -136,7 +136,7 @@ static void	get_redirect_in(t_minishell *mini)
 static void	get_redirect_out(t_minishell *mini)
 {
 	t_process	*p;
-	
+
 	p = mini->current_process;
 	if (p->output_file)
 	{
@@ -185,13 +185,13 @@ void	execute_command(t_minishell *mini)
 	wait_all_processes(mini->process_list);
 }
 
-void	executor(t_minishell *minishell)
+void	executor(t_minishell *mini)
 {
-	if (minishell->envp_copy)
-		free_env(minishell->envp_copy);
-	minishell->envp_copy = copy_envp(minishell->env_list);
-	if (!get_args(minishell->process_list))
+	if (mini->envp_copy)
+		free_env(mini->envp_copy);
+	mini->envp_copy = copy_envp(mini->env_list);
+	if (!get_args(mini->process_list))
 		return ;
-	execute_command(minishell);
-	unlink_heredoc_files(minishell);
+	execute_command(mini);
+	unlink_heredoc_files(mini);
 }

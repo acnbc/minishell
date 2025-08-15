@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:45:41 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/03 12:45:42 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 08:23:04 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*ft_strjoin_free(char *s1, char *s2)
+char	*strjoin_free(char *s1, char *s2)
 {
 	char	*joined;
 

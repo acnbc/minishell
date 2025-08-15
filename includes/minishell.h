@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/06/08 16:36:25 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/15 09:10:10 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ typedef struct s_process
 	char				*path;
 	char				*input_file;
 	char				*output_file;
-	char				*heredoc_delimiter;
+	char				*delimiter;
 	int					append_flag;
 	int					redirect_in_flag;
 	int					redirect_out_flag;
@@ -113,23 +113,23 @@ typedef struct s_minishell
 	t_exec_vars			*exec_vars;
 }						t_minishell;
 
-int						mini_shell(t_minishell *minishell);
+int						mini_shell(t_minishell *mini);
 /* ----------------------------- PARSER ---------------------------*/
 t_process				*new_process(char *content);
 void					add_process(t_process **lst, t_process *new);
 t_process				*last_process(t_process *proc);
 int						ft_isspace(char c);
-int						parser(t_minishell *minishell);
-char					*extract_variable(t_minishell *minishell,
+int						parser(t_minishell *mini);
+char					*extract_variable(t_minishell *mini,
 							char *variable);
-char					*handle_quotes(t_minishell *minishell, char *process,
+char					*handle_quotes(t_minishell *mini, char *process,
 							int *i);
 int						is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
-char					*ft_strjoin_free(char *s1, char *s2);
+char					*strjoin_free(char *s1, char *s2);
 int						is_stopchar(char c);
-char					*expansion(t_minishell *minishell, char *segment);
-char					*get_env_var(t_minishell *minishell, char *segment,
+char					*expansion(t_minishell *mini, char *segment);
+char					*get_env_var(t_minishell *mini, char *segment,
 							int *i, int *j);
 void					free_env_list(t_env *env_list);
 void					env_lstadd_back(t_env **lst, t_env *new);
@@ -139,37 +139,37 @@ char					**copy_envp(t_env *env_list);
 int						verify_quote_pair(char *input, char quote, int *i);
 int						verify_quote_count(char *process);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
-void					safe_exit(t_minishell *minishell);
+void					safe_exit(t_minishell *mini);
 void					*safe_malloc(size_t bytes);
 char					*ft_substr_safe(char *s, unsigned int start, size_t len,
-							t_minishell *minishell);
+							t_minishell *mini);
 /* ----------------------------- LEXER ---------------------------*/
-void					lexer(t_minishell *minishell);
-void					tokenize(t_minishell *minishell);
+void					lexer(t_minishell *mini);
+void					tokenize(t_minishell *mini);
 int						is_builtin(char *cmd);
-char					*is_variable(t_minishell *minishell, int *i, int start);
-void					word_tokenizer(t_minishell *minishell, int *i);
-void					redin_heredoc_tokenizer(t_minishell *minishell, int *i);
-void					redout_append_tokenizer(t_minishell *minishell, int *i);
-void					get_word_token(t_minishell *minishell, int *i,
+char					*is_variable(t_minishell *mini, int *i, int start);
+void					word_tokenizer(t_minishell *mini, int *i);
+void					redin_heredoc_tokenizer(t_minishell *mini, int *i);
+void					redout_append_tokenizer(t_minishell *mini, int *i);
+void					get_word_token(t_minishell *mini, int *i,
 							int start);
 char					**paths(t_env *env_list);
 char					*path_name(char **paths, char *command);
 /* ---------------- SYNTACTIC ANALYSIS ------------------*/
-bool					syntactic_analysis(t_minishell *minishell);
-int						is_cmd(char *cmd, t_minishell *minishell);
+bool					syntactic_analysis(t_minishell *mini);
+int						is_cmd(char *cmd, t_minishell *mini);
 /*------------------------ EXECUTOR ------------------------------*/
-void					executor(t_minishell *minishell);
+void					executor(t_minishell *mini);
 void					handle_heredoc(t_minishell *mini);
-void					unlink_heredoc_files(t_minishell *minishell);
+void					unlink_heredoc_files(t_minishell *mini);
 char					**copy_args(t_token *tokens);
 int						get_args(t_process *process_list);
 /* ----------------------------- UTILS ---------------------------*/
 t_token					*new_token(char *value, enum e_token_type type,
-							t_minishell *minishell);
+							t_minishell *mini);
 void					token_lstadd_back(t_token **tokens, t_token *new);
 int						skip_spaces(char *str, int *i);
-char					*get_str(char *str, int *i, t_minishell *minishell);
+char					*get_str(char *str, int *i, t_minishell *mini);
 
 /* ----------------------------- FREE MEMORY ---------------------------*/
 void					free_process_list(t_process *process_list);
@@ -178,7 +178,7 @@ void					free_env(char **envp_copy);
 void					free_token_list(t_token *tokens);
 void					free_matrix(char **matrix);
 void					safe_env_list_exit(t_env_vars *vars, t_env *env_list);
-void					flush(t_minishell *minishell);
+void					flush(t_minishell *mini);
 
 void					print_process_list(t_process *process_list);
 void					print_env_list(t_env *env_list);
