@@ -54,7 +54,7 @@ bool	syntactic_analysis(t_minishell *mini)
 			token = token->next;
 		}
 		if (!p->found_cmd)
-			return (syntax_error_msg("Missing command"));
+			return (syntax_error_msg("**Missing command"));
 		p = p->next;
 	}
 	return (true);

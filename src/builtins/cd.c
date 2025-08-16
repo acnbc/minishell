@@ -76,7 +76,7 @@ int	ft_cd(t_minishell *mini, t_env *env_list)
 		path = ft_strdup(str);
 	if (chdir(path) == -1)
 	{
-		write(mini->cur_proc->fdout, "cd: No such file or directory\n", 30);
+		write(2, "cd: No such file or directory\n", 30);
 		return (1);
 	}
 	else

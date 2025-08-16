@@ -47,6 +47,7 @@ void	redout_append_tokenizer(t_minishell *mini, int *i)
 	char	*cmd_seq;
 
 	cmd_seq = mini->cur_proc->cmd_seq;
+	// corrigir >>>
 	if (cmd_seq[*i + 1] && cmd_seq[*i + 1] == '>')
 	{
 		*i += 2;
@@ -66,6 +67,7 @@ void	redin_heredoc_tokenizer(t_minishell *mini, int *i)
 	char	*cmd_seq;
 
 	cmd_seq = mini->cur_proc->cmd_seq;
+	// corrigir <<<
 	if (cmd_seq[*i + 1] && cmd_seq[*i + 1] == '<')
 	{
 		*i += 2;

@@ -76,7 +76,7 @@ static void	create_forks(t_minishell *mini)
 		}
 		execve(p->path, p->args, mini->envp_copy);
 		perror("execve");
-		exit(1);
+		safe_exit(mini);
 	}
 }
 
@@ -173,11 +173,11 @@ void	exec_builtin(t_minishell *mini)
 	else if (ft_strcmp(p->args[0], "export") == 0)
 		p->exit_signal = ft_export(mini, p->args);
 	else if (ft_strcmp(p->args[0], "unset") == 0)
-		p->exit_signal = builtin_unset(mini, p->args);
+		p->exit_signal = ft_unset(mini, p->args);
 	else if (ft_strcmp(p->args[0], "env") == 0)
-		p->exit_signal = builtin_env(mini->env_list);
-	else if (ft_strcmp(p->args[0], "exit") == 0)
-		p->exit_signal = builtin_exit(mini, p->args);
+		p->exit_signal = ft_env(mini->env_list);
+	//else if (ft_strcmp(p->args[0], "exit") == 0)
+	//	p->exit_signal = ft_exit(mini, p->args);
 }
 
 void	execute_command(t_minishell *mini)
@@ -217,5 +217,4 @@ void	executor(t_minishell *mini)
 	if (!get_args(mini->process_list))
 		return ;
 	execute_command(mini);
-	unlink_heredoc_files(mini);
 }

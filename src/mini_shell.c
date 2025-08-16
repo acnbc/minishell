@@ -34,5 +34,6 @@ int	mini_shell(t_minishell *mini)
 		return (0);
 	}
 	executor(mini);
+	unlink_heredoc_files(mini);
 	return (1);
 }
