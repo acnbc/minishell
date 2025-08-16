@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:42:44 by abouchat          #+#    #+#             */
-/*   Updated: 2025/07/22 18:16:00 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/16 10:30:18 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,23 @@ cd ~: Vai para o diretório inicial do usuário atual.
 */
 
 #include "../../includes/minishell.h"
+
+static void	change_cwd(t_env *env_list)
+{
+	t_env	*old_pwd;
+	t_env	*pwd;
+	char	*temp;
+
+	old_pwd = find_env_var("OLDPWD", env_list);
+	pwd = find_env_var("PWD", env_list);
+	free(old_pwd->var_cont);
+	old_pwd->var_cont = ft_strdup(pwd->var_cont);
+	free(pwd->var_cont);
+	pwd->var_cont = NULL;
+	temp = getcwd(pwd->var_cont, 4096);
+	pwd->var_cont = ft_strdup(temp);
+	free(temp);
+}
 
 static char	*cd_special_char(char *str, t_env *env_list)
 {
@@ -50,8 +67,6 @@ static char	*cd_special_char(char *str, t_env *env_list)
 int	ft_cd(t_minishell *mini, t_env *env_list)
 {
 	char	*path;
-	t_env	*old_pwd;
-	t_env	*pwd;
 	char	*temp;
 	char	*str;
 
@@ -59,8 +74,6 @@ int	ft_cd(t_minishell *mini, t_env *env_list)
 	path = cd_special_char(str, env_list);
 	if (!path)
 		path = ft_strdup(str);
-	old_pwd = find_env_var("OLDPWD", env_list);
-	pwd = find_env_var("PWD", env_list);
 	if (chdir(path) == -1)
 	{
 		write(mini->cur_proc->fdout, "cd: No such file or directory\n", 30);
@@ -68,13 +81,7 @@ int	ft_cd(t_minishell *mini, t_env *env_list)
 	}
 	else
 	{
-		free(old_pwd->var_cont);
-		old_pwd->var_cont = ft_strdup(pwd->var_cont);
-		free(pwd->var_cont);
-		pwd->var_cont = NULL;
-		temp = getcwd(pwd->var_cont, 4096);
-		pwd->var_cont = ft_strdup(temp);
-		free(temp);
+		change_cwd(env_list);
 	}
 	free(path);
 	return (0);
