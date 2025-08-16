@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:39:34 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/15 08:46:30 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/16 12:34:24 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	main(int argc, char *argv[], char *envp[])
 	mini = safe_malloc(sizeof(t_minishell));
 	mini->env_list = env_list(envp);
 	mini->process_list = NULL;
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, signal_handler);
 	while (1)
 	{
 		if (!mini_shell(mini))

@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:42:44 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/16 10:30:18 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/16 12:36:06 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ static char	*cd_special_char(char *str, t_env *env_list)
 int	ft_cd(t_minishell *mini, t_env *env_list)
 {
 	char	*path;
-	char	*temp;
 	char	*str;
 
 	str = mini->cur_proc->args[1];

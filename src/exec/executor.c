@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 09:08:23 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/16 12:35:51 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ static void	get_redirect_out(t_minishell *mini)
 		dup_safe(mini, &p->fdout, mini->exec_vars->tmpout, "dup (stdout)");
 }
 
-void	exec_builtin(t_minishell *mini)
+/*void	exec_builtin(t_minishell *mini)
 {
 	t_process	*p;
 
@@ -178,7 +178,7 @@ void	exec_builtin(t_minishell *mini)
 		p->exit_signal = ft_env(mini->env_list);
 	//else if (ft_strcmp(p->args[0], "exit") == 0)
 	//	p->exit_signal = ft_exit(mini, p->args);
-}
+}*/
 
 void	execute_command(t_minishell *mini)
 {
@@ -195,9 +195,9 @@ void	execute_command(t_minishell *mini)
 		mini->cur_proc = p;
 		get_redirect_in(mini);
 		get_redirect_out(mini);
-		if (is_builtin(p->args[0]))
-			exec_builtin(mini);
-		else
+		//if (is_builtin(p->args[0]))
+		//	exec_builtin(mini);
+		//else
 			create_forks(mini);
 		close_fds(p);
 		p = p->next;
