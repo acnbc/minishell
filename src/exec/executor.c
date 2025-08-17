@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/16 12:35:51 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/17 17:51:02 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,26 +159,26 @@ static void	get_redirect_out(t_minishell *mini)
 		dup_safe(mini, &p->fdout, mini->exec_vars->tmpout, "dup (stdout)");
 }
 
-/*void	exec_builtin(t_minishell *mini)
+void	exec_builtin(t_minishell *mini)
 {
 	t_process	*p;
 
 	p = mini->cur_proc;
-	if (ft_strcmp(p->args[0], "cd") == 0)
-		p->exit_signal = ft_cd(p->args[1], mini->env_list);
-	else if (ft_strcmp(p->args[0], "echo") == 0)
+	if (ft_strncmp(p->args[0], "cd", ft_strlen(p->args[0])) == 0)
+		p->exit_signal = ft_cd(mini, mini->env_list);
+	else if (ft_strncmp(p->args[0], "echo", ft_strlen(p->args[0])) == 0)
 		p->exit_signal = ft_echo(p->args, p->fdout);
-	else if (ft_strcmp(p->args[0], "pwd") == 0)
+	else if (ft_strncmp(p->args[0], "pwd", ft_strlen(p->args[0])) == 0)
 		p->exit_signal = ft_pwd(mini->cur_proc, mini->env_list);
-	else if (ft_strcmp(p->args[0], "export") == 0)
+	else if (ft_strncmp(p->args[0], "export", ft_strlen(p->args[0])) == 0)
 		p->exit_signal = ft_export(mini, p->args);
-	else if (ft_strcmp(p->args[0], "unset") == 0)
-		p->exit_signal = ft_unset(mini, p->args);
-	else if (ft_strcmp(p->args[0], "env") == 0)
+	else if (ft_strncmp(p->args[0], "unset", ft_strlen(p->args[0])) == 0) 
+		p->exit_signal = ft_unset(mini->env_list, p->args);
+	else if (ft_strncmp(p->args[0], "env", ft_strlen(p->args[0])) == 0)
 		p->exit_signal = ft_env(mini->env_list);
 	//else if (ft_strcmp(p->args[0], "exit") == 0)
 	//	p->exit_signal = ft_exit(mini, p->args);
-}*/
+}
 
 void	execute_command(t_minishell *mini)
 {

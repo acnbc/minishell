@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:42:44 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/16 12:36:06 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:10:05 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,22 @@ static char	*cd_special_char(char *str, t_env *env_list)
 	t_env	*home_path;
 	char	*path;
 
+	path = NULL;
 	if (str[0] == '/')
 		path = ft_strdup(str);
-	if (str[0] == '-')
+	else if (str[0] == '-')
 	{
 		old_pwd = find_env_var("OLDPWD", env_list);
 		if (!old_pwd->var_cont)
-			return (NULL); // adicionar func de mensagem de erro
+			write (2, "cd: OLDPWD not set\n", 19);
 		else
 			path = ft_strjoin(old_pwd->var_cont, str + 1);
 	}
-	if (str[0] == '~')
+	else if (str[0] == '~')
 	{
 		home_path = find_env_var("HOME", env_list);
 		if (!home_path->var_cont)
-			return (NULL); // adicionar func de mensagem de erro
+			write (2, "cd: HOME not set\n", 17);
 		path = ft_strjoin(home_path->var_cont, str + 1);
 	}
 	else
@@ -72,16 +73,16 @@ int	ft_cd(t_minishell *mini, t_env *env_list)
 	str = mini->cur_proc->args[1];
 	path = cd_special_char(str, env_list);
 	if (!path)
-		path = ft_strdup(str);
+		return (EXIT_FAILURE);
 	if (chdir(path) == -1)
 	{
 		write(2, "cd: No such file or directory\n", 30);
-		return (1);
+		return (EXIT_FAILURE);
 	}
 	else
 	{
 		change_cwd(env_list);
 	}
 	free(path);
-	return (0);
+	return (EXIT_SUCCESS);
 }

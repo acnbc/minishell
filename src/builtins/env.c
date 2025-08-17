@@ -6,13 +6,13 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:46:54 by abouchat          #+#    #+#             */
-/*   Updated: 2025/07/09 17:01:52 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:20:17 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_env(t_env *env_list)
+int	ft_env(t_env *env_list)
 {
 	t_env	*curr;
 
@@ -25,4 +25,5 @@ void	ft_env(t_env *env_list)
 		write(1, "\n", 1);
 		curr = curr->next;
 	}
+	return (EXIT_SUCCESS);
 }

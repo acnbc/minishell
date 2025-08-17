@@ -6,19 +6,19 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:31:22 by abouchat          #+#    #+#             */
-/*   Updated: 2025/07/09 18:54:48 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:12:45 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_unset(char *var, t_env *env_list)
+int	ft_unset(char *var, t_env *env_list)
 {
 	t_env	*curr;
 	t_env	*temp;
 
 	if (!find_env_var(var, env_list))
-		return ;
+		return (EXIT_FAILURE);
 	curr = find_env_var(var, env_list);
 	temp = curr->prev;
 	temp->next = curr->next;
@@ -27,4 +27,5 @@ void	ft_unset(char *var, t_env *env_list)
 	curr->next = NULL;
 	curr->prev = NULL;
 	free_env_list(curr);
+	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/16 12:34:13 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:16:19 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,12 +169,13 @@ int						get_args(t_process *process_list);
 int						ft_echo(char **args, int fd);
 int						ft_cd(t_minishell *mini, t_env *env_list);
 int						ft_pwd(t_process *p, t_env *env_list);
-int						ft_export(char *arg_name, char *arg_cont, t_env *env_list);
-void					ft_unset(char *var, t_env *env_list);
-void					ft_env(t_env *env_list);
+int						ft_export(char *arg_name, char *arg_cont, \
+							t_env *env_list);
+int						ft_unset(char *var, t_env *env_list);
+int						ft_env(t_env *env_list);
 t_env					*find_env_var(char *var, t_env *env_list);
 /* ---------------------- SIGNALS ----------------------------*/
-void	signal_handler(int sig);
+void					signal_handler(int sig);
 /* ----------------------------- UTILS ---------------------------*/
 t_token					*new_token(char *value, enum e_token_type type,
 							t_minishell *mini);

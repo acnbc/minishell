@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 17:58:37 by abouchat          #+#    #+#             */
-/*   Updated: 2025/06/29 15:11:10 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:10:21 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,5 @@ int	ft_echo(char **args, int fd)
 	}
 	if (flag == 1)
 		write(fd, "\n", 1);
-	return (0);
+	return (EXIT_SUCCESS);
 }
