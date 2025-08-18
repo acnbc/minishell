@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:42:44 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/17 16:10:05 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:33:33 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ int	ft_cd(t_minishell *mini, t_env *env_list)
 	char	*str;
 
 	str = mini->cur_proc->args[1];
-	path = cd_special_char(str, env_list);
-	if (!path)
+	if (!str)
 		return (EXIT_FAILURE);
+	path = cd_special_char(str, env_list);
 	if (chdir(path) == -1)
 	{
 		write(2, "cd: No such file or directory\n", 30);

@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/17 17:51:02 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:30:04 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,11 +171,11 @@ void	exec_builtin(t_minishell *mini)
 	else if (ft_strncmp(p->args[0], "pwd", ft_strlen(p->args[0])) == 0)
 		p->exit_signal = ft_pwd(mini->cur_proc, mini->env_list);
 	else if (ft_strncmp(p->args[0], "export", ft_strlen(p->args[0])) == 0)
-		p->exit_signal = ft_export(mini, p->args);
-	else if (ft_strncmp(p->args[0], "unset", ft_strlen(p->args[0])) == 0) 
+		p->exit_signal = ft_export(mini->env_list, p->args);
+	else if (ft_strncmp(p->args[0], "unset", ft_strlen(p->args[0])) == 0)
 		p->exit_signal = ft_unset(mini->env_list, p->args);
 	else if (ft_strncmp(p->args[0], "env", ft_strlen(p->args[0])) == 0)
-		p->exit_signal = ft_env(mini->env_list);
+		p->exit_signal = ft_env(mini->env_list, p->fdout);
 	//else if (ft_strcmp(p->args[0], "exit") == 0)
 	//	p->exit_signal = ft_exit(mini, p->args);
 }
@@ -195,9 +195,9 @@ void	execute_command(t_minishell *mini)
 		mini->cur_proc = p;
 		get_redirect_in(mini);
 		get_redirect_out(mini);
-		//if (is_builtin(p->args[0]))
-		//	exec_builtin(mini);
-		//else
+		if (is_builtin(p->args[0]))
+			exec_builtin(mini);
+		else
 			create_forks(mini);
 		close_fds(p);
 		p = p->next;

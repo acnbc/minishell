@@ -6,26 +6,30 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:31:22 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/17 16:12:45 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:26:08 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_unset(char *var, t_env *env_list)
+int	ft_unset(t_env *env_list, char **args)
 {
 	t_env	*curr;
 	t_env	*temp;
 
-	if (!find_env_var(var, env_list))
-		return (EXIT_FAILURE);
-	curr = find_env_var(var, env_list);
-	temp = curr->prev;
-	temp->next = curr->next;
-	if (temp->next != NULL)
-		temp->next->prev = temp;
-	curr->next = NULL;
-	curr->prev = NULL;
-	free_env_list(curr);
+	while (args++)
+	{
+		if (!find_env_var(*args, env_list))
+			return (EXIT_FAILURE);
+		curr = find_env_var(*args, env_list);
+		temp = curr->prev;
+		temp->next = curr->next;
+		if (temp->next != NULL)
+			temp->next->prev = temp;
+		curr->next = NULL;
+		curr->prev = NULL;
+		free(curr->var_cont);
+		free(curr->var_name);
+	}
 	return (EXIT_SUCCESS);
 }

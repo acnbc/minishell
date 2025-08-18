@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/16 12:38:52 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:39:15 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	signal_handler(int sig)
 		write (1, "\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		//rl_redisplay();
+		rl_redisplay();
 		rl_done = 1;
 	}
 }
