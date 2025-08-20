@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:46:54 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/20 18:01:22 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/20 18:14:53 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,12 @@ static void	update_args(char **arg_name, char **arg_cont, char *args)
 	curr = first_equal(args);
 	free(*arg_name);
 	free(*arg_cont);
-	*arg_name = curr[0];
-	*arg_cont = curr[1];
+	*arg_name = ft_strdup(curr[0]);
+	*arg_cont = ft_strdup(curr[1]);
+	free(curr[0]);
+	free(curr[1]);
+	free(curr);
+
 }
 
 int	ft_export(t_env *env_list, char **args)
@@ -71,6 +75,8 @@ int	ft_export(t_env *env_list, char **args)
 			env_lstadd_back(&env_list, temp_node);
 		}
 	}
+	free(arg_cont);
+	free(arg_name);
 	return (EXIT_SUCCESS);
 }
 
