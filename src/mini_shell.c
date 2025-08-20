@@ -24,6 +24,42 @@ void	signal_handler(int sig)
 	}
 }
 
+static void	ft_exit(t_minishell *mini)
+{
+	char			*input;
+	
+	input = ft_strtrim(mini->input, " \t\n\v\f\r");
+	if (ft_strncmp(input, "exit", 4) == 0 && (input[4] == '\0'
+		|| ft_isspace(input[4])))
+    {
+        write(1, "exit\n", 5);
+        safe_exit(mini);
+    }
+	return ;
+}
+
+
+static char	*ft_strstr(char *str, char *to_find)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		j = 0;
+		if (str[i] == to_find[j])
+		{
+			while ((to_find[j] != '\0') && (str[i + j] == to_find[j]))
+				j++;
+			if (to_find[j] == '\0')
+				return (&str[i]);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
 int	mini_shell(t_minishell *mini)
 {
 	if (!mini)
@@ -31,8 +67,8 @@ int	mini_shell(t_minishell *mini)
 	mini->input = readline(MINISHELL_PROMPT);
 	if (!mini->input)
 		safe_exit(mini);
-	if (ft_strncmp(mini->input, "exit", 5) == 0)
-		safe_exit(mini);
+	if (ft_strstr(mini->input, "exit"))
+		ft_exit(mini);
 	if ((ft_strchr(mini->input, DOUBLE_QUOTE)
 			|| ft_strchr(mini->input, SINGLE_QUOTE))
 		&& !verify_quote_count(mini->input))
