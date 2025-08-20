@@ -6,26 +6,26 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:46:54 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/18 19:29:21 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:33:16 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static char	**first_equal(char *args)
+static char	**first_equal(char *arg)
 {
 	int		i;
 	char	**sep_args;
 
 	sep_args = safe_malloc(sizeof(char **) * 3);
 	i = 0;
-	while (args[i])
+	while (arg[i])
 	{
-		if (args[i] == '=')
+		if (arg[i] == '=')
 		{
 			if (i != 0)
-				sep_args[0] = ft_substr(args, 0, i - 1);
-			sep_args[1] = ft_substr(args, i + 1, ft_strlen(args) - i);
+				sep_args[0] = ft_substr(arg, 0, i - 1);
+			sep_args[1] = ft_substr(arg, i + 1, ft_strlen(arg) - i);
 			break ;
 		}
 		i++;
@@ -39,9 +39,7 @@ static void	update_args(char *arg_name, char *arg_cont, char *args)
 
 	curr = first_equal(args);
 	free(arg_name);
-	arg_name = NULL;
 	free(arg_cont);
-	arg_cont = NULL;
 	arg_name = curr[0];
 	arg_cont = curr[1];
 }
@@ -54,7 +52,7 @@ int	ft_export(t_env *env_list, char **args)
 
 	arg_name = NULL;
 	arg_cont = NULL;
-	while (args++)
+	while (++args)
 	{
 		update_args(arg_name, arg_cont, *args);
 		if (arg_name == NULL)
