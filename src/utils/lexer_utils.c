@@ -39,11 +39,13 @@ int	is_cmd(char *cmd, t_minishell *mini)
 	char	**path_dirs;
 	char	*temp;
 
-	if (ft_strchr(cmd, '/'))
+	if (ft_strstr(cmd, "./") || cmd[0] == '/')
 	{
 		mini->cur_proc->path = ft_strdup(cmd);
 		return (1);
 	}
+	if (ft_strncmp(cmd, "..", 3) == 0)
+		return (0);
 	path_dirs = paths(mini->env_list);
 	if (!path_dirs)
 		return (0);

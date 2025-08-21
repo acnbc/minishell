@@ -139,6 +139,7 @@ t_env					*env_list(char *envp[]);
 char					**copy_envp(t_env *env_list);
 int						verify_quote_pair(char *input, char quote, int *i);
 int						verify_quote_count(char *process);
+char					*ft_strstr(char *str, char *to_find);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
 void					safe_exit(t_minishell *mini);
 void					*safe_malloc(size_t bytes);

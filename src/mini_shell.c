@@ -39,7 +39,7 @@ static void	ft_exit(t_minishell *mini)
 }
 
 
-static char	*ft_strstr(char *str, char *to_find)
+char	*ft_strstr(char *str, char *to_find)
 {
 	int	i;
 	int	j;
