@@ -30,6 +30,8 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		if (!mini_shell(mini))
 			break ;
+		flush(mini);
 	}
+	safe_exit(mini);
 	return (0);
 }

@@ -17,7 +17,8 @@ int	parser(t_minishell *mini)
 	mini->process_list = separate_process(mini->input);
 	if (!mini->process_list)
 		return (0);
-	lexer(mini);
+	if (!lexer(mini))
+		return (0);
 	handle_heredoc(mini);
 	if (syntactic_analysis(mini) == false)
 		return (0);

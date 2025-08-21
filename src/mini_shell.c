@@ -69,18 +69,22 @@ int	mini_shell(t_minishell *mini)
 		safe_exit(mini);
 	if (ft_strstr(mini->input, "exit"))
 		ft_exit(mini);
+	if (ft_strncmp(".", mini->input, 2) == 0)
+	{
+		ft_printf("filename argument required\n.: usage: . filename [arguments]\n");
+		return (1);
+	}
+	if (ft_strncmp("..", mini->input, 2) == 0)
+	{
+		ft_printf("..: command not found\n");
+		return (1);
+	}
 	if ((ft_strchr(mini->input, DOUBLE_QUOTE)
 			|| ft_strchr(mini->input, SINGLE_QUOTE))
 		&& !verify_quote_count(mini->input))
-	{
-		free(mini->input);
 		return (1);
-	}
 	if (!parser(mini))
-	{
-		flush(mini);
-		return (0);
-	}
+		return (1);
 	executor(mini);
 	unlink_heredoc_files(mini);
 	add_history(mini->input);

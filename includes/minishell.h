@@ -145,13 +145,13 @@ void					*safe_malloc(size_t bytes);
 char					*ft_substr_safe(char *s, unsigned int start, size_t len,
 							t_minishell *mini);
 /* ----------------------------- LEXER ---------------------------*/
-void					lexer(t_minishell *mini);
-void					tokenize(t_minishell *mini);
+int						lexer(t_minishell *mini);
+int						tokenize(t_minishell *mini);
 int						is_builtin(char *cmd);
 char					*is_variable(t_minishell *mini, int *i, int start);
 void					word_tokenizer(t_minishell *mini, int *i);
-void					redin_heredoc_tokenizer(t_minishell *mini, int *i);
-void					redout_append_tokenizer(t_minishell *mini, int *i);
+int						redin_heredoc_tokenizer(t_minishell *mini, int *i);
+int						redout_append_tokenizer(t_minishell *mini, int *i);
 void					get_word_token(t_minishell *mini, int *i,
 							int start);
 char					**paths(t_env *env_list);

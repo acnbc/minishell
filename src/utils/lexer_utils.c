@@ -100,7 +100,7 @@ char	*is_variable(t_minishell *mini, int *i, int start)
 	return (segment);
 }
 
-void	tokenize(t_minishell *mini)
+int	tokenize(t_minishell *mini)
 {
 	int		i;
 	char	*cmd_seq;
@@ -111,12 +111,14 @@ void	tokenize(t_minishell *mini)
 	{
 		if (cmd_seq[i] == '<' && !is_between_quotes(cmd_seq, i))
 		{
-			redin_heredoc_tokenizer(mini, &i);
+			if (!redin_heredoc_tokenizer(mini, &i))
+				return (0);
 			continue ;
 		}
 		else if (cmd_seq[i] == '>' && !is_between_quotes(cmd_seq, i))
 		{
-			redout_append_tokenizer(mini, &i);
+			if (!redout_append_tokenizer(mini, &i))
+				return (0);
 			continue ;
 		}
 		else if (!ft_isspace(cmd_seq[i]))
@@ -127,6 +129,7 @@ void	tokenize(t_minishell *mini)
 		else
 			skip_spaces(cmd_seq, &i);
 	}
+	return (1);
 }
 
 void	print_process_list(t_process *process_list)
@@ -182,3 +185,27 @@ void	print_process_list(t_process *process_list)
 	}
 	printf("=== Fim da lista de processos ===\n\n");
 }
+/*1. get_word_token
+
+    Função: Analisa um segmento da linha de comando e adiciona um token à lista de tokens do processo atual.
+    Como: Verifica se o segmento é uma variável, builtin, comando ou argumento e adiciona o token correspondente.
+
+2. is_cmd
+
+    Função: Verifica se uma string é um comando válido.
+    Como: Se contém /, assume que é um caminho. Senão, procura o comando nas pastas do PATH. Se encontrar, salva o caminho.
+
+3. is_builtin
+
+    Função: Verifica se uma string corresponde a um comando builtin do shell.
+    Como: Compara a string com uma lista fixa de comandos internos (echo, cd, etc).
+
+4. is_variable
+
+    Função: Verifica se o segmento contém uma variável de ambiente e faz a expansão.
+    Como: Se encontrar $, chama a função de expansão e retorna o resultado expandido.
+5. tokenize
+
+    Função: Faz a tokenização da linha de comando do processo atual.
+    Como: Percorre a string, identifica redirecionamentos, palavras e espaços, e chama as funções apropriadas para cada caso.
+*/
