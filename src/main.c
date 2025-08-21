@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:39:34 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/21 17:38:00 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/21 19:07:42 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ int	main(int argc, char *argv[], char *envp[])
 	mini = safe_malloc(sizeof(t_minishell));
 	mini->env_list = env_list(envp);
 	mini->process_list = NULL;
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, signal_handler);
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, signal_handler);
 		if (!mini_shell(mini))
 			break ;
 	}

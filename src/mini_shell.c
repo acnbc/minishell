@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/21 17:38:50 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/21 19:20:27 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ int	mini_shell(t_minishell *mini)
 		flush(mini);
 		return (0);
 	}
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	executor(mini);
 	unlink_heredoc_files(mini);
 	add_history(mini->input);

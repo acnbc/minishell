@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:31:22 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/20 18:08:49 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:36:57 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	ft_unset(t_env *env_list, char **args)
 		curr->prev = NULL;
 		free(curr->var_cont);
 		free(curr->var_name);
+		free(curr);
 	}
 	return (EXIT_SUCCESS);
 }

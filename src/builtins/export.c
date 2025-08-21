@@ -6,11 +6,17 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:46:54 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/20 18:14:53 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:45:24 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+static void free_func(char **arg1, char **arg2)
+{
+	free(*arg1);
+	free(*arg2);
+}
 
 static char	**first_equal(char *arg)
 {
@@ -75,8 +81,7 @@ int	ft_export(t_env *env_list, char **args)
 			env_lstadd_back(&env_list, temp_node);
 		}
 	}
-	free(arg_cont);
-	free(arg_name);
+	free_func(&arg_cont, &arg_name);
 	return (EXIT_SUCCESS);
 }
 
