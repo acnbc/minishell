@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/18 19:39:15 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/21 17:38:50 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ void	signal_handler(int sig)
 static void	ft_exit(t_minishell *mini)
 {
 	char			*input;
-	
+
 	input = ft_strtrim(mini->input, " \t\n\v\f\r");
 	if (ft_strncmp(input, "exit", 4) == 0 && (input[4] == '\0'
-		|| ft_isspace(input[4])))
-    {
-        write(1, "exit\n", 5);
-        safe_exit(mini);
-    }
+			|| ft_isspace(input[4])))
+	{
+		write(1, "exit\n", 5);
+		safe_exit(mini);
+	}
 	return ;
 }
 
