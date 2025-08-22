@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/21 19:20:27 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:46:21 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,16 @@ void	signal_handler(int sig)
 		rl_redisplay();
 		rl_done = 1;
 	}
+}
+
+void	exec_signal_handler(int sig)
+{
+	if (sig == SIGQUIT)
+		write(1, "Quit (core dumped)", 19);
+	write (1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_done = 1;
 }
 
 static void	ft_exit(t_minishell *mini)
@@ -85,8 +95,6 @@ int	mini_shell(t_minishell *mini)
 		return (1);
 	if (!parser(mini))
 		return (1);
-	signal(SIGQUIT, SIG_DFL);
-	signal(SIGINT, SIG_DFL);
 	executor(mini);
 	unlink_heredoc_files(mini);
 	add_history(mini->input);

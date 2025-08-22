@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:42:44 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/18 19:33:33 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:30:08 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void	change_cwd(t_env *env_list)
 	old_pwd = find_env_var("OLDPWD", env_list);
 	pwd = find_env_var("PWD", env_list);
 	free(old_pwd->var_cont);
+	old_pwd->var_cont = NULL;
 	old_pwd->var_cont = ft_strdup(pwd->var_cont);
 	free(pwd->var_cont);
 	pwd->var_cont = NULL;

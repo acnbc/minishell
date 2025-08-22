@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/18 19:28:11 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:43:12 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ int						ft_env(t_env *env_list, int fd);
 t_env					*find_env_var(char *var, t_env *env_list);
 /* ---------------------- SIGNALS ----------------------------*/
 void					signal_handler(int sig);
+void					exec_signal_handler(int sig);
 /* ----------------------------- UTILS ---------------------------*/
 t_token					*new_token(char *value, enum e_token_type type,
 							t_minishell *mini);

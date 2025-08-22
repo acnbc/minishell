@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/21 19:08:34 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/22 18:45:20 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,8 @@ void	execute_command(t_minishell *mini)
 	dup_safe(mini, &e.tmpout, 1, "dup (stdout)");
 	p = mini->process_list;
 	mini->exec_vars = &e;
+	signal(SIGQUIT, exec_signal_handler);
+	signal(SIGINT, exec_signal_handler);
 	while (p)
 	{
 		mini->cur_proc = p;
