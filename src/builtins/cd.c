@@ -27,6 +27,8 @@ static void	change_cwd(t_env *env_list)
 
 	old_pwd = find_env_var("OLDPWD", env_list);
 	pwd = find_env_var("PWD", env_list);
+	if (!old_pwd || !pwd)
+		return; // ou criar as variáveis se não existirem
 	free(old_pwd->var_cont);
 	old_pwd->var_cont = NULL;
 	old_pwd->var_cont = ft_strdup(pwd->var_cont);

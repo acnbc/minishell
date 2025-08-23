@@ -16,11 +16,11 @@ void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		write (1, "\n", 1);
+		write(1, "\n", 1);
+		rl_clear_history();
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
-		rl_done = 1;
 	}
 }
 
@@ -43,6 +43,7 @@ static void	ft_exit(t_minishell *mini)
 			|| ft_isspace(input[4])))
 	{
 		write(1, "exit\n", 5);
+		free(input);
 		safe_exit(mini);
 	}
 	return ;

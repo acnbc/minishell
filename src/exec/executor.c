@@ -32,12 +32,35 @@ void	wait_all_processes(t_process *head)
 	}
 }
 
-static void	close_fds(t_process *p)
+static void	close_fds(t_process *p_list, t_exec_vars *e)
 {
-	if (p->fdin != -1)
-		close(p->fdin);
-	if (p->fdout != -1)
-		close(p->fdout);
+	t_process	*p;
+
+	p = p_list;
+	while (p)
+	{
+		if (p->fdin != -1)
+		{
+			close(p->fdin);
+			p->fdin = -1;
+		}
+		if (p->fdout != -1)
+		{
+			close(p->fdout);
+			p->fdout = -1;
+		}
+		p = p->next;
+	}
+	if (e->fdpipe[0] != -1)
+	{
+		close(e->fdpipe[0]);
+		e->fdpipe[0] = -1;
+	}
+	if (e->fdpipe[1] != -1)
+	{
+		close(e->fdpipe[1]);
+		e->fdpipe[1] = -1;
+	}
 }
 
 static void	dup2_safe(t_minishell *mini, int *fd, int dup2_fd,
@@ -62,7 +85,7 @@ static void	create_forks(t_minishell *mini)
 		perror("fork");
 		safe_exit(mini);
 	}
-	if (p->pid == 0)
+	if (p->pid == 0) // processo filho
 	{
 		if (p->fdin != 0)
 		{
@@ -74,9 +97,27 @@ static void	create_forks(t_minishell *mini)
 			dup2_safe(mini, &p->fdout, 1, "dup2 (stdout)");
 			close(p->fdout);
 		}
+		if (mini->exec_vars->fdpipe[0] != -1)
+			close(mini->exec_vars->fdpipe[0]);
+		if (mini->exec_vars->fdpipe[1] != -1)
+			close(mini->exec_vars->fdpipe[1]);
+
 		execve(p->path, p->args, mini->envp_copy);
 		perror("execve");
 		safe_exit(mini);
+	}
+	else
+	{
+		if (p->fdin != -1 && p->fdin != mini->exec_vars->tmpin)
+		{
+			close(p->fdin);
+			p->fdin = -1;
+		}
+		if (p->fdout != -1 && p->fdout != mini->exec_vars->tmpout)
+		{
+			close(p->fdout);
+			p->fdout = -1;
+		}
 	}
 }
 
@@ -96,8 +137,6 @@ static void	open_pipes(t_minishell *mini)
 		p->fdout = e->fdpipe[1];
 	if (p->next->fdin == -1 && !p->next->input_file)
 		p->next->fdin = e->fdpipe[0];
-	else
-		close(e->fdpipe[0]);
 }
 
 static void	dup_safe(t_minishell *mini, int *fd, int dup_fd,
@@ -201,9 +240,9 @@ void	execute_command(t_minishell *mini)
 			exec_builtin(mini);
 		else
 			create_forks(mini);
-		close_fds(p);
 		p = p->next;
 	}
+	close_fds(mini->process_list, &e);
 	dup2_safe(mini, &e.tmpin, 0, "dup2 (stdin)");
 	dup2_safe(mini, &e.tmpout, 1, "dup2 (stdout)");
 	close(e.tmpin);
