@@ -6,23 +6,11 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:21:34 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 09:10:16 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:01:37 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-static char	*put_line_break(char *line)
-{
-	char	*tmp;
-
-	tmp = ft_strjoin(line, "\n");
-	if (!tmp)
-		safe_exit(NULL);
-	free(line);
-	line = tmp;
-	return (line);
-}
 
 void	unlink_heredoc_files(t_minishell *mini)
 {
@@ -76,16 +64,6 @@ static char	*process_line(t_minishell *mini, t_process *p, char *line)
 	if (!line)
 		safe_exit(mini);
 	return (line);
-}
-
-static void	write_heredoc_line(int fd, char *line, t_minishell *mini)
-{
-	if (write(fd, line, ft_strlen(line)) < 0)
-	{
-		perror("heredoc write");
-		free(line);
-		safe_exit(mini);
-	}
 }
 
 static void	here_doc(t_minishell *mini)

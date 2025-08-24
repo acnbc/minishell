@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/19 16:22:27 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 09:20:28 by anogueir         ###   ########.fr       */
+/*   Created: 2025/08/24 15:58:45 by anogueir          #+#    #+#             */
+/*   Updated: 2025/08/24 15:58:48 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,49 +34,6 @@ void	get_word_token(t_minishell *mini, int *i, int start)
 	token_lstadd_back(tokens, new_token(segment, type, mini));
 }
 
-int	is_cmd(char *cmd, t_minishell *mini)
-{
-	char	**path_dirs;
-	char	*temp;
-
-	if (ft_strstr(cmd, "./") || cmd[0] == '/')
-	{
-		mini->cur_proc->path = ft_strdup(cmd);
-		return (1);
-	}
-	if (ft_strncmp(cmd, "..", 3) == 0)
-		return (0);
-	path_dirs = paths(mini->env_list);
-	if (!path_dirs)
-		return (0);
-	temp = path_name(path_dirs, cmd);
-	if (temp)
-	{
-		mini->cur_proc->path = temp;
-		free_matrix(path_dirs);
-		return (1);
-	}
-	free_matrix(path_dirs);
-	return (0);
-}
-
-int	is_builtin(char *cmd)
-{
-	static const char	*builtins[] = {"echo", "cd", "pwd", "export", "unset",
-		"env", "exit", NULL};
-	int					i;
-
-	i = -1;
-	if (!cmd)
-		return (0);
-	while (builtins[++i])
-	{
-		if (ft_strncmp(cmd, builtins[i], ft_strlen(builtins[i]) + 1) == 0)
-			return (1);
-	}
-	return (0);
-}
-
 char	*is_variable(t_minishell *mini, int *i, int start)
 {
 	char	*segment;
@@ -102,6 +59,25 @@ char	*is_variable(t_minishell *mini, int *i, int start)
 	return (segment);
 }
 
+static int	handle_redirection(t_minishell *mini, int *i)
+{
+	if (mini->cur_proc->cmd_seq[*i] == '<'
+		&& !is_between_quotes(mini->cur_proc->cmd_seq, *i))
+	{
+		if (!redin_heredoc_tokenizer(mini, i))
+			return (0);
+		return (1);
+	}
+	else if (mini->cur_proc->cmd_seq[*i] == '>'
+		&& !is_between_quotes(mini->cur_proc->cmd_seq, *i))
+	{
+		if (!redout_append_tokenizer(mini, i))
+			return (0);
+		return (1);
+	}
+	return (0);
+}
+
 int	tokenize(t_minishell *mini)
 {
 	int		i;
@@ -111,18 +87,8 @@ int	tokenize(t_minishell *mini)
 	cmd_seq = mini->cur_proc->cmd_seq;
 	while (cmd_seq[i])
 	{
-		if (cmd_seq[i] == '<' && !is_between_quotes(cmd_seq, i))
-		{
-			if (!redin_heredoc_tokenizer(mini, &i))
-				return (0);
+		if (handle_redirection(mini, &i))
 			continue ;
-		}
-		else if (cmd_seq[i] == '>' && !is_between_quotes(cmd_seq, i))
-		{
-			if (!redout_append_tokenizer(mini, &i))
-				return (0);
-			continue ;
-		}
 		else if (!ft_isspace(cmd_seq[i]))
 		{
 			word_tokenizer(mini, &i);
@@ -133,81 +99,3 @@ int	tokenize(t_minishell *mini)
 	}
 	return (1);
 }
-
-void	print_process_list(t_process *process_list)
-{
-	int		i;
-	int		j;
-	t_token	*tok;
-
-	i = 0;
-	printf("\n=== DEBUG: Process List ===\n");
-	while (process_list != NULL)
-	{
-		printf("Node[%d]:\n", i++);
-		printf("  cmd_seq:            '%s'\n", process_list->cmd_seq);
-		// Caminho resolvido para o comando
-		if (process_list->path)
-			printf("  path:               '%s'\n", process_list->path);
-		// Redirecionamentos
-		if (process_list->input_file)
-			printf("  input_file:         '%s'\n", process_list->input_file);
-		if (process_list->output_file)
-			printf("  output_file:        '%s'\n", process_list->output_file);
-		if (process_list->delimiter)
-			printf("  delimiter:  '%s'\n",
-				process_list->delimiter);
-		// Flags
-		printf("  append_flag:        %d\n", process_list->append_flag);
-		printf("  redirect_in_flag:   %d\n", process_list->redirect_in_flag);
-		printf("  redirect_out_flag:  %d\n", process_list->redirect_out_flag);
-		printf("  heredoc_flag:       %d\n", process_list->heredoc_flag);
-		printf("  double_quote_flag:  %d\n", process_list->double_quote_flag);
-		printf("  single_quote_flag:  %d\n", process_list->single_quote_flag);
-		// Tokens
-		tok = process_list->tokens;
-		j = 0;
-		while (tok)
-		{
-			printf("    Token[%d]:         '%s' (type: %d)\n", j++, tok->value,
-				tok->type);
-			tok = tok->next;
-		}
-		if (process_list->args)
-		{
-			j = 0;
-			while (process_list->args[j])
-			{
-				printf("    args[%d]:          '%s'\n", j,
-					process_list->args[j]);
-				j++;
-			}
-		}
-		process_list = process_list->next;
-	}
-	printf("=== Fim da lista de processos ===\n\n");
-}
-/*1. get_word_token
-
-    Função: Analisa um segmento da linha de comando e adiciona um token à lista de tokens do processo atual.
-    Como: Verifica se o segmento é uma variável, builtin, comando ou argumento e adiciona o token correspondente.
-
-2. is_cmd
-
-    Função: Verifica se uma string é um comando válido.
-    Como: Se contém /, assume que é um caminho. Senão, procura o comando nas pastas do PATH. Se encontrar, salva o caminho.
-
-3. is_builtin
-
-    Função: Verifica se uma string corresponde a um comando builtin do shell.
-    Como: Compara a string com uma lista fixa de comandos internos (echo, cd, etc).
-
-4. is_variable
-
-    Função: Verifica se o segmento contém uma variável de ambiente e faz a expansão.
-    Como: Se encontrar $, chama a função de expansão e retorna o resultado expandido.
-5. tokenize
-
-    Função: Faz a tokenização da linha de comando do processo atual.
-    Como: Percorre a string, identifica redirecionamentos, palavras e espaços, e chama as funções apropriadas para cada caso.
-*/

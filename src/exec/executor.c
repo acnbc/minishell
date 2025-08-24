@@ -3,74 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/22 18:45:20 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:20:40 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	wait_all_processes(t_process *head)
+static void	child_process(t_minishell *mini, t_process *p)
 {
-	t_process	*cur;
-
-	cur = head;
-	while (cur)
+	if (p->fdin != 0)
 	{
-		waitpid(cur->pid, &cur->status, 0);
-		if (WIFEXITED(cur->status))
-			cur->exit_signal = WEXITSTATUS(cur->status);
-		else if (WIFSIGNALED(cur->status))
-			cur->exit_signal = 128 + WTERMSIG(cur->status);
-		else
-			cur->exit_signal = -1;
-		if (cur->next == NULL)
-			g_exit_status = cur->exit_signal;
-		cur = cur->next;
+		dup2_safe(mini, &p->fdin, 0, "dup2 (stdin)");
+		close(p->fdin);
 	}
+	if (p->fdout != 1)
+	{
+		dup2_safe(mini, &p->fdout, 1, "dup2 (stdout)");
+		close(p->fdout);
+	}
+	if (mini->exec_vars->fdpipe[0] != -1)
+		close(mini->exec_vars->fdpipe[0]);
+	if (mini->exec_vars->fdpipe[1] != -1)
+		close(mini->exec_vars->fdpipe[1]);
+	execve(p->path, p->args, mini->envp_copy);
+	perror("execve");
+	safe_exit(mini);
 }
 
-static void	close_fds(t_process *p_list, t_exec_vars *e)
+static void	parent_process(t_minishell *mini, t_process *p)
 {
-	t_process	*p;
-
-	p = p_list;
-	while (p)
+	if (p->fdin != -1 && p->fdin != mini->exec_vars->tmpin)
 	{
-		if (p->fdin != -1)
-		{
-			close(p->fdin);
-			p->fdin = -1;
-		}
-		if (p->fdout != -1)
-		{
-			close(p->fdout);
-			p->fdout = -1;
-		}
-		p = p->next;
+		close(p->fdin);
+		p->fdin = -1;
 	}
-	if (e->fdpipe[0] != -1)
+	if (p->fdout != -1 && p->fdout != mini->exec_vars->tmpout)
 	{
-		close(e->fdpipe[0]);
-		e->fdpipe[0] = -1;
-	}
-	if (e->fdpipe[1] != -1)
-	{
-		close(e->fdpipe[1]);
-		e->fdpipe[1] = -1;
-	}
-}
-
-static void	dup2_safe(t_minishell *mini, int *fd, int dup2_fd,
-		const char *error_message)
-{
-	dup2(*fd, dup2_fd);
-	if (*fd == -1)
-	{
-		perror(error_message);
-		safe_exit(mini);
+		close(p->fdout);
+		p->fdout = -1;
 	}
 }
 
@@ -85,138 +58,10 @@ static void	create_forks(t_minishell *mini)
 		perror("fork");
 		safe_exit(mini);
 	}
-	if (p->pid == 0) // processo filho
-	{
-		if (p->fdin != 0)
-		{
-			dup2_safe(mini, &p->fdin, 0, "dup2 (stdin)");
-			close(p->fdin);
-		}
-		if (p->fdout != 1)
-		{
-			dup2_safe(mini, &p->fdout, 1, "dup2 (stdout)");
-			close(p->fdout);
-		}
-		if (mini->exec_vars->fdpipe[0] != -1)
-			close(mini->exec_vars->fdpipe[0]);
-		if (mini->exec_vars->fdpipe[1] != -1)
-			close(mini->exec_vars->fdpipe[1]);
-
-		execve(p->path, p->args, mini->envp_copy);
-		perror("execve");
-		safe_exit(mini);
-	}
+	if (p->pid == 0)
+		child_process(mini, p);
 	else
-	{
-		if (p->fdin != -1 && p->fdin != mini->exec_vars->tmpin)
-		{
-			close(p->fdin);
-			p->fdin = -1;
-		}
-		if (p->fdout != -1 && p->fdout != mini->exec_vars->tmpout)
-		{
-			close(p->fdout);
-			p->fdout = -1;
-		}
-	}
-}
-
-static void	open_pipes(t_minishell *mini)
-{
-	t_process	*p;
-	t_exec_vars	*e;
-
-	p = mini->cur_proc;
-	e = mini->exec_vars;
-	if (pipe(e->fdpipe) == -1)
-	{
-		perror("pipe");
-		safe_exit(mini);
-	}
-	if (!p->output_file)
-		p->fdout = e->fdpipe[1];
-	if (p->next->fdin == -1 && !p->next->input_file)
-		p->next->fdin = e->fdpipe[0];
-}
-
-static void	dup_safe(t_minishell *mini, int *fd, int dup_fd,
-		const char *error_message)
-{
-	*fd = dup(dup_fd);
-	if (*fd == -1)
-	{
-		perror(error_message);
-		safe_exit(mini);
-	}
-}
-
-static void	get_redirect_in(t_minishell *mini)
-{
-	t_process	*p;
-
-	p = mini->cur_proc;
-	if (p->fdin == -1)
-	{
-		if (p->input_file)
-		{
-			p->fdin = open(p->input_file, O_RDONLY);
-			if (p->fdin == -1)
-			{
-				perror(p->input_file);
-				p->exit_signal = 1;
-				return ;
-			}
-		}
-		else
-			dup_safe(mini, &p->fdin, mini->exec_vars->tmpin, "dup (stdin)");
-	}
-}
-
-static void	get_redirect_out(t_minishell *mini)
-{
-	t_process	*p;
-
-	p = mini->cur_proc;
-	if (p->output_file)
-	{
-		if (p->append_flag)
-			p->fdout = open(p->output_file, O_WRONLY | O_CREAT | O_APPEND,
-					0666);
-		else if (p->redirect_out_flag)
-			p->fdout = open(p->output_file, O_WRONLY | O_CREAT | O_TRUNC,
-					0666);
-		if (p->fdout == -1)
-		{
-			perror(p->output_file);
-			p->exit_signal = 1;
-			return ;
-		}
-	}
-	else if (p->next)
-		open_pipes(mini);
-	else
-		dup_safe(mini, &p->fdout, mini->exec_vars->tmpout, "dup (stdout)");
-}
-
-void	exec_builtin(t_minishell *mini)
-{
-	t_process	*p;
-
-	p = mini->cur_proc;
-	if (ft_strncmp(p->args[0], "cd", ft_strlen(p->args[0])) == 0)
-		p->exit_signal = ft_cd(mini, mini->env_list);
-	else if (ft_strncmp(p->args[0], "echo", ft_strlen(p->args[0])) == 0)
-		p->exit_signal = ft_echo(p->args, p->fdout);
-	else if (ft_strncmp(p->args[0], "pwd", ft_strlen(p->args[0])) == 0)
-		p->exit_signal = ft_pwd(mini->cur_proc, mini->env_list);
-	else if (ft_strncmp(p->args[0], "export", ft_strlen(p->args[0])) == 0)
-		p->exit_signal = ft_export(mini->env_list, p->args);
-	else if (ft_strncmp(p->args[0], "unset", ft_strlen(p->args[0])) == 0)
-		p->exit_signal = ft_unset(mini->env_list, p->args);
-	else if (ft_strncmp(p->args[0], "env", ft_strlen(p->args[0])) == 0)
-		p->exit_signal = ft_env(mini->env_list, p->fdout);
-	//else if (ft_strcmp(p->args[0], "exit") == 0)
-	//	p->exit_signal = ft_exit(mini, p->args);
+		parent_process(mini, p);
 }
 
 void	execute_command(t_minishell *mini)
@@ -236,17 +81,13 @@ void	execute_command(t_minishell *mini)
 		mini->cur_proc = p;
 		get_redirect_in(mini);
 		get_redirect_out(mini);
-		if (is_builtin(p->args[0]))
+		if (p->tokens->type == BUILTIN)
 			exec_builtin(mini);
 		else
 			create_forks(mini);
 		p = p->next;
 	}
-	close_fds(mini->process_list, &e);
-	dup2_safe(mini, &e.tmpin, 0, "dup2 (stdin)");
-	dup2_safe(mini, &e.tmpout, 1, "dup2 (stdout)");
-	close(e.tmpin);
-	close(e.tmpout);
+	close_fds(mini->process_list, &e, mini);
 	wait_all_processes(mini->process_list);
 }
 

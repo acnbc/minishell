@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:37:23 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 09:13:12 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 15:03:15 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ char	**copy_envp(t_env *env_list)
 	t_env	*current;
 	int		i;
 
-	if (!env_list)
-		return (NULL);
 	current = env_list;
 	i = 0;
 	while (current)
@@ -27,7 +25,9 @@ char	**copy_envp(t_env *env_list)
 		i++;
 		current = current->next;
 	}
-	copy = (char **)safe_malloc((i + 1) * sizeof(char *));
+	copy = (char **)ft_calloc((i + 1), sizeof(char *));
+	if (!copy)
+		return (NULL);
 	current = env_list;
 	i = 0;
 	while (current)
@@ -67,7 +67,9 @@ t_env	*env_list(char *envp[])
 	i = -1;
 	while (envp[++i])
 	{
-		variables = safe_malloc(sizeof(t_env_vars));
+		variables = (t_env_vars *)ft_calloc(1, sizeof(t_env_vars));
+		if (!variables)
+			return (NULL);
 		variables->equal_sign = ft_strchr(envp[i], '=');
 		env_list_pair(variables, i, envp);
 		if (!variables->var_name || !variables->var_cont)
@@ -83,7 +85,9 @@ t_env	*env_lstnew(char *var_name, char *var_cont)
 {
 	t_env	*new_node;
 
-	new_node = (t_env *)safe_malloc(sizeof(t_env));
+	new_node = (t_env *)ft_calloc(1, sizeof(t_env));
+	if (!new_node)
+		return (NULL);
 	new_node->var_name = var_name;
 	new_node->var_cont = var_cont;
 	new_node->next = NULL;
@@ -109,7 +113,7 @@ void	env_lstadd_back(t_env **lst, t_env *new)
 	new->prev = curr;
 }
 
-void	print_envp(char **envp_copy)
+/*void	print_envp(char **envp_copy)
 {
 	int	i;
 
@@ -138,3 +142,4 @@ void	print_env_list(t_env *env_list)
 		i++;
 	}
 }
+*/

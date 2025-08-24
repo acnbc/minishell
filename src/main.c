@@ -3,16 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:39:34 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/22 18:39:04 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/24 14:12:52 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 int	g_exit_status;
+
+void	signal_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_clear_history();
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+void	exec_signal_handler(int sig)
+{
+	if (sig == SIGQUIT)
+		write(1, "Quit (core dumped)", 19);
+	write (1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_done = 1;
+}
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -21,8 +43,12 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argc;
 	(void)argv;
 	g_exit_status = 0;
-	mini = safe_malloc(sizeof(t_minishell));
+	mini = (t_minishell *)ft_calloc(1, sizeof(t_minishell));
+	if (!mini)
+		exit(1);
 	mini->env_list = env_list(envp);
+	if (!mini->env_list)
+		exit(1);
 	mini->process_list = NULL;
 	while (1)
 	{

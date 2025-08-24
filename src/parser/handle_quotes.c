@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 19:34:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 08:45:55 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:29:55 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,21 @@ static char	*cut_double_quotes(t_minishell *mini, int i)
 {
 	char	*clean_input;
 	char	*cmd_seq;
+	char	*temp;
 	int		j;
 
 	clean_input = NULL;
+	temp = NULL;
 	cmd_seq = mini->cur_proc->cmd_seq;
 	j = i;
 	while (cmd_seq[i] != DOUBLE_QUOTE && cmd_seq[i])
 	{
 		if (cmd_seq[i] == '$')
-			clean_input = get_env_var(mini, cmd_seq, &i, &j);
+		{
+			temp = get_env_var(mini, cmd_seq, &i, &j);
+			if (temp)
+				clean_input = strjoin_free(clean_input, temp);
+		}
 		else
 			i++;
 	}

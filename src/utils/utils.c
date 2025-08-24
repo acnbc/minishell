@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:45:41 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 08:23:04 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 13:50:31 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,6 @@ char	*strjoin_free(char *s1, char *s2)
 	if (s2)
 		free(s2);
 	return (joined);
-}
-
-void	*safe_malloc(size_t bytes)
-{
-	void	*malloced_space;
-
-	malloced_space = ft_calloc(1, bytes);
-	if (!malloced_space)
-	{
-		// SAFE EXIT
-		exit(1);
-	}
-	if (bytes == 0)
-	{
-		free(malloced_space);
-		return (NULL);
-	}
-	return (malloced_space);
 }
 
 char	**paths(t_env *env_list)

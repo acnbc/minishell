@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/22 18:43:12 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:12:42 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <sys/stat.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -142,7 +143,6 @@ int						verify_quote_count(char *process);
 char					*ft_strstr(char *str, char *to_find);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
 void					safe_exit(t_minishell *mini);
-void					*safe_malloc(size_t bytes);
 char					*ft_substr_safe(char *s, unsigned int start, size_t len,
 							t_minishell *mini);
 /* ----------------------------- LEXER ---------------------------*/
@@ -166,6 +166,23 @@ void					handle_heredoc(t_minishell *mini);
 void					unlink_heredoc_files(t_minishell *mini);
 char					**copy_args(t_token *tokens);
 int						get_args(t_process *process_list);
+void					close_fds(t_process *p_list, t_exec_vars *e,
+							t_minishell *mini);
+void					dup2_safe(t_minishell *mini, int *fd, int dup2_fd,
+							const char *error_message);
+void					dup_safe(t_minishell *mini, int *fd, int dup_fd,
+							const char *error_message);
+void					get_redirect_in(t_minishell *mini);
+void					get_redirect_out(t_minishell *mini);
+void					open_pipes(t_minishell *mini);
+char					*put_line_break(char *line);
+void					write_heredoc_line(int fd, char *line,
+							t_minishell *mini);
+void					wait_all_processes(t_process *head);
+void					open_pipes(t_minishell *mini);
+void					exec_builtin(t_minishell *mini);
+int						is_cmd(char *cmd, t_minishell *mini);
+int						is_builtin(char *segment);
 /* ---------------------- BUILTINS ----------------------------*/
 int						ft_echo(char **args, int fd);
 int						ft_cd(t_minishell *mini, t_env *env_list);
@@ -192,8 +209,5 @@ void					free_token_list(t_token *tokens);
 void					free_matrix(char **matrix);
 void					safe_env_list_exit(t_env_vars *vars, t_env *env_list);
 void					flush(t_minishell *mini);
-
-void					print_process_list(t_process *process_list);
-void					print_env_list(t_env *env_list);
 
 #endif

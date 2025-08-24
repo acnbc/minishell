@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:23:30 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 08:41:22 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 13:50:06 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,4 @@ int	skip_spaces(char *str, int *i)
 int	ft_isspace(char c)
 {
 	return (c == ' ' || (c >= '\t' && c <= '\r'));
-}
-
-char	*ft_substr_safe(char *s, unsigned int start, size_t len,
-		t_minishell *mini)
-{
-	char	*substr;
-
-	substr = ft_substr(s, start, len);
-	if (!substr)
-		safe_exit(mini);
-	return (substr);
 }

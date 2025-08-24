@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:11:40 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 08:41:22 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 14:12:13 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ t_token	*new_token(char *value, enum e_token_type type, t_minishell *mini)
 		safe_exit(mini);
 		return (NULL);
 	}
-	new = safe_malloc(sizeof(t_token));
+	new = (t_token *)ft_calloc(1, sizeof(t_token));
+	if (!new)
+		safe_exit(mini);
 	new->value = value;
 	new->type = type;
 	new->next = NULL;

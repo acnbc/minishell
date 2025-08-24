@@ -3,36 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/22 18:46:21 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/24 14:16:41 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	signal_handler(int sig)
-{
-	if (sig == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_clear_history();
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
-
-void	exec_signal_handler(int sig)
-{
-	if (sig == SIGQUIT)
-		write(1, "Quit (core dumped)", 19);
-	write (1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_done = 1;
-}
 
 static void	ft_exit(t_minishell *mini)
 {
@@ -48,7 +26,6 @@ static void	ft_exit(t_minishell *mini)
 	}
 	return ;
 }
-
 
 char	*ft_strstr(char *str, char *to_find)
 {
@@ -71,18 +48,14 @@ char	*ft_strstr(char *str, char *to_find)
 	return (NULL);
 }
 
-int	mini_shell(t_minishell *mini)
+static int	first_input_checks(t_minishell *mini)
 {
-	if (!mini)
-		return (0);
-	mini->input = readline(MINISHELL_PROMPT);
-	if (!mini->input)
-		safe_exit(mini);
 	if (ft_strstr(mini->input, "exit"))
 		ft_exit(mini);
 	if (ft_strncmp(".", mini->input, 2) == 0)
 	{
-		ft_printf("filename argument required\n.: usage: . filename [arguments]\n");
+		ft_printf("filename argument required\n");
+		ft_printf(".: usage: . filename [arguments]\n");
 		return (1);
 	}
 	if (ft_strncmp("..", mini->input, 2) == 0)
@@ -93,6 +66,18 @@ int	mini_shell(t_minishell *mini)
 	if ((ft_strchr(mini->input, DOUBLE_QUOTE)
 			|| ft_strchr(mini->input, SINGLE_QUOTE))
 		&& !verify_quote_count(mini->input))
+		return (1);
+	return (0);
+}
+
+int	mini_shell(t_minishell *mini)
+{
+	if (!mini)
+		return (0);
+	mini->input = readline(MINISHELL_PROMPT);
+	if (!mini->input)
+		safe_exit(mini);
+	if (first_input_checks(mini))
 		return (1);
 	if (!parser(mini))
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 09:18:40 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 09:21:17 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 15:07:59 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,15 @@ static void	free_args(char **args, int count)
 	free(args);
 }
 
-char	**copy_args(t_token *tokens)
+static char	**copy_args_loop(t_token *tokens, int count)
 {
 	char	**args;
 	t_token	*current;
-	int		count;
 	int		i;
 
-	if (!tokens)
+	args = (char **)ft_calloc((count + 1), sizeof(char *));
+	if (!args)
 		return (NULL);
-	count = count_tokens(tokens);
-	args = (char **)safe_malloc((count + 1) * sizeof(char *));
 	current = tokens;
 	i = 0;
 	while (current)
@@ -55,11 +53,21 @@ char	**copy_args(t_token *tokens)
 			free_args(args, i);
 			return (NULL);
 		}
-		i++;
 		current = current->next;
+		i++;
 	}
 	args[i] = NULL;
 	return (args);
+}
+
+char	**copy_args(t_token *tokens)
+{
+	int	count;
+
+	if (!tokens)
+		return (NULL);
+	count = count_tokens(tokens);
+	return (copy_args_loop(tokens, count));
 }
 
 int	get_args(t_process *process_list)

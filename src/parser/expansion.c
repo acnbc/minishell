@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 12:01:02 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 08:45:01 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:27:05 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,55 +44,47 @@ char	*extract_variable(t_minishell *mini, char *variable)
 
 char	*get_env_var(t_minishell *mini, char *segment, int *i, int *j)
 {
-	char	*var_name;
-	char	*expanded;
-	int		start;
+	char	*clean_input;
 
-	if (!mini || !segment || !i || !j)
-		return (NULL);
+	clean_input = NULL;
+	if (*j < *i)
+		clean_input = strjoin_free(clean_input, ft_substr(segment, *j, *i
+					- *j));
 	*j = ++(*i);
 	if (segment[*i] == '?')
 	{
-		var_name = ft_strdup("?");
 		(*i)++;
+		clean_input = strjoin_free(clean_input, extract_variable(mini,
+					ft_strdup("?")));
+		*j = *i;
+		return (clean_input);
 	}
-	else
-	{
-		start = *i;
-		while (segment[*i] && is_stopchar(segment[*i]))
-			(*i)++;
-		var_name = ft_substr(segment, start, *i - start);
-	}
+	while (segment[*i] && is_stopchar(segment[*i]))
+		(*i)++;
+	clean_input = strjoin_free(clean_input, extract_variable(mini,
+				ft_substr(segment, *j, *i - *j)));
 	*j = *i;
-	expanded = extract_variable(mini, var_name);
-	return (expanded);
+	return (clean_input);
 }
 
 char	*expansion(t_minishell *mini, char *segment)
 {
-	char	*clean;
-	char	*var_value;
+	char	*clean_input;
 	int		i;
 	int		j;
 
-	clean = NULL;
+	clean_input = NULL;
 	i = 0;
-	j = 0;
+	j = i;
 	while (segment[i])
 	{
 		if (segment[i] == '$')
-		{
-			if (j < i)
-				clean = strjoin_free(clean, ft_substr(segment, j, i - j));
-			var_value = get_env_var(mini, segment, &i, &j);
-			if (var_value)
-				clean = strjoin_free(clean, var_value);
-			j = i;
-		}
+			clean_input = get_env_var(mini, segment, &i, &j);
 		else
 			i++;
 	}
 	if (j < i)
-		clean = strjoin_free(clean, ft_substr(segment, j, i - j));
-	return (clean);
+		clean_input = strjoin_free(clean_input, ft_substr(segment, j, i
+					- j));
+	return (clean_input);
 }

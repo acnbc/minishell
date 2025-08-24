@@ -6,39 +6,11 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:37:39 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 09:19:25 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 13:47:34 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	free_process_list(t_process *process_list)
-{
-	t_process	*tmp;
-
-	if (!process_list)
-		return ;
-	while (process_list)
-	{
-		tmp = process_list->next;
-		if (process_list->cmd_seq)
-			free(process_list->cmd_seq);
-		if (process_list->input_file)
-			free(process_list->input_file);
-		if (process_list->output_file)
-			free(process_list->output_file);
-		if (process_list->delimiter)
-			free(process_list->delimiter);
-		if (process_list->path)
-			free(process_list->path);
-		if (process_list->tokens)
-			free_token_list(process_list->tokens);
-		if (process_list->args)
-			free_matrix(process_list->args);
-		free(process_list);
-		process_list = tmp;
-	}
-}
 
 void	safe_env_list_exit(t_env_vars *vars, t_env *env_list)
 {
