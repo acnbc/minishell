@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 14:16:41 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:38:18 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	mini_shell(t_minishell *mini)
 		return (0);
 	mini->input = readline(MINISHELL_PROMPT);
 	if (!mini->input)
-		safe_exit(mini);
+		mini->input = ft_strdup("exit");
 	if (first_input_checks(mini))
 		return (1);
 	if (!parser(mini))
