@@ -37,6 +37,8 @@ static char	*cut_double_quotes(t_minishell *mini, int i)
 	if (j < i)
 		clean_input = strjoin_free(clean_input, ft_substr_safe(cmd_seq, j, i
 					- j, mini));
+	if (!clean_input)
+        clean_input = ft_strdup("");
 	return (clean_input);
 }
 
@@ -52,6 +54,8 @@ static char	*cut_single_quotes(t_minishell *mini, int i)
 	while (cmd_seq[i] != SINGLE_QUOTE && cmd_seq[i++])
 		;
 	clean_input = ft_substr_safe(cmd_seq, j, i - j, mini);
+	if (!clean_input)
+        clean_input = ft_strdup("");
 	return (clean_input);
 }
 

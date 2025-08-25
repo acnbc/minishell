@@ -119,7 +119,6 @@ int						mini_shell(t_minishell *mini);
 /* ----------------------------- PARSER ---------------------------*/
 t_process				*new_process(char *content);
 void					add_process(t_process **lst, t_process *new);
-t_process				*last_process(t_process *proc);
 int						ft_isspace(char c);
 int						parser(t_minishell *mini);
 char					*extract_variable(t_minishell *mini,

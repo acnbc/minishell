@@ -16,7 +16,7 @@ t_token	*new_token(char *value, enum e_token_type type, t_minishell *mini)
 {
 	t_token	*new;
 
-	if (*value == '\0' || !value)
+	if (!value)
 	{
 		safe_exit(mini);
 		return (NULL);

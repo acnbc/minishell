@@ -40,22 +40,6 @@ void	free_process_list(t_process *process_list)
 	}
 }
 
-t_process	*last_process(t_process *proc)
-{
-	t_process	*curr;
-
-	if (!proc)
-		return (NULL);
-	curr = proc;
-	while (curr != NULL)
-	{
-		if (curr->next == NULL)
-			break ;
-		curr = curr->next;
-	}
-	return (curr);
-}
-
 t_process	*new_process(char *cmd_seq)
 {
 	t_process	*process;
