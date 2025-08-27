@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 16:12:42 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/27 10:49:53 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ int						is_builtin(char *segment);
 /* ---------------------- BUILTINS ----------------------------*/
 int						ft_echo(char **args, int fd);
 int						ft_cd(t_minishell *mini, t_env *env_list);
-int						ft_pwd(t_process *p, t_env *env_list);
+int						ft_pwd(t_process *p);
 int						ft_export(t_env *env_list, char **args);
 int						ft_unset(t_env *env_list, char **args);
 int						ft_env(t_env *env_list, int fd);

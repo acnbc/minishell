@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 16:38:18 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/27 11:19:42 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	mini_shell(t_minishell *mini)
 	if (!parser(mini))
 		return (1);
 	executor(mini);
-	unlink_heredoc_files(mini);
+	// unlink_heredoc_files(mini);
 	add_history(mini->input);
 	return (1);
 }

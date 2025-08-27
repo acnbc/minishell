@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:39:34 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/24 14:12:52 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/27 11:21:24 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	signal_handler(int sig)
 	if (sig == SIGINT)
 	{
 		write(1, "\n", 1);
-		rl_clear_history();
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
@@ -56,6 +55,7 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, signal_handler);
 		if (!mini_shell(mini))
 			break ;
+		unlink_heredoc_files(mini);
 		flush(mini);
 	}
 	safe_exit(mini);

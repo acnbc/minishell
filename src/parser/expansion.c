@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 12:01:02 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 16:27:05 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/27 09:58:49 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ char	*expansion(t_minishell *mini, char *segment)
 	j = i;
 	while (segment[i])
 	{
-		if (segment[i] == '$')
+		if (segment[i] == '$' && segment[i + 1] != '\0' && 
+			(is_stopchar(segment[i + 1]) || segment[i + 1] == '?'))
 			clean_input = get_env_var(mini, segment, &i, &j);
 		else
 			i++;
