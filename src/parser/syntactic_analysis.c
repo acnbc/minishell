@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:27:08 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/15 09:10:10 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/26 21:30:20 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,22 @@ bool	syntactic_analysis(t_minishell *mini)
 {
 	t_process	*p;
 	t_token		*token;
+	int			count;
 
 	p = mini->process_list;
 	while (p)
 	{
-		p->found_cmd = false;
 		token = p->tokens;
 		if (has_redirection_without_target(p))
 			return (syntax_error_msg("Missing redirection target"));
+		count = 0;
 		while (token)
 		{
-			if ((token->type == CMD || token->type == BUILTIN) && p->found_cmd)
-				return (syntax_error_msg("Multiple commands without pipe"));
-			if (token->type == CMD || token->type == BUILTIN)
-				p->found_cmd = true;
-			if (!p->found_cmd && token->type == ARGS && token != p->tokens)
-				return (syntax_error_msg("Unexpected argument before command"));
+			if (count++ == 0)
+			{
+				if (token->type != CMD && token->type != BUILTIN)
+					return (syntax_error_msg("Missing command"));
+			}
 			token = token->next;
 		}
 		if (!p->found_cmd)
