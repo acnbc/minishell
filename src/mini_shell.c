@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/27 11:19:42 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/28 21:09:25 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,12 @@ int	mini_shell(t_minishell *mini)
 	mini->input = readline(MINISHELL_PROMPT);
 	if (!mini->input)
 		mini->input = ft_strdup("exit");
+	add_history(mini->input);
 	if (first_input_checks(mini))
 		return (1);
 	if (!parser(mini))
 		return (1);
 	executor(mini);
 	// unlink_heredoc_files(mini);
-	add_history(mini->input);
 	return (1);
 }

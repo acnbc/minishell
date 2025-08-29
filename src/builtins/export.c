@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:46:54 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/24 15:59:14 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/28 21:05:32 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char	**first_equal(char *arg)
 	int		i;
 	char	**sep_args;
 
-	if (!arg)
+	if (!ft_strchr(arg, '='))
 		return (NULL);
 	sep_args = (char **)ft_calloc(3, sizeof(char *));
 	if (!sep_args)
@@ -47,13 +47,17 @@ static int	update_args(char **arg_name, char **arg_cont, char *args)
 {
 	char	**curr;
 
+	free(*arg_name);
+	free(*arg_cont);
+	*arg_name = NULL;
+	*arg_cont = NULL;
 	curr = first_equal(args);
 	if (!curr)
 		return (0);
-	free(*arg_name);
-	free(*arg_cont);
-	*arg_name = ft_strdup(curr[0]);
-	*arg_cont = ft_strdup(curr[1]);
+	if (curr[0])
+		*arg_name = ft_strdup(curr[0]);
+	if (curr[1])
+		*arg_cont = ft_strdup(curr[1]);
 	free(curr[0]);
 	free(curr[1]);
 	free(curr);
@@ -82,17 +86,23 @@ int	ft_export(t_env *env_list, char **args)
 {
 	char	*arg_name;
 	char	*arg_cont;
+	int		exit_s;
 
+	exit_s = 0;
 	arg_name = NULL;
 	arg_cont = NULL;
 	while (++args && *args)
 	{
 		if (!update_args(&arg_name, &arg_cont, *args))
-			return (EXIT_FAILURE);
+			continue ;
 		if (arg_name == NULL)
+		{
 			write(2, "export: not a valid identifier\n", 32);
+			exit_s = EXIT_FAILURE;
+			continue ;
+		}
 		update_env_var(env_list, arg_name, arg_cont);
 	}
 	free_func(&arg_cont, &arg_name);
-	return (EXIT_SUCCESS);
+	return (exit_s);
 }
