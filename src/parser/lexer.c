@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 16:23:12 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 15:58:16 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:31:05 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 
 	cmd_seq = mini->cur_proc->cmd_seq;
 	skip_spaces(cmd_seq, i);
+	if (!is_stopchar(cmd_seq[*i]))
+		return (NULL);
 	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
 	{
 		temp = handle_quotes(mini, cmd_seq, i);
@@ -35,11 +37,17 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 	return (temp);
 }
 
-static void	assign_file(char **file, t_minishell *mini, int *i)
+static int	assign_file(char **file, t_minishell *mini, int *i)
 {
 	if (*file)
 		free(*file);
 	*file = get_redir_target(mini, i);
+	if (!*file)
+	{
+		write(2, "heredoc syntax error\n", 21);
+		return (0);
+	}
+	return (1);
 }
 
 int	redout_append_tokenizer(t_minishell *mini, int *i)
@@ -60,7 +68,8 @@ int	redout_append_tokenizer(t_minishell *mini, int *i)
 		*i += 1;
 		mini->cur_proc->redirect_out_flag = 1;
 	}
-	assign_file(&mini->cur_proc->output_file, mini, i);
+	if (!assign_file(&mini->cur_proc->output_file, mini, i))
+		return (0);
 	return (1);
 }
 
@@ -83,9 +92,15 @@ int	redin_heredoc_tokenizer(t_minishell *mini, int *i)
 		mini->cur_proc->redirect_in_flag = 1;
 	}
 	if (mini->cur_proc->heredoc_flag)
-		assign_file(&mini->cur_proc->delimiter, mini, i);
+	{
+		if (!assign_file(&mini->cur_proc->delimiter, mini, i))
+			return (0);
+	}
 	else
-		assign_file(&mini->cur_proc->input_file, mini, i);
+	{
+		if (!assign_file(&mini->cur_proc->input_file, mini, i))
+			return (0);
+	}
 	return (1);
 }
 

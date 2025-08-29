@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 12:04:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 14:11:55 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/29 08:10:08 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ t_process	*new_process(char *cmd_seq)
 	process->fdin = -1;
 	process->fdout = -1;
 	process->next = NULL;
+	process->path = NULL;
 	return (process);
 }
 

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/27 10:49:53 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:14:46 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include "../libft/libft.h"
 # include <curses.h>
 # include <dirent.h>
+# include <errno.h>
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -115,7 +116,7 @@ typedef struct s_minishell
 	t_exec_vars			*exec_vars;
 }						t_minishell;
 
-int						mini_shell(t_minishell *mini);
+void					mini_shell(t_minishell *mini);
 /* ----------------------------- PARSER ---------------------------*/
 t_process				*new_process(char *content);
 void					add_process(t_process **lst, t_process *new);
@@ -182,6 +183,7 @@ void					open_pipes(t_minishell *mini);
 void					exec_builtin(t_minishell *mini);
 int						is_cmd(char *cmd, t_minishell *mini);
 int						is_builtin(char *segment);
+void					handle_invalid_command(t_process *p);
 /* ---------------------- BUILTINS ----------------------------*/
 int						ft_echo(char **args, int fd);
 int						ft_cd(t_minishell *mini, t_env *env_list);

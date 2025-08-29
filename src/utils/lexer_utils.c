@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 15:58:45 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 15:58:48 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:30:32 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	get_word_token(t_minishell *mini, int *i, int start)
 		token_lstadd_back(tokens, new_token(segment, BUILTIN, mini));
 		return ;
 	}
-	else if (is_cmd(segment, mini))
+	else if (!mini->cur_proc->path && is_cmd(segment, mini))
 		type = CMD;
 	else
 		type = ARGS;
@@ -88,14 +88,20 @@ int	tokenize(t_minishell *mini)
 	while (cmd_seq[i])
 	{
 		if (handle_redirection(mini, &i))
-			continue ;
+			continue;
 		else if (!ft_isspace(cmd_seq[i]))
 		{
 			word_tokenizer(mini, &i);
-			continue ;
+			continue;
 		}
 		else
 			skip_spaces(cmd_seq, &i);
 	}
+	if (mini->cur_proc->redirect_in_flag && !mini->cur_proc->input_file)
+		return (0);
+	if (mini->cur_proc->redirect_out_flag && !mini->cur_proc->output_file)
+		return (0);
+	if (mini->cur_proc->heredoc_flag && !mini->cur_proc->delimiter)
+		return (0);
 	return (1);
 }

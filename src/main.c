@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:39:34 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/27 11:21:24 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:14:58 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, signal_handler);
-		if (!mini_shell(mini))
-			break ;
+		mini_shell(mini);
 		unlink_heredoc_files(mini);
 		flush(mini);
 	}

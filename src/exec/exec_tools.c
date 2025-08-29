@@ -6,11 +6,20 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/27 10:41:48 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/29 08:24:17 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	handle_invalid_command(t_process *p)
+{
+	write(2, "minishell: ", 11);
+	if (p->tokens)
+		write(2, p->tokens->value, ft_strlen(p->tokens->value));
+	write(2, ": command not found\n", 20);
+	g_exit_status = 127;
+}
 
 void	wait_all_processes(t_process *head)
 {
