@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 16:23:12 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/29 09:31:05 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:53:34 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 	else
 		temp = get_str(cmd_seq, i, mini);
 	skip_spaces(cmd_seq, i);
-	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
+	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')
+			|| is_builtin(temp) || is_cmd(temp, mini)))
 	{
 		free(temp);
 		temp = NULL;
@@ -37,7 +38,7 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 	return (temp);
 }
 
-static int	assign_file(char **file, t_minishell *mini, int *i)
+int	assign_file(char **file, t_minishell *mini, int *i)
 {
 	if (*file)
 		free(*file);
@@ -91,17 +92,7 @@ int	redin_heredoc_tokenizer(t_minishell *mini, int *i)
 		*i += 1;
 		mini->cur_proc->redirect_in_flag = 1;
 	}
-	if (mini->cur_proc->heredoc_flag)
-	{
-		if (!assign_file(&mini->cur_proc->delimiter, mini, i))
-			return (0);
-	}
-	else
-	{
-		if (!assign_file(&mini->cur_proc->input_file, mini, i))
-			return (0);
-	}
-	return (1);
+	return (handle_redirect_assignment(mini, i));
 }
 
 int	lexer(t_minishell *mini)

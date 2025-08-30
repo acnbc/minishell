@@ -15,7 +15,8 @@ SRC			= main.c mini_shell.c \
 			  $(addprefix exec/, executor.c heredoc.c exec_tools.c) \
 			  $(addprefix builtins/, cd.c echo.c env.c export.c pwd.c unset.c ) \
 			  $(addprefix utils/, process_utils.c utils.c env_utils.c safe_exit.c token_utils.c \
-			  lexer_utils.c quotes_utils.c string_utils.c exec_utils.c redirect_utils.c safe_utils.c heredoc_utils.c cmd_utils.c export_utils.c) \
+			  lexer_utils.c quotes_utils.c string_utils.c exec_utils.c redirect_utils.c safe_utils.c \
+			  heredoc_utils.c cmd_utils.c export_utils.c tokenizer_utils.c) \
 
 OBJ_DIR		= obj
 OBJ			= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))

@@ -6,11 +6,26 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 15:58:45 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/29 09:30:32 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:54:43 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	handle_redirect_assignment(t_minishell *mini, int *i)
+{
+	if (mini->cur_proc->heredoc_flag)
+	{
+		if (!assign_file(&mini->cur_proc->delimiter, mini, i))
+			return (0);
+	}
+	else
+	{
+		if (!assign_file(&mini->cur_proc->input_file, mini, i))
+			return (0);
+	}
+	return (1);
+}
 
 void	get_word_token(t_minishell *mini, int *i, int start)
 {
@@ -59,20 +74,20 @@ char	*is_variable(t_minishell *mini, int *i, int start)
 	return (segment);
 }
 
-static int	handle_redirection(t_minishell *mini, int *i)
+int	handle_redirection(t_minishell *mini, int *i)
 {
 	if (mini->cur_proc->cmd_seq[*i] == '<'
 		&& !is_between_quotes(mini->cur_proc->cmd_seq, *i))
 	{
 		if (!redin_heredoc_tokenizer(mini, i))
-			return (0);
+			return (-1);
 		return (1);
 	}
 	else if (mini->cur_proc->cmd_seq[*i] == '>'
 		&& !is_between_quotes(mini->cur_proc->cmd_seq, *i))
 	{
 		if (!redout_append_tokenizer(mini, i))
-			return (0);
+			return (-1);
 		return (1);
 	}
 	return (0);
@@ -82,26 +97,19 @@ int	tokenize(t_minishell *mini)
 {
 	int		i;
 	char	*cmd_seq;
+	int		redir_result;
 
 	i = 0;
 	cmd_seq = mini->cur_proc->cmd_seq;
 	while (cmd_seq[i])
 	{
-		if (handle_redirection(mini, &i))
-			continue;
-		else if (!ft_isspace(cmd_seq[i]))
-		{
-			word_tokenizer(mini, &i);
-			continue;
-		}
-		else
-			skip_spaces(cmd_seq, &i);
+		redir_result = process_redirection(mini, &i);
+		if (redir_result == 1)
+			continue ;
+		else if (redir_result == -1)
+			return (0);
+		else if (!process_word_or_space(mini, &i))
+			return (0);
 	}
-	if (mini->cur_proc->redirect_in_flag && !mini->cur_proc->input_file)
-		return (0);
-	if (mini->cur_proc->redirect_out_flag && !mini->cur_proc->output_file)
-		return (0);
-	if (mini->cur_proc->heredoc_flag && !mini->cur_proc->delimiter)
-		return (0);
-	return (1);
+	return (validate_redirects(mini));
 }

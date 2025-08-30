@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 19:34:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 16:58:29 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:34:45 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,17 @@ static char	*cut_double_quotes(t_minishell *mini, int i)
 {
 	char	*clean_input;
 	char	*cmd_seq;
-	char	*temp;
 	int		j;
 
 	clean_input = NULL;
-	temp = NULL;
 	cmd_seq = mini->cur_proc->cmd_seq;
 	j = i;
-	while (cmd_seq[i] != DOUBLE_QUOTE && cmd_seq[i])
-	{
-		if (cmd_seq[i] == '$')
-		{
-			temp = get_env_var(mini, cmd_seq, &i, &j);
-			if (temp)
-				clean_input = strjoin_free(clean_input, temp);
-		}
-		else
-			i++;
-	}
+	clean_input = expand_var_in_quotes(mini, cmd_seq, &i, &j);
 	if (j < i)
-		clean_input = strjoin_free(clean_input, ft_substr_safe(cmd_seq, j, i
-					- j, mini));
+		clean_input = strjoin_free(clean_input, ft_substr_safe(cmd_seq, j,
+					i - j, mini));
 	if (!clean_input)
-        clean_input = ft_strdup("");
+		clean_input = ft_strdup("");
 	return (clean_input);
 }
 
@@ -55,7 +43,7 @@ static char	*cut_single_quotes(t_minishell *mini, int i)
 		;
 	clean_input = ft_substr_safe(cmd_seq, j, i - j, mini);
 	if (!clean_input)
-        clean_input = ft_strdup("");
+		clean_input = ft_strdup("");
 	return (clean_input);
 }
 

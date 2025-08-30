@@ -3,14 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   quotes_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:16:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/19 19:16:02 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:23:53 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+char	*expand_var_in_quotes(t_minishell *mini, char *cmd_seq, int *i, int *j)
+{
+	char	*clean_input;
+	char	*temp;
+
+	clean_input = NULL;
+	while (cmd_seq[*i] != DOUBLE_QUOTE && cmd_seq[*i])
+	{
+		if (cmd_seq[*i] == '$')
+		{
+			temp = get_env_var(mini, cmd_seq, i, j);
+			if (temp)
+				clean_input = strjoin_free(clean_input, temp);
+		}
+		else
+			(*i)++;
+	}
+	return (clean_input);
+}
 
 int	verify_quote_pair(char *input, char quote, int *i)
 {

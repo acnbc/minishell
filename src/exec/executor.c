@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/29 08:25:04 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:48:12 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	child_process(t_minishell *mini, t_process *p)
 		close(mini->exec_vars->fdpipe[1]);
 	execve(p->path, p->args, mini->envp_copy);
 	perror("execve");
-	safe_exit(mini);
+	exit(127);
 }
 
 static void	parent_process(t_minishell *mini, t_process *p)

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:27:08 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/29 09:33:24 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:10:57 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ bool	syntactic_analysis(t_minishell *mini)
 			if (count++ == 0)
 			{
 				if (token->type == CMD || token->type == BUILTIN)
-					p->found_cmd = true;
+					return (true);
 			}
 			token = token->next;
 		}
 		p = p->next;
 	}
-	return (true);
+	return (false);
 }

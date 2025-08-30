@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:39:34 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/29 09:14:58 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:48:16 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	signal_handler(int sig)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		g_exit_status = 130;
 	}
 }
 
@@ -44,10 +45,10 @@ int	main(int argc, char *argv[], char *envp[])
 	g_exit_status = 0;
 	mini = (t_minishell *)ft_calloc(1, sizeof(t_minishell));
 	if (!mini)
-		exit(1);
+		return (1);
 	mini->env_list = env_list(envp);
 	if (!mini->env_list)
-		exit(1);
+		return (1);
 	mini->process_list = NULL;
 	while (1)
 	{

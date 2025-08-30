@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   separate_process.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:45:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/07/03 12:45:22 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:15:28 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,17 @@ static int	pipe_checks(char *input, int *i)
 
 	j = *i;
 	if (*i == 0 || input[*i + 1] == '\0')
+	{
+		write(2, "syntax error\n", 13);
 		return (0);
+	}
 	j++;
 	skip_spaces(input, &j);
 	if (input[j] == '|' && j != *i)
+	{
+		write(2, "syntax error\n", 13);
 		return (0);
+	}
 	return (1);
 }
 

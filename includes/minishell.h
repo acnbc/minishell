@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/29 09:14:46 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:55:16 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ typedef struct s_process
 	int					double_quote_flag;
 	int					single_quote_flag;
 	char				**args;
-	bool				found_cmd;
 	int					fdin;
 	int					fdout;
 	int					heredoc_fd;
@@ -141,6 +140,10 @@ char					**copy_envp(t_env *env_list);
 int						verify_quote_pair(char *input, char quote, int *i);
 int						verify_quote_count(char *process);
 char					*ft_strstr(char *str, char *to_find);
+char					*expand_var_in_quotes(t_minishell *mini, char *cmd_seq,
+							int *i, int *j);
+int						handle_redirect_assignment(t_minishell *mini, int *i);
+int						assign_file(char **file, t_minishell *mini, int *i);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
 void					safe_exit(t_minishell *mini);
 char					*ft_substr_safe(char *s, unsigned int start, size_t len,
@@ -151,6 +154,10 @@ int						tokenize(t_minishell *mini);
 int						is_builtin(char *cmd);
 char					*is_variable(t_minishell *mini, int *i, int start);
 void					word_tokenizer(t_minishell *mini, int *i);
+int						process_redirection(t_minishell *mini, int *i);
+int						process_word_or_space(t_minishell *mini, int *i);
+int						handle_redirection(t_minishell *mini, int *i);
+int						validate_redirects(t_minishell *mini);
 int						redin_heredoc_tokenizer(t_minishell *mini, int *i);
 int						redout_append_tokenizer(t_minishell *mini, int *i);
 void					get_word_token(t_minishell *mini, int *i,
@@ -210,5 +217,7 @@ void					free_token_list(t_token *tokens);
 void					free_matrix(char **matrix);
 void					safe_env_list_exit(t_env_vars *vars, t_env *env_list);
 void					flush(t_minishell *mini);
+
+void					print_process_list(t_process *process_list);
 
 #endif
