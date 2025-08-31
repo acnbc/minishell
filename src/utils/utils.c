@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:45:41 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/29 08:04:01 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/31 14:05:36 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,22 @@ char	*path_name(char **paths, char *command)
 	char	*final_path;
 	int		i;
 
-	path = NULL;
 	final_path = NULL;
 	i = -1;
 	while (paths[++i] != NULL)
 	{
 		path = ft_strjoin(paths[i], "/");
+		if (!path)
+			return (NULL);
 		final_path = ft_strjoin(path, command);
 		free(path);
+		if (!final_path)
+			return (NULL);
+		
 		if (access(final_path, X_OK) == 0)
 			return (final_path);
 		free(final_path);
+		final_path = NULL;
 	}
 	return (NULL);
 }

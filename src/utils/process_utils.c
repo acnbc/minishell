@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 12:04:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/31 14:15:27 by codespace        ###   ########.fr       */
+/*   Updated: 2025/08/31 12:38:13 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,10 @@ t_process	*new_process(char *cmd_seq)
 {
 	t_process	*process;
 
-	process = (t_process *)ft_calloc(0, sizeof(t_process));
+	process = (t_process *)ft_calloc(1, sizeof(t_process));
 	if (!process)
 		return (NULL);
+	ft_bzero(process, sizeof(t_process));
 	process->cmd_seq = cmd_seq;
 	process->fdin = -1;
 	process->fdout = -1;

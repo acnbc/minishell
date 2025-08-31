@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 12:01:02 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/30 20:06:28 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/31 12:44:59 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ char	*extract_variable(t_minishell *mini, char *variable)
 	var_len = ft_strlen(variable);
 	while (current)
 	{
-		if (ft_strncmp(current->var_name, variable, var_len + 1) == 0)
+		if (ft_strncmp(current->var_name, variable, var_len) == 0 
+			&& (int) ft_strlen(current->var_name) == var_len)
 		{
 			free(variable);
 			return (ft_strdup(current->var_cont));
