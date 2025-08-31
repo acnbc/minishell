@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/30 20:55:16 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/31 15:02:59 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ char					*expand_var_in_quotes(t_minishell *mini, char *cmd_seq,
 							int *i, int *j);
 int						handle_redirect_assignment(t_minishell *mini, int *i);
 int						assign_file(char **file, t_minishell *mini, int *i);
+void					expand_env_vars(t_minishell *mini);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
 void					safe_exit(t_minishell *mini);
 char					*ft_substr_safe(char *s, unsigned int start, size_t len,

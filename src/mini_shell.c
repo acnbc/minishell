@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/29 09:14:07 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/31 15:11:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,33 +50,49 @@ char	*ft_strstr(char *str, char *to_find)
 
 static int	first_input_checks(t_minishell *mini)
 {
+	if (mini->input[0] == '$')
+	{
+		expand_env_vars(mini);
+		return (0);
+	}
 	if (ft_strstr(mini->input, "exit"))
 		ft_exit(mini);
 	if (ft_strncmp(".", mini->input, 2) == 0)
 	{
 		ft_printf("filename argument required\n");
 		ft_printf(".: usage: . filename [arguments]\n");
-		return (1);
+		return (0);
 	}
 	if (ft_strncmp("..", mini->input, 2) == 0)
 	{
 		ft_printf("..: command not found\n");
-		return (1);
+		return (0);
 	}
 	if ((ft_strchr(mini->input, DOUBLE_QUOTE)
 			|| ft_strchr(mini->input, SINGLE_QUOTE))
 		&& !verify_quote_count(mini->input))
-		return (1);
-	return (0);
+		return (0);
+	return (1);
 }
 
 void	mini_shell(t_minishell *mini)
 {
-	mini->input = readline(MINISHELL_PROMPT);
+	char	*input;
+	
+	input = readline(MINISHELL_PROMPT);
+	mini->input = ft_strtrim(input, " \t\n\v\f\r");
+	if (!mini->input || mini->input[0] == '\0')
+	{
+		free(input);
+		free(mini->input);
+		mini->input = NULL;
+		return ;
+	}
+	free(input);
 	if (!mini->input)
 		mini->input = ft_strdup("exit");
 	add_history(mini->input);
-	if (first_input_checks(mini))
+	if (!first_input_checks(mini))
 		return ;
 	if (!parser(mini))
 		return ;
