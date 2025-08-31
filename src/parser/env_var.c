@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 13:49:59 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/31 14:22:14 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:08:50 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ static int	expand_exit_status(t_minishell *mini)
 	}
 	return (0);
 }
+
 void	expand_env_vars(t_minishell *mini)
 {
 	int		i;

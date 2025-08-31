@@ -6,28 +6,16 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:46:54 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/28 21:05:32 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/08/31 16:13:25 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	free_func(char **arg1, char **arg2)
+static void	stopchar_loop(char **sep_args, char *arg)
 {
-	free(*arg1);
-	free(*arg2);
-}
+	int	i;
 
-static char	**first_equal(char *arg)
-{
-	int		i;
-	char	**sep_args;
-
-	if (!ft_strchr(arg, '='))
-		return (NULL);
-	sep_args = (char **)ft_calloc(3, sizeof(char *));
-	if (!sep_args)
-		return (NULL);
 	i = 0;
 	while (arg[i])
 	{
@@ -46,6 +34,18 @@ static char	**first_equal(char *arg)
 		}
 		i++;
 	}
+}
+
+static char	**first_equal(char *arg)
+{
+	char	**sep_args;
+
+	if (!ft_strchr(arg, '='))
+		return (NULL);
+	sep_args = (char **)ft_calloc(3, sizeof(char *));
+	if (!sep_args)
+		return (NULL);
+	stopchar_loop(sep_args, arg);
 	return (sep_args);
 }
 
@@ -109,6 +109,7 @@ int	ft_export(t_env *env_list, char **args)
 		}
 		update_env_var(env_list, arg_name, arg_cont);
 	}
-	free_func(&arg_cont, &arg_name);
+	free(arg_cont);
+	free(arg_name);
 	return (exit_s);
 }
