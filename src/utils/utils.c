@@ -57,7 +57,6 @@ char	*path_name(char **paths, char *command)
 		free(path);
 		if (!final_path)
 			return (NULL);
-		
 		if (access(final_path, X_OK) == 0)
 			return (final_path);
 		free(final_path);

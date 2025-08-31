@@ -78,7 +78,7 @@ static int	first_input_checks(t_minishell *mini)
 void	mini_shell(t_minishell *mini)
 {
 	char	*input;
-	
+
 	input = readline(MINISHELL_PROMPT);
 	mini->input = ft_strtrim(input, " \t\n\v\f\r");
 	if (!mini->input || mini->input[0] == '\0')

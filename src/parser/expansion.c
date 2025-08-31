@@ -31,7 +31,7 @@ char	*extract_variable(t_minishell *mini, char *variable)
 	var_len = ft_strlen(variable);
 	while (current)
 	{
-		if (ft_strncmp(current->var_name, variable, var_len) == 0 
+		if (ft_strncmp(current->var_name, variable, var_len) == 0
 			&& (int) ft_strlen(current->var_name) == var_len)
 		{
 			free(variable);
