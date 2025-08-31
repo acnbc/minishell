@@ -34,5 +34,8 @@ bool	syntactic_analysis(t_minishell *mini)
 		}
 		p = p->next;
 	}
+	write(2, mini->cur_proc->tokens->value,
+		ft_strlen(mini->cur_proc->tokens->value) + 1);
+	write(2, ": command not found\n", 20);
 	return (false);
 }

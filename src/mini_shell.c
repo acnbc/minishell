@@ -48,6 +48,24 @@ char	*ft_strstr(char *str, char *to_find)
 	return (NULL);
 }
 
+static int	check_dot_arg(t_minishell *mini)
+{
+	if (ft_strncmp(".", mini->input, 2) == 0)
+	{
+		ft_printf("filename argument required\n");
+		ft_printf(".: usage: . filename [arguments]\n");
+		g_exit_status = 2;
+		return (0);
+	}
+	if (ft_strncmp("..", mini->input, 2) == 0)
+	{
+		ft_printf("..: command not found\n");
+		g_exit_status = 127;
+		return (0);
+	}
+	return (1);
+}
+
 static int	first_input_checks(t_minishell *mini)
 {
 	if (mini->input[0] == '$')
@@ -57,17 +75,8 @@ static int	first_input_checks(t_minishell *mini)
 	}
 	if (ft_strstr(mini->input, "exit"))
 		ft_exit(mini);
-	if (ft_strncmp(".", mini->input, 2) == 0)
-	{
-		ft_printf("filename argument required\n");
-		ft_printf(".: usage: . filename [arguments]\n");
+	if (!check_dot_arg(mini))
 		return (0);
-	}
-	if (ft_strncmp("..", mini->input, 2) == 0)
-	{
-		ft_printf("..: command not found\n");
-		return (0);
-	}
 	if ((ft_strchr(mini->input, DOUBLE_QUOTE)
 			|| ft_strchr(mini->input, SINGLE_QUOTE))
 		&& !verify_quote_count(mini->input))
@@ -81,6 +90,8 @@ void	mini_shell(t_minishell *mini)
 
 	input = readline(MINISHELL_PROMPT);
 	mini->input = ft_strtrim(input, " \t\n\v\f\r");
+	if (!mini->input)
+		mini->input = ft_strdup("exit");
 	if (!mini->input || mini->input[0] == '\0')
 	{
 		free(input);
@@ -88,10 +99,8 @@ void	mini_shell(t_minishell *mini)
 		mini->input = NULL;
 		return ;
 	}
-	free(input);
-	if (!mini->input)
-		mini->input = ft_strdup("exit");
 	add_history(mini->input);
+	free(input);
 	if (!first_input_checks(mini))
 		return ;
 	if (!parser(mini))

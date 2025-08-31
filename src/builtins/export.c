@@ -31,6 +31,12 @@ static char	**first_equal(char *arg)
 	i = 0;
 	while (arg[i])
 	{
+		if (!is_stopchar(arg[i]) && arg[i] != '=')
+		{
+			sep_args[0] = NULL;
+			sep_args[1] = NULL;
+			break ;
+		}
 		if (arg[i] == '=')
 		{
 			if (i != 0)

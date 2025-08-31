@@ -72,7 +72,7 @@ int	ft_cd(t_minishell *mini, t_env *env_list)
 	path = cd_special_char(str, env_list);
 	if (chdir(path) == -1)
 	{
-		write(2, "cd: No such file or directory\n", 30);
+		perror("cd");
 		return (EXIT_FAILURE);
 	}
 	else

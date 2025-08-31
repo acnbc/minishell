@@ -43,6 +43,7 @@ static void	is_expandable(char *input, char *var_value)
 	}
 	if (expandable_envs[i])
 		print_msg(expandable_envs[i]);
+	g_exit_status = 0;
 	return ;
 }
 
@@ -62,6 +63,19 @@ static void	call_exec(t_minishell *mini, char *var_value)
 	executor(mini);
 }
 
+static int	expand_exit_status(t_minishell *mini)
+{
+	char	*status;
+
+	status = ft_itoa(g_exit_status);
+	if (ft_strncmp(mini->input, "$?", ft_strlen(mini->input) + 1) == 0)
+	{
+		write(2, status, ft_strlen(status) + 1);
+		g_exit_status = 0;
+		return (1);
+	}
+	return (0);
+}
 void	expand_env_vars(t_minishell *mini)
 {
 	int		i;
@@ -70,6 +84,8 @@ void	expand_env_vars(t_minishell *mini)
 
 	i = 1;
 	if (!is_stopchar(mini->input[i]))
+		return ;
+	if (expand_exit_status(mini))
 		return ;
 	while (mini->input[i] && is_stopchar(mini->input[i]))
 		i++;
