@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:16:51 by abouchat          #+#    #+#             */
-/*   Updated: 2024/10/14 11:19:47 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/01 11:05:50 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	find_in_set(char *str, char const *set)
 	int	i;
 
 	i = 0;
+	if (!str || !set)
+		return (0);
 	while (set[i] != '\0' && *str != '\0')
 	{
 		if (*str == set[i++])

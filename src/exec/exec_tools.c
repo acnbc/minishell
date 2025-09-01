@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/30 19:15:12 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/01 11:05:01 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,26 @@
 
 void	handle_invalid_command(t_process *p)
 {
-	write(2, "minishell: ", 11);
+	struct stat	path_stat;
+	
+	if (p->tokens && p->tokens->value)
+	{
+		if (stat(p->tokens->value, &path_stat) == 0)
+		{
+			if (S_ISDIR(path_stat.st_mode))
+			{
+				write(2, "minishell: ", 11);
+				write(2, p->tokens->value, ft_strlen(p->tokens->value));
+				write(2, ": Is a directory\n", 18);
+				g_exit_status = 126;
+				return ;
+			}
+		}
+	}
+	ft_putstr_fd("minishell: ", 2);	
 	if (p->tokens)
-		write(2, p->tokens->value, ft_strlen(p->tokens->value));
-	write(2, ": command not found\n", 20);
+		ft_putstr_fd(p->tokens->value, 2);
+	ft_putstr_fd(": command not found\n", 2);
 	g_exit_status = 127;
 }
 

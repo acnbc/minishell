@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:34:22 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/30 20:55:00 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/01 10:49:26 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	validate_redirects(t_minishell *mini)
 	return (1);
 }
 
-/*void	print_process_list(t_process *process_list)
+void	print_process_list(t_process *process_list)
 {
 	int		i;
 	int		j;
@@ -104,4 +104,4 @@ int	validate_redirects(t_minishell *mini)
 		process_list = process_list->next;
 	}
 	printf("=== Fim da lista de processos ===\n\n");
-}*/
+}

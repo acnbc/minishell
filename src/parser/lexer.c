@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 16:23:12 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/30 20:53:34 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/01 10:49:22 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 	else
 		temp = get_str(cmd_seq, i, mini);
 	skip_spaces(cmd_seq, i);
-	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')
-			|| is_builtin(temp) || is_cmd(temp, mini)))
+	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
 	{
 		free(temp);
 		temp = NULL;
@@ -45,7 +44,7 @@ int	assign_file(char **file, t_minishell *mini, int *i)
 	*file = get_redir_target(mini, i);
 	if (!*file)
 	{
-		write(2, "heredoc syntax error\n", 21);
+		write(2, "syntax error\n", 13);
 		return (0);
 	}
 	return (1);
