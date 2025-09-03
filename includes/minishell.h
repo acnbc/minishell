@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/31 15:02:59 by codespace        ###   ########.fr       */
+/*   Updated: 2025/09/03 15:46:42 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,7 @@ int						ft_pwd(t_process *p);
 int						ft_export(t_env *env_list, char **args);
 int						ft_unset(t_env *env_list, char **args);
 int						ft_env(t_env *env_list, int fd);
+int						ft_exit(t_minishell *mini, char **args);
 t_env					*find_env_var(char *var, t_env *env_list);
 /* ---------------------- SIGNALS ----------------------------*/
 void					signal_handler(int sig);

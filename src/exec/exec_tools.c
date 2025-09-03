@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/01 11:05:01 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/03 15:46:22 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,9 @@ void	exec_builtin(t_minishell *mini)
 		g_exit_status = ft_unset(mini->env_list, p->args);
 	else if (ft_strncmp(p->args[0], "env", ft_strlen(p->args[0])) == 0)
 		g_exit_status = ft_env(mini->env_list, p->fdout);
+	else if (ft_strncmp(p->args[0], "exit", ft_strlen(p->args[0])) == 0)
+	{
+		g_exit_status = ft_exit(mini, p->args);
+		safe_exit(mini);
+	}
 }
