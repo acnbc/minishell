@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/01 19:31:57 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/04 08:38:23 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	handle_invalid_command(t_process *p)
 		if (is_directory(p->tokens->value))
 			return ;
 	}
-	ft_putstr_fd("minishell: ", 2);	
+	ft_putstr_fd("minishell: ", 2);
 	if (p->tokens)
 		ft_putstr_fd(p->tokens->value, 2);
 	ft_putstr_fd(": command not found\n", 2);
@@ -102,4 +102,9 @@ void	exec_builtin(t_minishell *mini)
 		g_exit_status = ft_unset(mini->env_list, p->args);
 	else if (ft_strncmp(p->args[0], "env", ft_strlen(p->args[0])) == 0)
 		g_exit_status = ft_env(mini->env_list, p->fdout);
+	else if (ft_strncmp(p->args[0], "exit", ft_strlen(p->args[0])) == 0)
+	{
+		g_exit_status = ft_exit(p->args);
+		safe_exit(mini);
+	}
 }

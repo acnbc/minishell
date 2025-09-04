@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/03 16:28:43 by anogueir         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/09/04 08:33:00 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -31,6 +32,7 @@
 # include <term.h>
 # include <termios.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define MINISHELL_PROMPT "minishell> "
 # define SINGLE_QUOTE '\''
@@ -200,6 +202,7 @@ int						ft_pwd(t_process *p);
 int						ft_export(t_env *env_list, char **args);
 int						ft_unset(t_env *env_list, char **args);
 int						ft_env(t_env *env_list, int fd);
+int						ft_exit(char **args);
 t_env					*find_env_var(char *var, t_env *env_list);
 /* ---------------------- SIGNALS ----------------------------*/
 void					signal_handler(int sig);
