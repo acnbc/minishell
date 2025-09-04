@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/09/04 08:33:00 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/04 08:53:16 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,8 +142,16 @@ char					**copy_envp(t_env *env_list);
 int						verify_quote_pair(char *input, char quote, int *i);
 int						verify_quote_count(char *process);
 char					*ft_strstr(char *str, char *to_find);
-char					*expand_var_in_quotes(t_minishell *mini, char *cmd_seq,
-							int *i, int *j);
+/* ----------------------------- QUOTE PROCESSOR -----------------*/
+char					*process_single_quotes(const char *seg, int *j);
+char					*process_double_quotes(t_minishell *mini, const char *seg,
+							int *j);
+char					*expand_variable(t_minishell *mini, const char *segment,
+							int *j);
+char					*expand_literal(const char *segment, int *j);
+char					*expand_segment(t_minishell *mini, const char *segment);
+char					*process_quoted_string(t_minishell *mini, char *cmd_seq,
+							int *i);
 int						handle_redirect_assignment(t_minishell *mini, int *i);
 int						assign_file(char **file, t_minishell *mini, int *i);
 void					expand_env_vars(t_minishell *mini);

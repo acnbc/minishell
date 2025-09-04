@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 13:49:59 by codespace         #+#    #+#             */
-/*   Updated: 2025/08/31 16:08:50 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/04 09:06:05 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,24 @@ static void	print_msg(const char *env)
 	if (ft_strncmp(env, "$PWD", ft_strlen(env + 1)) == 0 || ft_strncmp(env,
 			"$OLDPWD", ft_strlen(env + 1)) == 0 || ft_strncmp(env, "$HOME",
 			ft_strlen(env + 1)) == 0)
+	{
 		write(2, " Is a directory\n", 16);
+		g_exit_status = 126;
+		return ;
+	}
 	if (ft_strncmp(env, "$USER", ft_strlen(env + 1)) == 0 || ft_strncmp(env,
 			"$LOGNAME", ft_strlen(env + 1)) == 0)
+	{
 		write(2, ": command not found\n", 21);
+		g_exit_status = 127;
+		return ;
+	}
 	else
+	{
 		write(2, ": No such file or directory\n", 29);
+		g_exit_status = 127;
+		return ;
+	}
 }
 
 static void	is_expandable(char *input, char *var_value)
@@ -43,7 +55,6 @@ static void	is_expandable(char *input, char *var_value)
 	}
 	if (expandable_envs[i])
 		print_msg(expandable_envs[i]);
-	g_exit_status = 0;
 	return ;
 }
 

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 16:23:12 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/04 08:27:30 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/04 09:27:08 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,17 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 
 	cmd_seq = mini->cur_proc->cmd_seq;
 	skip_spaces(cmd_seq, i);
+	if (cmd_seq[*i] == '\0')
+	{
+		write(2, "minishell: syntax error near unexpected token\n", 46);
+		g_exit_status = 2;
+		return (NULL);
+	}
 	if (!mini->cur_proc->heredoc_flag && !is_stopchar(cmd_seq[*i]))
 		return (NULL);
 	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
 	{
-		temp = handle_quotes(mini, cmd_seq, i);
+		temp = process_quoted_string(mini, cmd_seq, i);
 		mini->cur_proc->heredoc_quote_flag = 1;
 	}
 	else
@@ -32,6 +38,11 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')
 		|| is_directory(temp)))
 	{
+		if (ft_strchr(temp, '<') || ft_strchr(temp, '>'))
+		{
+			write(2, "minishell: syntax error near unexpected token\n", 46);
+			g_exit_status = 2;
+		}
 		free(temp);
 		temp = NULL;
 	}
@@ -43,8 +54,8 @@ int	assign_file(char **file, t_minishell *mini, int *i)
 	if (*file)
 		free(*file);
 	*file = get_redir_target(mini, i);
-	if (!*file)
-		return (0);
+	/*if (!*file)
+		return (0);*/
 	return (1);
 }
 

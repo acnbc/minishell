@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:45:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/03 15:48:32 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/04 09:12:14 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,16 @@ static int	pipe_checks(char *input, int *i)
 	j = *i;
 	if (*i == 0 || input[*i + 1] == '\0')
 	{
-		write(2, "syntax error\n", 13);
+		write(2, "minishell: syntax error near unexpected token `|'\n", 51);
+		g_exit_status = 2;
 		return (0);
 	}
 	j++;
 	skip_spaces(input, &j);
 	if (input[j] == '|' && j != *i)
 	{
-		write(2, "syntax error\n", 13);
+		write(2, "minishell: syntax error near unexpected token `|'\n", 51);
+		g_exit_status = 2;
 		return (0);
 	}
 	return (1);
