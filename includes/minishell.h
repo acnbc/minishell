@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/03 21:19:14 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:52:08 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <term.h>
 # include <termios.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define MINISHELL_PROMPT "minishell> "
 # define SINGLE_QUOTE '\''

@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 15:40:31 by abouchat          #+#    #+#             */
-/*   Updated: 2025/09/03 21:21:47 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:52:32 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,14 @@ static int	numerical_check(char *str)
 	size_t			i;
 
 	i = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-')
+		i++;
+	else if (str[i] == '+')
+		i++;
+	if (!str[i])
+		return (-1);
 	while (i < ft_strlen(str))
 	{
 		if (!ft_isdigit(str[i]))
@@ -48,12 +56,11 @@ static int	numerical_check(char *str)
 		i++;
 	}
 	num = ft_atoll(str);
-	if (num > 9223372036854775807 || num < -9223372036854775807)
+	if (num > LLONG_MAX || num < LLONG_MIN)
 	{
 		return (-1);
 	}
-	num = num % 256;
-	return ((int)num);
+	return ((unsigned char)num);
 }
 
 int	ft_exit(char **args)

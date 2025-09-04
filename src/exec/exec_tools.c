@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/03 21:21:35 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:54:47 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	handle_invalid_command(t_process *p)
 			}
 		}
 	}
-	ft_putstr_fd("minishell: ", 2);	
+	ft_putstr_fd("minishell: ", 2);
 	if (p->tokens)
 		ft_putstr_fd(p->tokens->value, 2);
 	ft_putstr_fd(": command not found\n", 2);

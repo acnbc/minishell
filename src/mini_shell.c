@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/03 15:40:20 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:42:43 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ static int	first_input_checks(t_minishell *mini)
 		expand_env_vars(mini);
 		return (0);
 	}
-//	if (ft_strstr(mini->input, "exit"))
-//		ft_exit(mini);
 	if (!check_dot_arg(mini))
 		return (0);
 	if ((ft_strchr(mini->input, DOUBLE_QUOTE)
