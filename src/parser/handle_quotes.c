@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 19:34:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/30 19:34:45 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:01:25 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,10 @@ static char	*cut_single_quotes(t_minishell *mini, int i)
 	clean_input = NULL;
 	cmd_seq = mini->cur_proc->cmd_seq;
 	j = i;
-	while (cmd_seq[i] != SINGLE_QUOTE && cmd_seq[i++])
-		;
-	clean_input = ft_substr_safe(cmd_seq, j, i - j, mini);
+	i++; // pula a aspa de abertura
+	while (cmd_seq[i] && cmd_seq[i] != SINGLE_QUOTE)
+		i++;
+	clean_input = ft_substr_safe(cmd_seq, j + 1, i - (j + 1), mini);
 	if (!clean_input)
 		clean_input = ft_strdup("");
 	return (clean_input);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:36:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/31 15:02:59 by codespace        ###   ########.fr       */
+/*   Updated: 2025/09/03 16:28:43 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ void					get_word_token(t_minishell *mini, int *i,
 							int start);
 char					**paths(t_env *env_list);
 char					*path_name(char **paths, char *command);
+int						is_directory(char *word);
 /* ---------------- SYNTACTIC ANALYSIS ------------------*/
 bool					syntactic_analysis(t_minishell *mini);
 int						is_cmd(char *cmd, t_minishell *mini);

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 16:23:12 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/01 10:49:22 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/04 08:27:30 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 
 	cmd_seq = mini->cur_proc->cmd_seq;
 	skip_spaces(cmd_seq, i);
-	if (!is_stopchar(cmd_seq[*i]))
+	if (!mini->cur_proc->heredoc_flag && !is_stopchar(cmd_seq[*i]))
 		return (NULL);
 	if (cmd_seq[*i] == DOUBLE_QUOTE || cmd_seq[*i] == SINGLE_QUOTE)
 	{
@@ -29,7 +29,8 @@ static char	*get_redir_target(t_minishell *mini, int *i)
 	else
 		temp = get_str(cmd_seq, i, mini);
 	skip_spaces(cmd_seq, i);
-	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')))
+	if (temp && (ft_strchr(temp, '<') || ft_strchr(temp, '>')
+		|| is_directory(temp)))
 	{
 		free(temp);
 		temp = NULL;
@@ -43,10 +44,7 @@ int	assign_file(char **file, t_minishell *mini, int *i)
 		free(*file);
 	*file = get_redir_target(mini, i);
 	if (!*file)
-	{
-		write(2, "syntax error\n", 13);
 		return (0);
-	}
 	return (1);
 }
 

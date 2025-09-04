@@ -6,29 +6,36 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/01 11:05:01 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/01 19:31:57 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	handle_invalid_command(t_process *p)
+int	is_directory(char *word)
 {
 	struct stat	path_stat;
 	
+	if (stat(word, &path_stat) == 0)
+	{
+		if (S_ISDIR(path_stat.st_mode))
+		{
+			write(2, "minishell: ", 11);
+			write(2, word, ft_strlen(word));
+			write(2, ": Is a directory\n", 18);
+			g_exit_status = 126;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+void	handle_invalid_command(t_process *p)
+{
 	if (p->tokens && p->tokens->value)
 	{
-		if (stat(p->tokens->value, &path_stat) == 0)
-		{
-			if (S_ISDIR(path_stat.st_mode))
-			{
-				write(2, "minishell: ", 11);
-				write(2, p->tokens->value, ft_strlen(p->tokens->value));
-				write(2, ": Is a directory\n", 18);
-				g_exit_status = 126;
-				return ;
-			}
-		}
+		if (is_directory(p->tokens->value))
+			return ;
 	}
 	ft_putstr_fd("minishell: ", 2);	
 	if (p->tokens)

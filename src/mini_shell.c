@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/01 10:45:48 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/03 16:46:33 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static int	first_input_checks(t_minishell *mini)
 		return (0);
 	if ((ft_strchr(mini->input, DOUBLE_QUOTE)
 			|| ft_strchr(mini->input, SINGLE_QUOTE))
-		&& !verify_quote_count(mini->input))
+		&& verify_quote_count(mini->input))
 		return (0);
 	return (1);
 }
