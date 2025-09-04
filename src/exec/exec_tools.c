@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/03 15:46:22 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:21:35 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	handle_invalid_command(t_process *p)
 {
 	struct stat	path_stat;
-	
+
 	if (p->tokens && p->tokens->value)
 	{
 		if (stat(p->tokens->value, &path_stat) == 0)
@@ -97,7 +97,7 @@ void	exec_builtin(t_minishell *mini)
 		g_exit_status = ft_env(mini->env_list, p->fdout);
 	else if (ft_strncmp(p->args[0], "exit", ft_strlen(p->args[0])) == 0)
 	{
-		g_exit_status = ft_exit(mini, p->args);
+		g_exit_status = ft_exit(p->args);
 		safe_exit(mini);
 	}
 }

@@ -6,27 +6,64 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 15:40:31 by abouchat          #+#    #+#             */
-/*   Updated: 2025/09/03 17:03:38 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:21:47 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
-// bash: exit: too many arguments -> 1
-// bash: exit: numeric argument required -> 2
+static long long int	ft_atoll(const char *nptr)
+{
+	long long int	res;
+	long int		neg;
+
+	if (nptr == NULL)
+		return (0);
+	res = 0;
+	neg = 1;
+	while (*nptr == ' ' || (*nptr >= 9 && *nptr <= 13))
+		nptr++;
+	if (*nptr == '-')
+	{
+		neg = neg * (-1);
+		nptr++;
+	}
+	else if (*nptr == '+')
+		nptr++;
+	while (*nptr >= '0' && *nptr <= '9')
+		res = (res * 10) + (*nptr++ - '0');
+	return (res * neg);
+}
 
 static int	numerical_check(char *str)
 {
-	
+	long long int	num;
+	size_t			i;
+
+	i = 0;
+	while (i < ft_strlen(str))
+	{
+		if (!ft_isdigit(str[i]))
+			return (-1);
+		i++;
+	}
+	num = ft_atoll(str);
+	if (num > 9223372036854775807 || num < -9223372036854775807)
+	{
+		return (-1);
+	}
+	num = num % 256;
+	return ((int)num);
 }
 
-int	ft_exit(t_minishell *mini, char **args)
+int	ft_exit(char **args)
 {
 	int	exit_status;
 
+	write(1, "exit\n", 6);
 	if (args[1] == NULL)
 		return (EXIT_SUCCESS);
-	if (!numerical_check(args[1]))
+	if (numerical_check(args[1]) < 0)
 	{
 		write(2, "exit: numeric argument required\n", 33);
 		return (2);
@@ -36,4 +73,6 @@ int	ft_exit(t_minishell *mini, char **args)
 		write(2, "exit: too many arguments\n", 26);
 		return (1);
 	}
+	exit_status = numerical_check(args[1]);
+	return (exit_status);
 }

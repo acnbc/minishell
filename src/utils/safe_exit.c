@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   safe_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:37:39 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 13:47:34 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:12:52 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	safe_exit(t_minishell *mini)
 		mini->envp_copy = NULL;
 	}
 	free(mini);
-	exit(EXIT_SUCCESS);
+	exit(g_exit_status);
 }
 
 void	flush(t_minishell *mini)
