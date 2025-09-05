@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:42:44 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/27 10:37:26 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/05 08:31:06 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,9 @@ static void	change_cwd(t_env *env_list)
 	if (!old_pwd || !pwd)
 		return ;
 	free(old_pwd->var_cont);
-	old_pwd->var_cont = NULL;
 	old_pwd->var_cont = ft_strdup(pwd->var_cont);
 	free(pwd->var_cont);
-	pwd->var_cont = NULL;
-	temp = getcwd(pwd->var_cont, 4096);
+	temp = getcwd(NULL, 0);
 	pwd->var_cont = ft_strdup(temp);
 	free(temp);
 }
@@ -47,7 +45,7 @@ static char	*cd_special_char(char *str, t_env *env_list)
 		if (!old_pwd->var_cont)
 			write (2, "cd: OLDPWD not set\n", 19);
 		else
-			path = ft_strjoin(old_pwd->var_cont, str + 1);
+			path = ft_strdup(old_pwd->var_cont);
 	}
 	else if (str[0] == '~')
 	{
