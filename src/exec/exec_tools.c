@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/04 08:38:23 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/05 16:58:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,19 +70,17 @@ void	wait_all_processes(t_process *head)
 void	open_pipes(t_minishell *mini)
 {
 	t_process	*p;
-	t_exec_vars	*e;
-
+	
 	p = mini->cur_proc;
-	e = mini->exec_vars;
-	if (pipe(e->fdpipe) == -1)
+	if (pipe(p->pipe_fd) == -1)
 	{
 		perror("pipe");
 		safe_exit(mini);
 	}
 	if (!p->output_file)
-		p->fdout = e->fdpipe[1];
+		p->fdout = p->pipe_fd[1];
 	if (p->next->fdin == -1 && !p->next->input_file)
-		p->next->fdin = e->fdpipe[0];
+		p->next->fdin = p->pipe_fd[0];
 }
 
 void	exec_builtin(t_minishell *mini)

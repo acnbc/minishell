@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/01 10:51:49 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/05 16:55:50 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ static void	child_process(t_minishell *mini, t_process *p)
 		dup2_safe(mini, &p->fdout, 1, "dup2 (stdout)");
 		close(p->fdout);
 	}
-	if (mini->exec_vars->fdpipe[0] != -1)
-		close(mini->exec_vars->fdpipe[0]);
-	if (mini->exec_vars->fdpipe[1] != -1)
-		close(mini->exec_vars->fdpipe[1]);
+	if (p->pipe_fd[0] != -1)
+		close(p->pipe_fd[0]);
+	if (p->pipe_fd[1] != -1)
+		close(p->pipe_fd[1]);
 	execve(p->path, p->args, mini->envp_copy);
 	perror("execve");
 	exit(127);

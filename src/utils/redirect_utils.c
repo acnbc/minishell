@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 13:30:10 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 13:48:49 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/05 17:31:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,31 @@ static void	close_process_fds(t_process *p_list)
 	}
 }
 
-static void	close_pipe_fds(t_exec_vars *e)
+static void	close_pipe_fds(t_process *p)
 {
-	if (e->fdpipe[0] != -1)
+	t_process	*tmp;
+	
+	tmp = p;
+	while (tmp)
 	{
-		close(e->fdpipe[0]);
-		e->fdpipe[0] = -1;
-	}
-	if (e->fdpipe[1] != -1)
-	{
-		close(e->fdpipe[1]);
-		e->fdpipe[1] = -1;
+		if (tmp->pipe_fd[0] != -1)
+		{
+			close(tmp->pipe_fd[0]);
+			tmp->pipe_fd[0] = -1;
+		}
+		if (tmp->pipe_fd[1] != -1)
+		{
+			close(tmp->pipe_fd[1]);
+			tmp->pipe_fd[1] = -1;
+		}
+		tmp = tmp->next;
 	}
 }
 
 void	close_fds(t_process *p_list, t_exec_vars *e, t_minishell *mini)
 {
 	close_process_fds(p_list);
-	close_pipe_fds(e);
+	close_pipe_fds(p_list);
 	dup2_safe(mini, &e->tmpin, 0, "dup2 (stdin)");
 	dup2_safe(mini, &e->tmpout, 1, "dup2 (stdout)");
 	close(e->tmpin);

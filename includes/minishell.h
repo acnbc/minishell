@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/09/04 08:53:16 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/05 16:49:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ typedef struct s_exec_vars
 	int					fdin;
 	int					fdout;
 	int					pid;
-	int					fdpipe[2];
 	int					ret;
 }						t_exec_vars;
 
@@ -100,6 +99,7 @@ typedef struct s_process
 	int					fdin;
 	int					fdout;
 	int					heredoc_fd;
+	int					pipe_fd[2];
 	int					pid;
 	int					status;
 	int					exit_signal;
