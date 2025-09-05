@@ -35,12 +35,13 @@ static void	child_process(t_minishell *mini, t_process *p)
 
 static void	parent_process(t_minishell *mini, t_process *p)
 {
-	if (p->fdin != -1 && p->fdin != mini->exec_vars->tmpin)
+	(void)mini; // Parâmetro não usado, mas mantido para compatibilidade
+	if (p->fdin != -1 && p->fdin != 0 && p->fdin != 1 && p->fdin != 2)
 	{
 		close(p->fdin);
 		p->fdin = -1;
 	}
-	if (p->fdout != -1 && p->fdout != mini->exec_vars->tmpout)
+	if (p->fdout != -1 && p->fdout != 0 && p->fdout != 1 && p->fdout != 2)
 	{
 		close(p->fdout);
 		p->fdout = -1;

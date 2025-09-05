@@ -15,8 +15,7 @@
 void	dup2_safe(t_minishell *mini, int *fd, int dup2_fd,
 		const char *error_message)
 {
-	dup2(*fd, dup2_fd);
-	if (*fd == -1)
+	if (dup2(*fd, dup2_fd) == -1)
 	{
 		perror(error_message);
 		safe_exit(mini);
