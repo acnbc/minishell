@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:37:23 by anogueir          #+#    #+#             */
-/*   Updated: 2025/08/24 15:03:15 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 11:57:24 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,34 +112,3 @@ void	env_lstadd_back(t_env **lst, t_env *new)
 	curr->next = new;
 	new->prev = curr;
 }
-
-/*void	print_envp(char **envp_copy)
-{
-	int	i;
-
-	i = 0;
-	if (!envp_copy)
-		return ;
-	while (envp_copy[i])
-	{
-		printf("envp_copy[%d]: %s\n", i, envp_copy[i]);
-		i++;
-	}
-}
-
-void	print_env_list(t_env *env_list)
-{
-	t_env	*current;
-	int		i;
-
-	current = env_list;
-	i = 0;
-	while (current)
-	{
-		printf("env_list[%d]: %s=%s\n", i, current->var_name,
-			current->var_cont);
-		current = current->next;
-		i++;
-	}
-}
-*/

@@ -6,17 +6,12 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:11:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/04 08:52:19 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 11:58:11 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/* Funções de processamento de aspas movidas para src/utils/quote_processor.c */
-
-/*
-** Função auxiliar: cria o token apropriado baseado no conteúdo.
-*/
 static void	create_token(t_minishell *mini, char *expanded)
 {
 	t_token	**tokens;
@@ -35,9 +30,6 @@ static void	create_token(t_minishell *mini, char *expanded)
 		token_lstadd_back(tokens, new_token(expanded, ARGS, mini));
 }
 
-/*
-** Função principal: tokeniza e expande um segmento de comando.
-*/
 void	word_tokenizer(t_minishell *mini, int *i)
 {
 	char	*cmd_seq;
@@ -51,9 +43,9 @@ void	word_tokenizer(t_minishell *mini, int *i)
 	len = ft_strlen(cmd_seq);
 	while (*i < len)
 	{
-		if ((ft_isspace(cmd_seq[*i]) && !is_between_quotes(cmd_seq, *i)) ||
-			((cmd_seq[*i] == '>' || cmd_seq[*i] == '<') &&
-			!is_between_quotes(cmd_seq, *i)))
+		if ((ft_isspace(cmd_seq[*i]) && !is_between_quotes(cmd_seq, *i))
+			|| ((cmd_seq[*i] == '>' || cmd_seq[*i] == '<')
+				&& !is_between_quotes(cmd_seq, *i)))
 			break ;
 		(*i)++;
 	}

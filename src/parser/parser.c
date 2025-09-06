@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 19:37:33 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/04 09:21:27 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 11:35:26 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	parser(t_minishell *mini)
 	if (!lexer(mini))
 		return (0);
 	handle_heredoc(mini);
-	/*print_process_list(mini->process_list);*/
 	if (syntactic_analysis(mini) == false)
 		return (0);
 	return (1);

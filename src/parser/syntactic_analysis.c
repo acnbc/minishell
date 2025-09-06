@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:27:08 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/04 09:21:52 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 11:35:40 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static bool	syntax_error_msg(const char *msg)
 bool	syntactic_analysis(t_minishell *mini)
 {
 	t_process	*p;
-	
+
 	p = mini->process_list;
 	while (p)
 	{

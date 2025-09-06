@@ -5,11 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/09/05 23:50:36 by anogueir         ###   ########.fr       */
+/*   Created: 2025/09/06 11:37:27 by anogueir          #+#    #+#             */
+/*   Updated: 2025/09/06 11:56:44 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -144,8 +143,8 @@ int						verify_quote_count(char *process);
 char					*ft_strstr(char *str, char *to_find);
 /* ----------------------------- QUOTE PROCESSOR -----------------*/
 char					*process_single_quotes(const char *seg, int *j);
-char					*process_double_quotes(t_minishell *mini, const char *seg,
-							int *j);
+char					*process_double_quotes(t_minishell *mini,
+							const char *seg, int *j);
 char					*expand_variable(t_minishell *mini, const char *segment,
 							int *j);
 char					*expand_literal(const char *segment, int *j);
@@ -154,6 +153,8 @@ char					*process_quoted_string(t_minishell *mini, char *cmd_seq,
 							int *i);
 int						handle_redirect_assignment(t_minishell *mini, int *i);
 int						assign_file(char **file, t_minishell *mini, int *i);
+char					*get_redir_target(t_minishell *mini, int *i);
+int						redout_append_tokenizer(t_minishell *mini, int *i);
 void					expand_env_vars(t_minishell *mini);
 /* ----------------------------- SAFE OPERATIONS -----------------*/
 void					safe_exit(t_minishell *mini);
@@ -198,10 +199,7 @@ char					*put_line_break(char *line);
 void					write_heredoc_line(int fd, char *line,
 							t_minishell *mini);
 void					wait_all_processes(t_process *head);
-void					open_pipes(t_minishell *mini);
 void					exec_builtin(t_minishell *mini);
-int						is_cmd(char *cmd, t_minishell *mini);
-int						is_builtin(char *segment);
 void					handle_invalid_command(t_process *p);
 void					close_other_pipes(t_minishell *mini, t_process *p);
 void					setup_redirects(t_process *p);
