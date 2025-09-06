@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 15:32:24 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 17:59:09 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	execute_processes(t_minishell *mini)
 		mini->cur_proc = p;
 		if (p->tokens && p->tokens->type == BUILTIN)
 		{
-			if (!p->next && p->fdin == -1)
-				exec_builtin(mini);
+			if (p->next)
+				exec_builtin_with_pipe(mini);
 			else
-				create_forks(mini);
+				exec_builtin(mini);
 		}
 		else if (p->tokens && p->tokens->type == CMD)
 			create_forks(mini);

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 00:00:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 00:01:50 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 18:01:07 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,6 @@ void	get_redirect_out(t_minishell *mini)
 			return ;
 		}
 	}
-	else if (p->next)
+	if (p->next && p->tokens && p->tokens->type != BUILTIN)
 		open_pipes(mini);
 }

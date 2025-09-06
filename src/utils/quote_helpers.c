@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 23:55:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/05 23:58:36 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 16:25:31 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ static void	process_double_quote_var(t_minishell *mini, const char *seg,
 			int *j, char **res)
 {
 	int		k;
+	char	*result;
+	char	*expansion_result;
 
 	k = *j + 1;
 	if (seg[k] == '?')
@@ -50,19 +52,24 @@ static void	process_double_quote_var(t_minishell *mini, const char *seg,
 	else
 		while (seg[k] && is_stopchar(seg[k]))
 			k++;
+	result = ft_substr(seg, *j, k - *j);
+	expansion_result = expansion(mini, result);
 	*res = strjoin_free(*res,
-			expansion(mini, ft_substr(seg, *j, k - *j)));
+			expansion_result);
+	free(result);
 	*j = k;
 }
 
 static void	process_double_quote_literal(const char *seg, int *j, char **res)
 {
 	int		start;
+	char	*result;
 
 	start = *j;
 	while (seg[*j] && seg[*j] != DOUBLE_QUOTE && seg[*j] != '$')
 		(*j)++;
-	*res = strjoin_free(*res, ft_substr(seg, start, *j - start));
+	result = ft_substr(seg, start, *j - start);
+	*res = strjoin_free(*res, result);
 }
 
 char	*process_double_quotes(t_minishell *mini, const char *seg, int *j)

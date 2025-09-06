@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 13:49:59 by codespace         #+#    #+#             */
-/*   Updated: 2025/09/04 09:06:05 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 16:33:10 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,10 @@ static int	expand_exit_status(t_minishell *mini)
 	{
 		write(2, status, ft_strlen(status) + 1);
 		g_exit_status = 0;
+		free(status);
 		return (1);
 	}
+	free(status);
 	return (0);
 }
 

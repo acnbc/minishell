@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 11:37:27 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 11:56:44 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 17:48:27 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,10 @@ void					write_heredoc_line(int fd, char *line,
 							t_minishell *mini);
 void					wait_all_processes(t_process *head);
 void					exec_builtin(t_minishell *mini);
+void					exec_builtin_with_pipe(t_minishell *mini);
+void					open_pipes(t_minishell *mini);
+void					execute_builtin_command(t_minishell *mini,
+							t_process *p);
 void					handle_invalid_command(t_process *p);
 void					close_other_pipes(t_minishell *mini, t_process *p);
 void					setup_redirects(t_process *p);
@@ -207,6 +211,7 @@ void					execute_processes(t_minishell *mini);
 void					create_forks(t_minishell *mini);
 void					child_process(t_minishell *mini, t_process *p);
 void					setup_builtin_redirects(t_process *p);
+void					restore_builtin_redirects(t_process *p);
 /* ---------------------- BUILTINS ----------------------------*/
 int						ft_echo(char **args, int fd);
 int						ft_cd(t_minishell *mini, t_env *env_list);

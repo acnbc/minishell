@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:42:44 by abouchat          #+#    #+#             */
-/*   Updated: 2025/09/06 15:50:05 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 17:29:31 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	ft_cd(t_minishell *mini, t_env *env_list)
 	if (chdir(path) == -1)
 	{
 		perror("cd");
+		free(path);
 		return (EXIT_FAILURE);
 	}
 	else

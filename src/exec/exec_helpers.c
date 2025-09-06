@@ -6,103 +6,48 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 23:45:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 15:49:46 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 17:59:44 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	process_exit_status(t_process *cur, int status)
-{
-	if (WIFEXITED(status))
-		cur->exit_signal = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		cur->exit_signal = 128 + WTERMSIG(status);
-	else
-		cur->exit_signal = -1;
-	if (cur->next == NULL)
-		g_exit_status = cur->exit_signal;
-	cur->pid = 0;
-}
-
 void	setup_builtin_redirects(t_process *p)
 {
-	int	fdin;
-	int	fdout;
-	int	saved_stdin;
-	int	saved_stdout;
-
-	saved_stdin = dup(0);
-	saved_stdout = dup(1);
-	if (p->fdin != -1)
-		fdin = p->fdin;
-	else
-		fdin = 0;
-	if (p->fdout != -1)
-		fdout = p->fdout;
-	else
-		fdout = 1;
-	if (fdin != 0)
-		dup2(fdin, 0);
-	if (fdout != 1)
-		dup2(fdout, 1);
-	dup2(saved_stdout, 1);
-	dup2(saved_stdin, 0);
-	close(saved_stdin);
-	close(saved_stdout);
+	if (p->fdin != -1 && p->fdin != 0)
+		dup2(p->fdin, 0);
+	if (p->fdout != -1 && p->fdout != 1)
+		dup2(p->fdout, 1);
 }
 
-static int	count_total_processes(t_process *head)
+void	restore_builtin_redirects(t_process *p)
 {
-	t_process	*cur;
-	int			total;
-
-	total = 0;
-	cur = head;
-	while (cur)
+	if (p->fdin != -1 && p->fdin != 0)
 	{
-		if (cur->pid > 0)
-			total++;
-		cur = cur->next;
+		close(p->fdin);
+		p->fdin = -1;
 	}
-	return (total);
+	if (p->fdout != -1 && p->fdout != 1)
+	{
+		close(p->fdout);
+		p->fdout = -1;
+	}
 }
 
-static int	process_wait_loop(t_process *head)
+int	is_directory(char *word)
 {
-	t_process	*cur;
-	int			status;
-	int			pid;
-	int			completed;
+	struct stat	path_stat;
 
-	completed = 0;
-	cur = head;
-	while (cur)
+	if (stat(word, &path_stat) == 0)
 	{
-		if (cur->pid > 0)
+		if (S_ISDIR(path_stat.st_mode))
 		{
-			pid = waitpid(cur->pid, &status, WNOHANG);
-			if (pid > 0)
-			{
-				process_exit_status(cur, status);
-				completed++;
-			}
+			write(2, "minishell: ", 11);
+			write(2, word, ft_strlen(word));
+			write(2, ": Is a directory\n", 18);
+			g_exit_status = 126;
+			return (1);
 		}
-		cur = cur->next;
 	}
-	return (completed);
-}
-
-void	wait_all_processes(t_process *head)
-{
-	int	total_processes;
-	int	completed_processes;
-
-	total_processes = count_total_processes(head);
-	completed_processes = 0;
-	while (completed_processes < total_processes)
-	{
-		completed_processes += process_wait_loop(head);
-		usleep(1000);
-	}
+	return (0);
 }
