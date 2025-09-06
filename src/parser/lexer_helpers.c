@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 00:10:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 11:58:30 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 15:50:31 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ char	*get_redir_target(t_minishell *mini, int *i)
 	cmd_seq = mini->cur_proc->cmd_seq;
 	skip_spaces(cmd_seq, i);
 	if (check_syntax_error(cmd_seq, i))
-		return (NULL);
-	if (!mini->cur_proc->heredoc_flag && !is_stopchar(cmd_seq[*i]))
 		return (NULL);
 	temp = process_redir_string(mini, cmd_seq, i);
 	skip_spaces(cmd_seq, i);

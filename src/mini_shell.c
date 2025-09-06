@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/04 08:32:20 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 15:49:28 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ void	mini_shell(t_minishell *mini)
 		mini->input = NULL;
 		return ;
 	}
-	//mini->input = ft_strtrim(input, " \t\n\v\f\r");
 	add_history(mini->input);
 	if (!first_input_checks(mini))
 		return ;

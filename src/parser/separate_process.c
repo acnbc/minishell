@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:45:20 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/04 09:12:14 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 15:50:21 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,8 @@
 void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 {
 	char	*phrase;
-	//char	*temp;
 
 	phrase = ft_substr(input, j, i - j);
-	/*temp = NULL;
-	temp = ft_substr(input, j, i - j);
-	phrase = ft_strtrim(temp, " \t");
-	free(temp);*/
 	if (phrase && *phrase)
 		add_process(phrases, new_process(phrase));
 	else

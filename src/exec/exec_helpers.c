@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 23:45:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/05 23:50:36 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 15:49:46 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,11 @@ void	setup_builtin_redirects(t_process *p)
 {
 	int	fdin;
 	int	fdout;
+	int	saved_stdin;
+	int	saved_stdout;
 
+	saved_stdin = dup(0);
+	saved_stdout = dup(1);
 	if (p->fdin != -1)
 		fdin = p->fdin;
 	else
@@ -42,6 +46,10 @@ void	setup_builtin_redirects(t_process *p)
 		dup2(fdin, 0);
 	if (fdout != 1)
 		dup2(fdout, 1);
+	dup2(saved_stdout, 1);
+	dup2(saved_stdin, 0);
+	close(saved_stdin);
+	close(saved_stdout);
 }
 
 static int	count_total_processes(t_process *head)

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 16:23:12 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 11:58:23 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 14:26:49 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ int	assign_file(char **file, t_minishell *mini, int *i)
 	if (*file)
 	{
 		free(*file);
-		return (0);
+		*file = NULL;
 	}
 	*file = get_redir_target(mini, i);
+	if (!*file)
+		return (0);
 	return (1);
 }
 

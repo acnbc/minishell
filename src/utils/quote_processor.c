@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 08:30:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 00:04:23 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 14:36:31 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ char	*expand_variable(t_minishell *mini, const char *segment, int *j)
 			k++;
 	var = ft_substr(segment, *j, k - *j);
 	val = expansion(mini, var);
+	free(var);
 	*j = k;
 	return (val);
 }

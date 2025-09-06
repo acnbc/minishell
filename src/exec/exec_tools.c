@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 00:04:23 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 15:44:49 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void	execute_builtin_command(t_minishell *mini, t_process *p)
 	if (ft_strncmp(p->args[0], "cd", ft_strlen(p->args[0])) == 0)
 		g_exit_status = ft_cd(mini, mini->env_list);
 	else if (ft_strncmp(p->args[0], "echo", ft_strlen(p->args[0])) == 0)
-		g_exit_status = ft_echo(p->args, 1);
+		g_exit_status = ft_echo(p->args, p->fdout);
 	else if (ft_strncmp(p->args[0], "pwd", ft_strlen(p->args[0])) == 0)
 		g_exit_status = ft_pwd(mini->cur_proc);
 	else if (ft_strncmp(p->args[0], "export", ft_strlen(p->args[0])) == 0)
@@ -73,7 +73,7 @@ static void	execute_builtin_command(t_minishell *mini, t_process *p)
 	else if (ft_strncmp(p->args[0], "unset", ft_strlen(p->args[0])) == 0)
 		g_exit_status = ft_unset(mini->env_list, p->args);
 	else if (ft_strncmp(p->args[0], "env", ft_strlen(p->args[0])) == 0)
-		g_exit_status = ft_env(mini->env_list, 1);
+		g_exit_status = ft_env(mini->env_list, p->fdout);
 	else if (ft_strncmp(p->args[0], "exit", ft_strlen(p->args[0])) == 0)
 	{
 		g_exit_status = ft_exit(p->args);
