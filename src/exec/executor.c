@@ -3,66 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/05 16:55:50 by codespace        ###   ########.fr       */
+/*   Updated: 2025/09/05 23:42:14 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	child_process(t_minishell *mini, t_process *p)
-{
-	if (p->fdin != 0)
-	{
-		dup2_safe(mini, &p->fdin, 0, "dup2 (stdin)");
-		close(p->fdin);
-	}
-	if (p->fdout != 1)
-	{
-		dup2_safe(mini, &p->fdout, 1, "dup2 (stdout)");
-		close(p->fdout);
-	}
-	if (p->pipe_fd[0] != -1)
-		close(p->pipe_fd[0]);
-	if (p->pipe_fd[1] != -1)
-		close(p->pipe_fd[1]);
-	execve(p->path, p->args, mini->envp_copy);
-	perror("execve");
-	exit(127);
-}
-
-static void	parent_process(t_minishell *mini, t_process *p)
-{
-	(void)mini; // Parâmetro não usado, mas mantido para compatibilidade
-	if (p->fdin != -1 && p->fdin != 0 && p->fdin != 1 && p->fdin != 2)
-	{
-		close(p->fdin);
-		p->fdin = -1;
-	}
-	if (p->fdout != -1 && p->fdout != 0 && p->fdout != 1 && p->fdout != 2)
-	{
-		close(p->fdout);
-		p->fdout = -1;
-	}
-}
-
-static void	create_forks(t_minishell *mini)
+void	execute_processes(t_minishell *mini)
 {
 	t_process	*p;
 
-	p = mini->cur_proc;
-	p->pid = fork();
-	if (p->pid < 0)
+	p = mini->process_list;
+	while (p)
 	{
-		perror("fork");
-		safe_exit(mini);
+		mini->cur_proc = p;
+		if (p->tokens && p->tokens->type == BUILTIN)
+		{
+			if (!p->next && p->fdin == -1 && p->fdout == -1)
+				exec_builtin(mini);
+			else
+				create_forks(mini);
+		}
+		else if (p->tokens && p->tokens->type == CMD)
+			create_forks(mini);
+		else
+			handle_invalid_command(p);
+		p = p->next;
 	}
-	if (p->pid == 0)
-		child_process(mini, p);
-	else
-		parent_process(mini, p);
 }
 
 void	execute_command(t_minishell *mini)
@@ -71,8 +41,8 @@ void	execute_command(t_minishell *mini)
 	t_process	*p;
 
 	ft_memset(&e, -1, sizeof(t_exec_vars));
-	dup_safe(mini, &e.tmpin, 0, "dup (stdin)");
-	dup_safe(mini, &e.tmpout, 1, "dup (stdout)");
+	e.tmpin = -1;
+	e.tmpout = -1;
 	p = mini->process_list;
 	mini->exec_vars = &e;
 	signal(SIGQUIT, exec_signal_handler);
@@ -82,16 +52,13 @@ void	execute_command(t_minishell *mini)
 		mini->cur_proc = p;
 		get_redirect_in(mini);
 		get_redirect_out(mini);
-		if (p->tokens && p->tokens->type == BUILTIN)
-			exec_builtin(mini);
-		else if (p->tokens && p->tokens->type == CMD)
-			create_forks(mini);
-		else
-			handle_invalid_command(p);
 		p = p->next;
 	}
-	close_fds(mini->process_list, &e, mini);
+	execute_processes(mini);
+	cleanup_pipes(mini);
 	wait_all_processes(mini->process_list);
+	cleanup_all_fds(mini);
+	mini->exec_vars = NULL;
 }
 
 void	executor(t_minishell *mini)

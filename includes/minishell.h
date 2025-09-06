@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/09/05 16:49:23 by codespace        ###   ########.fr       */
+/*   Updated: 2025/09/05 23:50:36 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,12 +185,12 @@ void					handle_heredoc(t_minishell *mini);
 void					unlink_heredoc_files(t_minishell *mini);
 char					**copy_args(t_token *tokens);
 int						get_args(t_process *process_list);
-void					close_fds(t_process *p_list, t_exec_vars *e,
-							t_minishell *mini);
+void					close_fds(t_process *p_list);
 void					dup2_safe(t_minishell *mini, int *fd, int dup2_fd,
 							const char *error_message);
 void					dup_safe(t_minishell *mini, int *fd, int dup_fd,
 							const char *error_message);
+void					cleanup_all_fds(t_minishell *mini);
 void					get_redirect_in(t_minishell *mini);
 void					get_redirect_out(t_minishell *mini);
 void					open_pipes(t_minishell *mini);
@@ -203,6 +203,13 @@ void					exec_builtin(t_minishell *mini);
 int						is_cmd(char *cmd, t_minishell *mini);
 int						is_builtin(char *segment);
 void					handle_invalid_command(t_process *p);
+void					close_other_pipes(t_minishell *mini, t_process *p);
+void					setup_redirects(t_process *p);
+void					cleanup_pipes(t_minishell *mini);
+void					execute_processes(t_minishell *mini);
+void					create_forks(t_minishell *mini);
+void					child_process(t_minishell *mini, t_process *p);
+void					setup_builtin_redirects(t_process *p);
 /* ---------------------- BUILTINS ----------------------------*/
 int						ft_echo(char **args, int fd);
 int						ft_cd(t_minishell *mini, t_env *env_list);

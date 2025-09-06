@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:39:34 by abouchat          #+#    #+#             */
-/*   Updated: 2025/09/05 08:31:06 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/05 23:32:23 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,17 @@ void	exec_signal_handler(int sig)
 	rl_done = 1;
 }
 
+static int	init_minishell_env(t_minishell *mini)
+{
+	if (!find_env_var("PWD", mini->env_list))
+		env_lstadd_back(&mini->env_list,
+			env_lstnew(ft_strdup("PWD"), getcwd(NULL, 0)));
+	if (!find_env_var("OLDPWD", mini->env_list))
+		env_lstadd_back(&mini->env_list,
+			env_lstnew(ft_strdup("OLDPWD"), ft_strdup("")));
+	return (0);
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_minishell	*mini;
@@ -49,10 +60,7 @@ int	main(int argc, char *argv[], char *envp[])
 	mini->env_list = env_list(envp);
 	if (!mini->env_list)
 		return (1);
-	if (!find_env_var("PWD", mini->env_list))
-		env_lstadd_back(&mini->env_list, env_lstnew(ft_strdup("PWD"), getcwd(NULL, 0)));
-	if (!find_env_var("OLDPWD", mini->env_list))
-		env_lstadd_back(&mini->env_list, env_lstnew(ft_strdup("OLDPWD"), ft_strdup("")));
+	init_minishell_env(mini);
 	mini->process_list = NULL;
 	while (1)
 	{
