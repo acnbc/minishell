@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 11:37:27 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 17:48:27 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 18:18:46 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ extern int				g_exit_status;
 
 typedef struct s_exec_vars
 {
-	int					tmpin;
-	int					tmpout;
 	int					fdin;
 	int					fdout;
 	int					pid;

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 17:59:09 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 18:18:29 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ void	execute_command(t_minishell *mini)
 	t_process	*p;
 
 	ft_memset(&e, -1, sizeof(t_exec_vars));
-	e.tmpin = -1;
-	e.tmpout = -1;
 	p = mini->process_list;
 	mini->exec_vars = &e;
 	signal(SIGQUIT, exec_signal_handler);

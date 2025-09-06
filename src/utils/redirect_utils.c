@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 13:30:10 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 00:04:23 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/06 18:19:30 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,6 @@ static void	cleanup_process_fds(t_process *p)
 	}
 }
 
-static void	cleanup_exec_vars(t_minishell *mini)
-{
-	if (mini->exec_vars)
-	{
-		if (mini->exec_vars->tmpin != -1)
-		{
-			close(mini->exec_vars->tmpin);
-			mini->exec_vars->tmpin = -1;
-		}
-		if (mini->exec_vars->tmpout != -1)
-		{
-			close(mini->exec_vars->tmpout);
-			mini->exec_vars->tmpout = -1;
-		}
-	}
-}
-
 void	cleanup_all_fds(t_minishell *mini)
 {
 	t_process	*p;
@@ -63,5 +46,4 @@ void	cleanup_all_fds(t_minishell *mini)
 		cleanup_process_fds(p);
 		p = p->next;
 	}
-	cleanup_exec_vars(mini);
 }
