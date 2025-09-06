@@ -6,7 +6,7 @@
 /*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:31:22 by abouchat          #+#    #+#             */
-/*   Updated: 2025/08/21 18:36:57 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/06 19:00:35 by abouchat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_unset(t_env *env_list, char **args)
 	while (++args && *args)
 	{
 		if (!find_env_var(*args, env_list))
-			return (EXIT_FAILURE);
+			continue ;
 		curr = find_env_var(*args, env_list);
 		temp = curr->prev;
 		temp->next = curr->next;
