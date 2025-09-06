@@ -15,7 +15,10 @@
 int	assign_file(char **file, t_minishell *mini, int *i)
 {
 	if (*file)
+	{
 		free(*file);
+		return (0);
+	}
 	*file = get_redir_target(mini, i);
 	return (1);
 }
