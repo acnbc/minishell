@@ -15,13 +15,13 @@
 void	get_cmd_seq(t_process **phrases, char *input, int i, int j)
 {
 	char	*phrase;
-	char	*temp;
+	//char	*temp;
 
-	phrase = NULL;
-	temp = NULL;
+	phrase = ft_substr(input, j, i - j);
+	/*temp = NULL;
 	temp = ft_substr(input, j, i - j);
 	phrase = ft_strtrim(temp, " \t");
-	free(temp);
+	free(temp);*/
 	if (phrase && *phrase)
 		add_process(phrases, new_process(phrase));
 	else

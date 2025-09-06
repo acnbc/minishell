@@ -69,21 +69,17 @@ static int	first_input_checks(t_minishell *mini)
 
 void	mini_shell(t_minishell *mini)
 {
-	char	*input;
-
-	input = readline(MINISHELL_PROMPT);
-	mini->input = ft_strtrim(input, " \t\n\v\f\r");
+	mini->input = readline(MINISHELL_PROMPT);
 	if (!mini->input)
 		mini->input = ft_strdup("exit");
 	if (!mini->input || mini->input[0] == '\0')
 	{
-		free(input);
 		free(mini->input);
 		mini->input = NULL;
 		return ;
 	}
+	//mini->input = ft_strtrim(input, " \t\n\v\f\r");
 	add_history(mini->input);
-	free(input);
 	if (!first_input_checks(mini))
 		return ;
 	if (!parser(mini))

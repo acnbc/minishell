@@ -29,6 +29,8 @@ static int	find_in_set(char *str, char const *set)
 
 static void	find_len(char const *s1, char const *set, size_t *i, size_t *s1_len)
 {
+	if (!s1 || !set)
+		return ;
 	while (find_in_set((char *)(s1 + (*i)), set))
 		(*i)++;
 	while (find_in_set((char *)(s1 + ((*s1_len) - 1)), set))
@@ -42,7 +44,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	size_t	i;
 	size_t	j;
 
-	if (s1 == NULL || set == NULL)
+	if (!s1 || s1[0] == '\0' || !set || set[0] == '\0')
 		return (NULL);
 	j = 0;
 	i = 0;

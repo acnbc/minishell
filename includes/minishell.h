@@ -178,7 +178,6 @@ char					**paths(t_env *env_list);
 char					*path_name(char **paths, char *command);
 int						is_directory(char *word);
 /* ---------------- SYNTACTIC ANALYSIS ------------------*/
-bool					syntactic_analysis(t_minishell *mini);
 int						is_cmd(char *cmd, t_minishell *mini);
 /*------------------------ EXECUTOR ------------------------------*/
 void					executor(t_minishell *mini);
