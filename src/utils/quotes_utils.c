@@ -6,13 +6,11 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:16:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/04 08:44:06 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 12:19:03 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-/* Função removida - migrada para quote_processor.c */
 
 int	verify_quote_pair(char *input, char quote, int *i)
 {

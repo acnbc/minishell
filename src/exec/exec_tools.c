@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 17:52:46 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 15:02:37 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,14 @@ static void	execute_env_builtin(t_minishell *mini, t_process *p)
 static void	execute_exit_builtin(t_minishell *mini, t_process *p)
 {
 	g_exit_status = ft_exit(p->args);
+	if (mini->exec_vars)
+	{
+		if (mini->exec_vars->tmpin != -1)
+			close(mini->exec_vars->tmpin);
+		if (mini->exec_vars->tmpout != -1)
+			close(mini->exec_vars->tmpout);
+	}
+
 	safe_exit(mini);
 }
 
@@ -63,22 +71,14 @@ void	execute_builtin_command(t_minishell *mini, t_process *p)
 		execute_env_builtin(mini, p);
 	else if (ft_strncmp(p->args[0], "exit", ft_strlen(p->args[0])) == 0)
 		execute_exit_builtin(mini, p);
-}
-
-void	exec_builtin(t_minishell *mini)
-{
-	t_process	*p;
-
-	p = mini->cur_proc;
-	execute_builtin_command(mini, p);
-	if (p->fdin != -1 && p->fdin != 0)
-	{
-		close(p->fdin);
-		p->fdin = -1;
-	}
-	if (p->fdout != -1 && p->fdout != 1)
+	if (p->fdout != -1 && p->fdout != 1 && p->fdout != 2)
 	{
 		close(p->fdout);
 		p->fdout = -1;
+	}
+	if (p->next && p->next->fdin != -1 && p->next->fdin != 0)
+	{
+		close(p->next->fdin);
+		p->next->fdin = -1;
 	}
 }

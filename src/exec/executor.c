@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:20:57 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 18:18:29 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 15:14:00 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,7 @@ void	execute_processes(t_minishell *mini)
 	{
 		mini->cur_proc = p;
 		if (p->tokens && p->tokens->type == BUILTIN)
-		{
-			if (p->next)
-				exec_builtin_with_pipe(mini);
-			else
-				exec_builtin(mini);
-		}
+			execute_builtin_command(mini, p);
 		else if (p->tokens && p->tokens->type == CMD)
 			create_forks(mini);
 		else
@@ -42,6 +37,8 @@ void	execute_command(t_minishell *mini)
 
 	ft_memset(&e, -1, sizeof(t_exec_vars));
 	p = mini->process_list;
+	e.tmpin = dup(STDIN_FILENO);
+	e.tmpout = dup(STDOUT_FILENO);
 	mini->exec_vars = &e;
 	signal(SIGQUIT, exec_signal_handler);
 	signal(SIGINT, exec_signal_handler);
@@ -55,7 +52,11 @@ void	execute_command(t_minishell *mini)
 	execute_processes(mini);
 	cleanup_pipes(mini);
 	wait_all_processes(mini->process_list);
-	cleanup_all_fds(mini);
+	close_process_fds(mini->process_list);
+	dup2(e.tmpin, 0);
+	dup2(e.tmpout, 1);
+	close(e.tmpin);
+	close(e.tmpout);
 	mini->exec_vars = NULL;
 }
 

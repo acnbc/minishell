@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 11:37:27 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 18:18:46 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 14:51:48 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ extern int				g_exit_status;
 
 typedef struct s_exec_vars
 {
+	int					tmpin;
+	int					tmpout;
 	int					fdin;
 	int					fdout;
 	int					pid;
@@ -138,7 +140,6 @@ t_env					*env_list(char *envp[]);
 char					**copy_envp(t_env *env_list);
 int						verify_quote_pair(char *input, char quote, int *i);
 int						verify_quote_count(char *process);
-char					*ft_strstr(char *str, char *to_find);
 /* ----------------------------- QUOTE PROCESSOR -----------------*/
 char					*process_single_quotes(const char *seg, int *j);
 char					*process_double_quotes(t_minishell *mini,
@@ -210,6 +211,7 @@ void					create_forks(t_minishell *mini);
 void					child_process(t_minishell *mini, t_process *p);
 void					setup_builtin_redirects(t_process *p);
 void					restore_builtin_redirects(t_process *p);
+void					close_process_fds(t_process *p_list);
 /* ---------------------- BUILTINS ----------------------------*/
 int						ft_echo(char **args, int fd);
 int						ft_cd(t_minishell *mini, t_env *env_list);

@@ -6,67 +6,90 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 23:35:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 17:01:07 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 14:34:55 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	close_other_pipes(t_minishell *mini, t_process *p)
+int	is_directory(char *word)
 {
-	t_process	*tmp;
+	struct stat	path_stat;
 
-	tmp = mini->process_list;
-	while (tmp)
+	if (stat(word, &path_stat) == 0)
 	{
-		if (tmp != p)
+		if (S_ISDIR(path_stat.st_mode))
 		{
-			if (tmp->pipe_fd[0] != -1)
-				close(tmp->pipe_fd[0]);
-			if (tmp->pipe_fd[1] != -1)
-				close(tmp->pipe_fd[1]);
+			write(2, "minishell: ", 11);
+			write(2, word, ft_strlen(word));
+			write(2, ": Is a directory\n", 18);
+			g_exit_status = 126;
+			return (1);
 		}
-		tmp = tmp->next;
+	}
+	return (0);
+}
+
+void	wait_all_processes(t_process *p)
+{
+	t_process	*cur;
+
+	cur = p;
+	while (cur)
+	{
+		if (cur->pid > 0)
+		{
+			waitpid(cur->pid, &cur->status, 0);
+			if (WIFEXITED(cur->status))
+				cur->exit_signal = WEXITSTATUS(cur->status);
+			else if (WIFSIGNALED(cur->status))
+				cur->exit_signal = 128 + WTERMSIG(cur->status);
+			else
+				cur->exit_signal = -1;
+			if (cur->next == NULL)
+				g_exit_status = cur->exit_signal;
+		}
+		cur = cur->next;
 	}
 }
 
-void	setup_redirects(t_process *p)
+void	close_process_fds(t_process *p_list)
 {
-	if (p->fdin != -1 && p->fdin != 0)
+	t_process	*p;
+
+	p = p_list;
+	while (p)
 	{
-		if (dup2(p->fdin, 0) == -1)
+		if (p->fdin != -1 && p->fdin != 0 && p->fdin != 1 && p->fdin != 2)
 		{
-			perror("dup2 (stdin)");
-			exit(127);
+			close(p->fdin);
+			p->fdin = -1;
 		}
-		close(p->fdin);
-	}
-	if (p->fdout != -1 && p->fdout != 1)
-	{
-		if (dup2(p->fdout, 1) == -1)
+		if (p->fdout != -1 && p->fdout != 0 && p->fdout != 1 && p->fdout != 2)
 		{
-			perror("dup2 (stdout)");
-			exit(127);
+			close(p->fdout);
+			p->fdout = -1;
 		}
-		close(p->fdout);
+		p = p->next;
 	}
 }
 
 void	child_process(t_minishell *mini, t_process *p)
 {
-	setup_redirects(p);
+	if (p->fdin != -1 && p->fdin != 0)
+	{
+		dup2(p->fdin, 0);
+		close(p->fdin);
+	}
+	if (p->fdout != -1 && p->fdout != 1)
+	{
+		dup2(p->fdout, 1);
+		close(p->fdout);
+	}
 	close_other_pipes(mini, p);
-	if (p->tokens && p->tokens->type == BUILTIN)
-	{
-		exec_builtin(mini);
-		exit(g_exit_status);
-	}
-	else
-	{
-		execve(p->path, p->args, mini->envp_copy);
-		perror("execve");
-		exit(127);
-	}
+	execve(p->path, p->args, mini->envp_copy);
+	perror("execve");
+	exit(127);
 }
 
 void	create_forks(t_minishell *mini)
@@ -84,23 +107,3 @@ void	create_forks(t_minishell *mini)
 		child_process(mini, p);
 }
 
-void	cleanup_pipes(t_minishell *mini)
-{
-	t_process	*p;
-
-	p = mini->process_list;
-	while (p)
-	{
-		if (p->pipe_fd[0] != -1)
-		{
-			close(p->pipe_fd[0]);
-			p->pipe_fd[0] = -1;
-		}
-		if (p->pipe_fd[1] != -1)
-		{
-			close(p->pipe_fd[1]);
-			p->pipe_fd[1] = -1;
-		}
-		p = p->next;
-	}
-}

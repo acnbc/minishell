@@ -6,32 +6,11 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 21:15:13 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/06 15:49:28 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 11:51:12 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-char	*ft_strstr(char *str, char *to_find)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		j = 0;
-		if (str[i] == to_find[j])
-		{
-			while ((to_find[j] != '\0') && (str[i + j] == to_find[j]))
-				j++;
-			if (to_find[j] == '\0')
-				return (&str[i]);
-		}
-		i++;
-	}
-	return (NULL);
-}
 
 static int	check_dot_arg(t_minishell *mini)
 {
