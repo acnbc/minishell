@@ -13,10 +13,10 @@ SRC_SUBDIRS	= builtins exec parse utils
 SRC			= main.c mini_shell.c \
 		  $(addprefix parser/, parser.c expansion.c separate_process.c lexer.c \
 		  lexer_helpers.c word_tokenizer.c env_var.c) \
-		  $(addprefix exec/, executor.c exec_utils.c args_utils.c heredoc.c exec_tools.c) \
+		  $(addprefix exec/, executor.c exec_utils.c args_utils.c heredoc.c exec_tools.c pipeline.c pipeline_utils.c pipeline_setup.c) \
 		  $(addprefix builtins/, cd.c echo.c env.c export.c pwd.c unset.c exit.c) \
 		  $(addprefix utils/, process_utils.c utils.c env_utils.c safe_exit.c token_utils.c \
-		  lexer_utils.c quotes_utils.c string_utils.c redirect_helpers.c \
+		  lexer_utils.c quotes_utils.c string_utils.c \
 		  safe_utils.c heredoc_utils.c cmd_utils.c export_utils.c tokenizer_utils.c \
 		  quote_processor.c quote_helpers.c) \
 

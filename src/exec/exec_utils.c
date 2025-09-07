@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 23:35:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/07 14:34:55 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 16:40:41 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	child_process(t_minishell *mini, t_process *p)
 		dup2(p->fdout, 1);
 		close(p->fdout);
 	}
-	close_other_pipes(mini, p);
+	close_unused_pipes(mini->pipeline, p);
 	execve(p->path, p->args, mini->envp_copy);
 	perror("execve");
 	exit(127);
@@ -106,4 +106,3 @@ void	create_forks(t_minishell *mini)
 	if (p->pid == 0)
 		child_process(mini, p);
 }
-

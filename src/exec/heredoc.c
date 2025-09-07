@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:21:34 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/07 14:50:01 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 16:24:42 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static char	*process_line(t_minishell *mini, t_process *p, char *line)
 {
 	char	*temp;
 
-	if (p->heredoc_quote_flag)
+	if (!p->heredoc_quote_flag)
 	{
 		temp = expansion(mini, line);
 		free(line);

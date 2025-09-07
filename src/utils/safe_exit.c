@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   safe_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouchat <abouchat@student.42.rio>         +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 12:37:39 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/03 21:12:52 by abouchat         ###   ########.fr       */
+/*   Updated: 2025/09/07 17:37:04 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,25 +55,11 @@ void	safe_exit(t_minishell *mini)
 {
 	if (!mini)
 		exit(EXIT_FAILURE);
-	if (mini->input)
-	{
-		free(mini->input);
-		mini->input = NULL;
-	}
-	if (mini->process_list)
-	{
-		free_process_list(mini->process_list);
-		mini->process_list = NULL;
-	}
+	flush(mini);
 	if (mini->env_list)
 	{
 		free_env_list(mini->env_list);
 		mini->env_list = NULL;
-	}
-	if (mini->envp_copy)
-	{
-		free_env(mini->envp_copy);
-		mini->envp_copy = NULL;
 	}
 	free(mini);
 	exit(g_exit_status);
@@ -91,5 +77,10 @@ void	flush(t_minishell *mini)
 	{
 		free_env(mini->envp_copy);
 		mini->envp_copy = NULL;
+	}
+	if (mini->pipeline)
+	{
+		free_pipeline(mini->pipeline);
+		mini->pipeline = NULL;
 	}
 }

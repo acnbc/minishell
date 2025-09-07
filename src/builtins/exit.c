@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 15:40:31 by abouchat          #+#    #+#             */
-/*   Updated: 2025/09/05 08:19:57 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 18:15:35 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,7 @@ static int	numerical_check(char *str)
 	}
 	num = ft_atoll(str);
 	if (num > LLONG_MAX || num < LLONG_MIN)
-	{
 		return (-1);
-	}
 	return ((unsigned char)num);
 }
 

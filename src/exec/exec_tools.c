@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:07:11 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/07 15:02:37 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 16:41:51 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,30 @@ void	handle_invalid_command(t_process *p)
 		ft_putstr_fd(p->tokens->value, 2);
 	ft_putstr_fd(": command not found\n", 2);
 	g_exit_status = 127;
+}
+
+void	close_builtin_fds(t_process *p_list)
+{
+	t_process	*cur;
+
+	cur = p_list;
+	while (cur)
+	{
+		if (cur->tokens && cur->tokens->type == BUILTIN)
+		{
+			if (cur->fdout != -1 && cur->fdout != 1 && cur->fdout != 2)
+			{
+				close(cur->fdout);
+				cur->fdout = -1;
+			}
+			if (cur->next && cur->next->fdin != -1 && cur->next->fdin != 0)
+			{
+				close(cur->next->fdin);
+				cur->next->fdin = -1;
+			}
+		}
+		cur = cur->next;
+	}
 }
 
 static void	execute_env_builtin(t_minishell *mini, t_process *p)
@@ -46,11 +70,10 @@ static void	execute_exit_builtin(t_minishell *mini, t_process *p)
 		if (mini->exec_vars->tmpout != -1)
 			close(mini->exec_vars->tmpout);
 	}
-
 	safe_exit(mini);
 }
 
-void	execute_builtin_command(t_minishell *mini, t_process *p)
+void	execute_builtin_in_pipeline(t_minishell *mini, t_process *p)
 {
 	int	fdout;
 
@@ -71,14 +94,4 @@ void	execute_builtin_command(t_minishell *mini, t_process *p)
 		execute_env_builtin(mini, p);
 	else if (ft_strncmp(p->args[0], "exit", ft_strlen(p->args[0])) == 0)
 		execute_exit_builtin(mini, p);
-	if (p->fdout != -1 && p->fdout != 1 && p->fdout != 2)
-	{
-		close(p->fdout);
-		p->fdout = -1;
-	}
-	if (p->next && p->next->fdin != -1 && p->next->fdin != 0)
-	{
-		close(p->next->fdin);
-		p->next->fdin = -1;
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 11:37:27 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/07 14:51:48 by anogueir         ###   ########.fr       */
+/*   Updated: 2025/09/07 17:13:22 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,6 @@ typedef struct s_exec_vars
 {
 	int					tmpin;
 	int					tmpout;
-	int					fdin;
-	int					fdout;
-	int					pid;
-	int					ret;
 }						t_exec_vars;
 
 enum					e_token_type
@@ -92,28 +88,40 @@ typedef struct s_process
 	int					redirect_out_flag;
 	int					heredoc_flag;
 	int					heredoc_quote_flag;
-	int					double_quote_flag;
-	int					single_quote_flag;
 	char				**args;
 	int					fdin;
 	int					fdout;
 	int					heredoc_fd;
-	int					pipe_fd[2];
 	int					pid;
 	int					status;
 	int					exit_signal;
 	struct s_process	*next;
 }						t_process;
 
+typedef struct s_pipe
+{
+	int					read_fd;
+	int					write_fd;
+	struct s_pipe		*next;
+}						t_pipe;
+
+typedef struct s_pipeline
+{
+	t_pipe				*pipes;
+	int					pipe_count;
+	t_process			*processes;
+	int					process_count;
+}						t_pipeline;
+
 typedef struct s_minishell
 {
 	char				*input;
 	t_env				*env_list;
 	char				**envp_copy;
-	int					process_count;
 	t_process			*process_list;
 	t_process			*cur_proc;
 	t_exec_vars			*exec_vars;
+	t_pipeline			*pipeline;
 }						t_minishell;
 
 void					mini_shell(t_minishell *mini);
@@ -124,8 +132,6 @@ int						ft_isspace(char c);
 int						parser(t_minishell *mini);
 char					*extract_variable(t_minishell *mini,
 							char *variable);
-char					*handle_quotes(t_minishell *mini, char *process,
-							int *i);
 int						is_between_quotes(const char *str, int pos);
 t_process				*separate_process(char *input);
 char					*strjoin_free(char *s1, char *s2);
@@ -176,7 +182,6 @@ void					get_word_token(t_minishell *mini, int *i,
 char					**paths(t_env *env_list);
 char					*path_name(char **paths, char *command);
 int						is_directory(char *word);
-/* ---------------- SYNTACTIC ANALYSIS ------------------*/
 int						is_cmd(char *cmd, t_minishell *mini);
 /*------------------------ EXECUTOR ------------------------------*/
 void					executor(t_minishell *mini);
@@ -184,34 +189,26 @@ void					handle_heredoc(t_minishell *mini);
 void					unlink_heredoc_files(t_minishell *mini);
 char					**copy_args(t_token *tokens);
 int						get_args(t_process *process_list);
-void					close_fds(t_process *p_list);
-void					dup2_safe(t_minishell *mini, int *fd, int dup2_fd,
-							const char *error_message);
-void					dup_safe(t_minishell *mini, int *fd, int dup_fd,
-							const char *error_message);
-void					cleanup_all_fds(t_minishell *mini);
-void					get_redirect_in(t_minishell *mini);
-void					get_redirect_out(t_minishell *mini);
-void					open_pipes(t_minishell *mini);
 char					*put_line_break(char *line);
 void					write_heredoc_line(int fd, char *line,
 							t_minishell *mini);
 void					wait_all_processes(t_process *head);
-void					exec_builtin(t_minishell *mini);
-void					exec_builtin_with_pipe(t_minishell *mini);
-void					open_pipes(t_minishell *mini);
-void					execute_builtin_command(t_minishell *mini,
+void					execute_builtin_in_pipeline(t_minishell *mini,
 							t_process *p);
 void					handle_invalid_command(t_process *p);
-void					close_other_pipes(t_minishell *mini, t_process *p);
-void					setup_redirects(t_process *p);
-void					cleanup_pipes(t_minishell *mini);
+void					execute_pipeline(t_minishell *mini);
+t_pipeline				*create_pipeline(t_process *process_list);
+void					setup_process_redirects(t_process *process,
+							t_pipeline *pipeline, int process_index);
+void					close_pipeline_pipes(t_pipeline *pipeline);
+void					close_unused_pipes(t_pipeline *pipeline,
+							t_process *current);
+void					free_pipeline(t_pipeline *pipeline);
 void					execute_processes(t_minishell *mini);
 void					create_forks(t_minishell *mini);
 void					child_process(t_minishell *mini, t_process *p);
-void					setup_builtin_redirects(t_process *p);
-void					restore_builtin_redirects(t_process *p);
 void					close_process_fds(t_process *p_list);
+void					close_builtin_fds(t_process *p_list);
 /* ---------------------- BUILTINS ----------------------------*/
 int						ft_echo(char **args, int fd);
 int						ft_cd(t_minishell *mini, t_env *env_list);
@@ -239,7 +236,6 @@ void					free_token_list(t_token *tokens);
 void					free_matrix(char **matrix);
 void					safe_env_list_exit(t_env_vars *vars, t_env *env_list);
 void					flush(t_minishell *mini);
-
 void					print_process_list(t_process *process_list);
 
 #endif

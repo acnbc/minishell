@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: anogueir <anogueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 12:04:00 by anogueir          #+#    #+#             */
-/*   Updated: 2025/09/05 16:43:29 by codespace        ###   ########.fr       */
+/*   Updated: 2025/09/07 18:20:14 by anogueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ t_process	*new_process(char *cmd_seq)
 	process->fdin = -1;
 	process->fdout = -1;
 	process->heredoc_fd = -1;
-	process->pipe_fd[0] = -1;
-	process->pipe_fd[1] = -1;
 	process->next = NULL;
 	process->path = NULL;
 	return (process);
